@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
-  base: '/',
+  base: '/simple-elevator-simulator/',
   server: {
     port: 3000, // Custom port
     open: true, // Auto-open browser

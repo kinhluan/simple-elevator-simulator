@@ -164,7 +164,40 @@ This simulator is ideal for:
 - **System Design**: Understanding real-world elevator optimization
 - **Human-Computer Interaction**: Studying user interface design for complex systems
 
-## 📝 License
+## � Deployment
+
+### Automatic Deployment to GitHub Pages
+
+This project is configured with GitHub Actions for automatic deployment:
+
+1. **Enable GitHub Pages**:
+   - Go to your repository Settings → Pages
+   - Under "Build and deployment", select **GitHub Actions** as the source
+
+2. **Push to main branch**:
+   ```bash
+   git add .
+   git commit -m "Your commit message"
+   git push origin main
+   ```
+
+3. The workflow will automatically:
+   - Install dependencies
+   - Build the project
+   - Deploy to GitHub Pages
+
+4. **Access your deployed site**:
+   - `https://phatpham9.github.io/simple-elevator-simulator/`
+
+### Manual Deployment
+
+You can also deploy manually using gh-pages:
+
+```bash
+npm run deploy
+```
+
+## �📝 License
 
 This project is available for educational and non-commercial use.
 
