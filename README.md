@@ -16,7 +16,11 @@ This interactive web application simulates a multi-elevator system in a building
 - **Realistic Mechanics**: 
   - Door opening/closing animations with progress indicators
   - Detailed operational states (IDLE, MOVING, DOORS_OPENING, DOORS_OPEN, DOORS_CLOSING)
-  - Configurable timing for travel and door operations
+  - Configurable timing for travel and door operations:
+    - **Floor Travel Time**: 100-5000ms per floor (default: 1000ms)
+    - **Door Open Time**: 500-5000ms (default: 2500ms)
+    - **Door Hold Time**: 1000-10000ms (default: 3000ms)
+    - **Door Close Time**: 500-5000ms (default: 2000ms)
 - **Multiple Operating Modes**:
   - **Manual Mode**: Manually assign calls to specific elevators with full control
   - **Automatic Mode**: Algorithms automatically optimize elevator assignments
@@ -106,6 +110,17 @@ npm run dev
 2. Elevators always move to the nearest floor next
 3. Observe how it handles clustered vs. distributed calls
 4. Notice potential starvation of distant floors with high traffic
+
+### Configuring Timing
+1. Open the right sidebar and navigate to the "Config" tab
+2. Scroll to the "⏱️ Timing Configuration" section
+3. Adjust timing values to simulate different elevator speeds and door mechanisms:
+   - **Floor Travel Time**: Control how fast elevators move between floors
+   - **Door Open Time**: Set how long it takes for doors to fully open
+   - **Door Hold Time**: Configure how long doors stay open for passengers
+   - **Door Close Time**: Adjust how long it takes for doors to close
+4. Changes take effect immediately for new movements
+5. Useful for testing algorithm behavior under different performance conditions
 
 ## 🏗️ Project Structure
 

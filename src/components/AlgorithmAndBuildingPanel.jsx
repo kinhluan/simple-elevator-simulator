@@ -4,7 +4,9 @@ const AlgorithmAndBuildingPanel = ({
     numFloors, 
     setNumFloors, 
     numElevators, 
-    setNumElevators 
+    setNumElevators,
+    timingConfig,
+    setTimingConfig
 }) => {
     const getAlgorithmInfo = (mode) => {
         switch (mode) {
@@ -108,6 +110,90 @@ const AlgorithmAndBuildingPanel = ({
                             className="w-full border-2 border-slate-300 rounded-lg px-3 py-2 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
                         />
                         <p className="text-xs text-slate-500 mt-1">Range: 2-12 elevators</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Timing Configuration Section */}
+            <div className="pt-4 border-t border-slate-200">
+                <h3 className="text-base font-bold mb-3 text-slate-800 flex items-center gap-2">
+                    ⏱️ Timing Configuration
+                </h3>
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                            🚀 Floor Travel Time (ms)
+                        </label>
+                        <input
+                            type="number"
+                            min="100"
+                            max="5000"
+                            step="100"
+                            value={timingConfig.floorTravelTime}
+                            onChange={e => setTimingConfig({
+                                ...timingConfig,
+                                floorTravelTime: Math.min(5000, Math.max(100, parseInt(e.target.value) || 1000))
+                            })}
+                            className="w-full border-2 border-slate-300 rounded-lg px-3 py-2 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                        />
+                        <p className="text-xs text-slate-500 mt-1">Time to travel one floor (100-5000ms)</p>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                            🚪 Door Open Time (ms)
+                        </label>
+                        <input
+                            type="number"
+                            min="500"
+                            max="5000"
+                            step="100"
+                            value={timingConfig.doorOpenTime}
+                            onChange={e => setTimingConfig({
+                                ...timingConfig,
+                                doorOpenTime: Math.min(5000, Math.max(500, parseInt(e.target.value) || 2500))
+                            })}
+                            className="w-full border-2 border-slate-300 rounded-lg px-3 py-2 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                        />
+                        <p className="text-xs text-slate-500 mt-1">Time to open doors (500-5000ms)</p>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                            ⏸️ Door Hold Time (ms)
+                        </label>
+                        <input
+                            type="number"
+                            min="1000"
+                            max="10000"
+                            step="100"
+                            value={timingConfig.doorHoldTime}
+                            onChange={e => setTimingConfig({
+                                ...timingConfig,
+                                doorHoldTime: Math.min(10000, Math.max(1000, parseInt(e.target.value) || 3000))
+                            })}
+                            className="w-full border-2 border-slate-300 rounded-lg px-3 py-2 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                        />
+                        <p className="text-xs text-slate-500 mt-1">Time doors stay open (1000-10000ms)</p>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                            🚪 Door Close Time (ms)
+                        </label>
+                        <input
+                            type="number"
+                            min="500"
+                            max="5000"
+                            step="100"
+                            value={timingConfig.doorCloseTime}
+                            onChange={e => setTimingConfig({
+                                ...timingConfig,
+                                doorCloseTime: Math.min(5000, Math.max(500, parseInt(e.target.value) || 2000))
+                            })}
+                            className="w-full border-2 border-slate-300 rounded-lg px-3 py-2 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                        />
+                        <p className="text-xs text-slate-500 mt-1">Time to close doors (500-5000ms)</p>
                     </div>
                 </div>
             </div>

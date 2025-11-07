@@ -3,16 +3,23 @@ import { getAlgorithm, insertIntoQueue } from '../algorithms/elevatorScheduler'
 import { 
     ELEVATOR_STATES, 
     ELEVATOR_TIMING, 
-    calculateTravelTime,
-    calculateDoorHoldTime
+    calculateTravelTime
 } from '../constants/elevatorTiming'
 
 /**
  * Custom hook to manage elevator system state and logic
  */
-export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'manual') => {
+export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'manual', timingConfig = {}) => {
     const [elevators, setElevators] = useState([])
     const [calls, setCalls] = useState([])
+    
+    // Merge custom timing config with defaults
+    const timing = {
+        floorTravelTime: timingConfig.floorTravelTime ?? ELEVATOR_TIMING.FLOOR_TRAVEL_TIME,
+        doorOpenTime: timingConfig.doorOpenTime ?? ELEVATOR_TIMING.DOOR_OPEN_TIME,
+        doorHoldTime: timingConfig.doorHoldTime ?? ELEVATOR_TIMING.DOOR_HOLD_TIME,
+        doorCloseTime: timingConfig.doorCloseTime ?? ELEVATOR_TIMING.DOOR_CLOSE_TIME,
+    }
     
     const isAutoMode = schedulingMode !== 'manual'
 
@@ -27,7 +34,8 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                 isMoving: false,
                 operationalState: ELEVATOR_STATES.IDLE, // New: detailed state for door operations
                 queue: [], // Queue of {floor, callDirection} objects
-                doorProgress: 0 // New: for door animation (0-100)
+                doorProgress: 0, // New: for door animation (0-100)
+                passengerCount: 0 // Number of passengers boarding/alighting
             }))
         )
         setCalls([])
@@ -201,7 +209,7 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
             const remainingDistance = Math.abs(targetFloor - currentFloor)
             const timeToNextFloor = remainingDistance === 1 
                 ? calculateTravelTime(1) 
-                : ELEVATOR_TIMING.FLOOR_TRAVEL_TIME
+                : timing.floorTravelTime
 
             return setTimeout(() => {
                 setElevators(prev =>
@@ -244,19 +252,25 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
         // Handle DOORS_OPENING state
         const handleDoorsOpeningState = (elevator) => {
             return setTimeout(() => {
+                // Generate random passenger count when doors open
+                const passengerCount = ELEVATOR_TIMING.BASE_PASSENGERS + 
+                    Math.floor(Math.random() * (ELEVATOR_TIMING.MAX_ADDITIONAL_PASSENGERS + 1))
+                
                 setElevators(prev =>
                     prev.map(e => e.id === elevator.id ? {
                         ...e,
                         operationalState: ELEVATOR_STATES.DOORS_OPEN,
-                        doorProgress: 100
+                        doorProgress: 100,
+                        passengerCount: passengerCount
                     } : e)
                 )
-            }, ELEVATOR_TIMING.DOOR_OPEN_TIME)
+            }, timing.doorOpenTime)
         }
 
         // Handle DOORS_OPEN state - passengers boarding/alighting
         const handleDoorsOpenState = (elevator) => {
-            const holdTime = calculateDoorHoldTime()
+            // Use custom door hold time instead of calculated
+            const holdTime = timing.doorHoldTime
             
             return setTimeout(() => {
                 setElevators(prev =>
@@ -354,7 +368,8 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                             return {
                                 ...e,
                                 queue: newQueue,
-                                doorProgress: 0
+                                doorProgress: 0,
+                                passengerCount: 0
                             }
                         }
 
@@ -367,7 +382,8 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                                 queue: newQueue,
                                 isMoving: true,
                                 operationalState: ELEVATOR_STATES.MOVING,
-                                doorProgress: 0
+                                doorProgress: 0,
+                                passengerCount: 0
                             }
                         }
 
@@ -379,11 +395,12 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                             isMoving: false,
                             operationalState: ELEVATOR_STATES.IDLE,
                             queue: [],
-                            doorProgress: 0
+                            doorProgress: 0,
+                            passengerCount: 0
                         }
                     })
                 )
-            }, ELEVATOR_TIMING.DOOR_CLOSE_TIME)
+            }, timing.doorCloseTime)
         }
 
         const intervals = elevators.map(elevator => {
@@ -411,7 +428,7 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                 if (interval) clearTimeout(interval)
             })
         }
-    }, [elevators, schedulingMode, numFloors, isAutoMode])
+    }, [elevators, schedulingMode, numFloors, isAutoMode, timing.floorTravelTime, timing.doorOpenTime, timing.doorHoldTime, timing.doorCloseTime])
 
     // Assign a call to an elevator (manual mode)
     const assignCall = (callId, elevatorId) => {

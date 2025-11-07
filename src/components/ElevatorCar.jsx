@@ -139,7 +139,9 @@ const ElevatorCar = ({ elevator, numFloors, elevatorIndex }) => {
                                 {elevator.operationalState === ELEVATOR_STATES.DOORS_OPENING ? 'Opening...' : 'Closing...'}
                             </span>
                         ) : (
-                            <span className="text-xs opacity-75 animate-pulse">Boarding</span>
+                            <span className="text-xs opacity-75 animate-pulse">
+                                Boarding {elevator.passengerCount || 0} 👥
+                            </span>
                         )}
                     </div>
                 ) : (

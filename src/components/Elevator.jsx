@@ -3,15 +3,29 @@ import { useElevatorSystem } from '../hooks/useElevatorSystem'
 import BuildingVisualization from './BuildingVisualization'
 import TabbedControlPanel from './TabbedControlPanel'
 import RightSidebar from './RightSidebar'
+import { ELEVATOR_TIMING } from '../constants/elevatorTiming'
 
 const Elevator = () => {
     // Configuration state
     const [numFloors, setNumFloors] = useState(5)
     const [numElevators, setNumElevators] = useState(3)
     const [schedulingMode, setSchedulingMode] = useState('manual')
+    
+    // Timing configuration state
+    const [timingConfig, setTimingConfig] = useState({
+        floorTravelTime: ELEVATOR_TIMING.FLOOR_TRAVEL_TIME,
+        doorOpenTime: ELEVATOR_TIMING.DOOR_OPEN_TIME,
+        doorHoldTime: ELEVATOR_TIMING.DOOR_HOLD_TIME,
+        doorCloseTime: ELEVATOR_TIMING.DOOR_CLOSE_TIME,
+    })
 
     // Use custom hook for elevator system logic
-    const { elevators, calls, callElevator, moveElevator, assignCall } = useElevatorSystem(numFloors, numElevators, schedulingMode)
+    const { elevators, calls, callElevator, moveElevator, assignCall } = useElevatorSystem(
+        numFloors, 
+        numElevators, 
+        schedulingMode,
+        timingConfig
+    )
     
     const isAutoMode = schedulingMode !== 'manual'
 
@@ -82,6 +96,8 @@ const Elevator = () => {
                     setNumFloors={setNumFloors}
                     numElevators={numElevators}
                     setNumElevators={setNumElevators}
+                    timingConfig={timingConfig}
+                    setTimingConfig={setTimingConfig}
                     assignCall={assignCall}
                 />
             </div>

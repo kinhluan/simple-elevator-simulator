@@ -13,6 +13,8 @@ const RightSidebar = ({
     setNumFloors,
     numElevators,
     setNumElevators,
+    timingConfig,
+    setTimingConfig,
     assignCall
 }) => {
     const [activeTab, setActiveTab] = useState('statistics')
@@ -78,6 +80,8 @@ const RightSidebar = ({
                             setNumFloors={setNumFloors}
                             numElevators={numElevators}
                             setNumElevators={setNumElevators}
+                            timingConfig={timingConfig}
+                            setTimingConfig={setTimingConfig}
                         />
                     </div>
                 )}
