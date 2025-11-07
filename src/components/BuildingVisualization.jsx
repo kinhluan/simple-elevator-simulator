@@ -1,7 +1,7 @@
 import ElevatorCar from './ElevatorCar'
 import { generateFloors, getElevatorColorClass } from '../utils/elevatorUtils'
 
-const BuildingVisualization = ({ numFloors, numElevators, elevators, calls, callElevator, moveElevator, isAutoMode }) => {
+const BuildingVisualization = ({ numFloors, numElevators, elevators, calls, callElevator, moveElevator }) => {
     const floors = generateFloors(numFloors)
 
     return (
@@ -88,78 +88,87 @@ const BuildingVisualization = ({ numFloors, numElevators, elevators, calls, call
                         ))}
                     </div>
 
-                    {/* Elevator controls at the bottom */}
-                    <div className="flex border-t-2 border-slate-300 bg-white">
+                    {/* Elevator in-car panels at the bottom */}
+                    <div className="flex border-t-2 border-slate-300 bg-gradient-to-b from-slate-100 to-slate-200">
                         {elevators.map((elevator) => (
-                            <div key={`control-${elevator.id}`} className="flex-1 border-r-2 last:border-r-0 border-slate-200 p-3">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <div className={`w-4 h-4 rounded-full ${getElevatorColorClass(elevator.id)} shadow-sm`}></div>
-                                    <div className="text-xs text-slate-500 ml-auto font-medium bg-slate-100 px-2 py-0.5 rounded">
-                                        {elevator.isMoving
-                                            ? `→ ${elevator.targetFloor}`
-                                            : `@ ${elevator.currentFloor}`}
+                            <div key={`control-${elevator.id}`} className="flex-1 border-r-2 last:border-r-0 border-slate-300 p-2">
+                                {/* Real-life elevator panel design */}
+                                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-2 shadow-lg border-2 border-slate-700">
+                                    
+                                    {/* LCD Display - Like real elevator displays */}
+                                    <div className="mb-2 bg-black rounded p-2 border border-slate-600 shadow-inner">
+                                        <div className="flex items-center justify-between gap-2">
+                                            {/* Left side: Floor Display and Direction Arrows */}
+                                            <div className="flex items-center gap-2">
+                                                <div className="flex items-center gap-1.5">
+                                                    <div className={`w-2 h-2 rounded-full ${getElevatorColorClass(elevator.id)} shadow-sm`}></div>
+                                                    <span className="text-emerald-400 font-mono text-lg font-bold tracking-wider" style={{textShadow: '0 0 8px rgba(52, 211, 153, 0.8)'}}>
+                                                        {elevator.currentFloor}
+                                                    </span>
+                                                </div>
+                                                
+                                                {/* Direction Arrows */}
+                                                <div className="flex flex-col gap-0.5">
+                                                    <div className={`w-4 h-3 flex items-center justify-center ${
+                                                        elevator.isMoving && elevator.direction === 'up' 
+                                                            ? 'text-emerald-400' 
+                                                            : 'text-slate-700'
+                                                    }`} style={elevator.isMoving && elevator.direction === 'up' ? {textShadow: '0 0 6px rgba(52, 211, 153, 0.8)'} : {}}>
+                                                        <span className="text-xs">▲</span>
+                                                    </div>
+                                                    <div className={`w-4 h-3 flex items-center justify-center ${
+                                                        elevator.isMoving && elevator.direction === 'down' 
+                                                            ? 'text-amber-400' 
+                                                            : 'text-slate-700'
+                                                    }`} style={elevator.isMoving && elevator.direction === 'down' ? {textShadow: '0 0 6px rgba(251, 191, 36, 0.8)'} : {}}>
+                                                        <span className="text-xs">▼</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Right side: Queue indicator */}
+                                            <div className="text-[10px] text-cyan-400 font-mono" style={{textShadow: '0 0 4px rgba(34, 211, 238, 0.6)'}}>
+                                                {elevator.queue && elevator.queue.length > 0 ? (
+                                                    elevator.queue.map((q) => {
+                                                        const floor = q.floor || q
+                                                        const dir = q.callDirection
+                                                        return `${floor}${dir ? (dir === 'up' ? '↑' : '↓') : ''}`
+                                                    }).join(' ')
+                                                ) : (
+                                                    <span className="text-slate-700">—</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Floor Button Grid - Like real elevator buttons */}
+                                    <div className="grid grid-cols-3 gap-1">
+                                        {Array.from({ length: numFloors }, (_, i) => i + 1).map(floor => {
+                                            const isInQueue = elevator.queue && elevator.queue.some(q => (q.floor || q) === floor)
+                                            const isCurrent = floor === elevator.currentFloor
+                                            return (
+                                                <button
+                                                    key={`move-${elevator.id}-${floor}`}
+                                                    onClick={() => moveElevator(elevator.id, floor)}
+                                                    disabled={isCurrent}
+                                                    className={`relative h-8 rounded font-bold text-sm transition-all ${
+                                                        isCurrent
+                                                            ? 'bg-slate-600 text-slate-400 cursor-not-allowed border border-slate-700'
+                                                            : isInQueue
+                                                                ? 'bg-gradient-to-br from-amber-400 to-amber-500 text-amber-900 shadow-md border-2 border-amber-300'
+                                                                : 'bg-gradient-to-br from-slate-300 to-slate-400 text-slate-800 hover:from-slate-200 hover:to-slate-300 active:scale-95 shadow-sm border border-slate-500'
+                                                    }`}
+                                                    style={isInQueue ? {boxShadow: '0 0 12px rgba(251, 191, 36, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.3)'} : {}}
+                                                >
+                                                    {floor}
+                                                    {isInQueue && (
+                                                        <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-amber-600 rounded-full animate-pulse"></span>
+                                                    )}
+                                                </button>
+                                            )
+                                        })}
                                     </div>
                                 </div>
-
-                                {/* Show queue in auto mode */}
-                                {isAutoMode && elevator.queue && elevator.queue.length > 0 && (
-                                    <div className="mb-2 p-2 bg-blue-50 border border-blue-100 rounded shadow-sm">
-                                        <div className="font-semibold text-blue-900 mb-1 text-xs">📋 Queue:</div>
-                                        <div className="flex flex-wrap gap-1">
-                                            {elevator.queue.map((queueItem, idx) => {
-                                                const floor = queueItem.floor || queueItem
-                                                const callDir = queueItem.callDirection
-                                                return (
-                                                    <span 
-                                                        key={`queue-${elevator.id}-${idx}`}
-                                                        className={`px-1.5 py-0.5 rounded text-xs font-medium ${
-                                                            idx === 0 
-                                                                ? 'bg-blue-600 text-white shadow-sm' 
-                                                                : 'bg-blue-100 text-blue-900 border border-blue-200'
-                                                        }`}
-                                                    >
-                                                        {floor}{callDir ? (callDir === 'up' ? '↑' : '↓') : ''}
-                                                    </span>
-                                                )
-                                            })}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Manual controls */}
-                                {(!isAutoMode || !elevator.isMoving) && (
-                                    <div>
-                                        <p className="text-xs text-slate-600 mb-1 font-medium">Send to:</p>
-                                        <div className="grid grid-cols-3 gap-1">
-                                            {Array.from({ length: numFloors }, (_, i) => i + 1).map(floor => {
-                                                const isInQueue = isAutoMode && elevator.queue && elevator.queue.some(q => (q.floor || q) === floor)
-                                                return (
-                                                    <button
-                                                        key={`move-${elevator.id}-${floor}`}
-                                                        onClick={() => moveElevator(elevator.id, floor)}
-                                                        disabled={floor === elevator.currentFloor || isInQueue}
-                                                        className={`px-1 py-1 text-xs rounded font-medium transition-all ${
-                                                            floor === elevator.currentFloor
-                                                                ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                                                                : isInQueue
-                                                                    ? 'bg-blue-100 text-blue-400 cursor-not-allowed'
-                                                                    : 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:border-slate-400 active:scale-95'
-                                                        }`}
-                                                    >
-                                                        {floor}
-                                                    </button>
-                                                )
-                                            })}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Status message for auto mode */}
-                                {isAutoMode && elevator.isMoving && (
-                                    <div className="mt-2 text-xs text-slate-600 font-medium text-center bg-slate-50 py-1 rounded">
-                                        {elevator.direction === 'up' ? '⬆️' : '⬇️'} Moving {elevator.direction}...
-                                    </div>
-                                )}
                             </div>
                         ))}
                     </div>
