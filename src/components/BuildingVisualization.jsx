@@ -1,5 +1,5 @@
 import ElevatorCar from './ElevatorCar'
-import { generateFloors, getElevatorColorClass } from '../utils/elevatorUtils'
+import { generateFloors } from '../utils/elevatorUtils'
 
 const BuildingVisualization = ({ numFloors, numElevators, elevators, calls, callElevator, moveElevator }) => {
     const floors = generateFloors(numFloors)
@@ -97,45 +97,56 @@ const BuildingVisualization = ({ numFloors, numElevators, elevators, calls, call
                                     
                                     {/* LCD Display - Like real elevator displays */}
                                     <div className="mb-2 bg-black rounded p-2 border border-slate-600 shadow-inner">
-                                        <div className="flex items-center justify-between gap-2">
-                                            {/* Left side: Floor Display and Direction Arrows */}
-                                            <div className="flex items-center gap-2">
-                                                <div className="flex items-center gap-1.5">
-                                                    <div className={`w-2 h-2 rounded-full ${getElevatorColorClass(elevator.id)} shadow-sm`}></div>
-                                                    <span className="text-emerald-400 font-mono text-lg font-bold tracking-wider" style={{textShadow: '0 0 8px rgba(52, 211, 153, 0.8)'}}>
-                                                        {elevator.currentFloor}
-                                                    </span>
+                                        <div className="flex items-center justify-center gap-2">
+                                            {/* Current Floor */}
+                                            <span className="text-emerald-400 font-mono text-lg font-bold tracking-wider" style={{textShadow: '0 0 8px rgba(52, 211, 153, 0.8)'}}>
+                                                {elevator.currentFloor}
+                                            </span>
+                                            
+                                            {/* Direction Arrows */}
+                                            <div className="flex flex-col gap-0.5">
+                                                <div className={`w-4 h-3 flex items-center justify-center ${
+                                                    elevator.isMoving && elevator.direction === 'up' 
+                                                        ? 'text-emerald-400' 
+                                                        : 'text-slate-700'
+                                                }`} style={elevator.isMoving && elevator.direction === 'up' ? {textShadow: '0 0 6px rgba(52, 211, 153, 0.8)'} : {}}>
+                                                    <span className="text-xs">▲</span>
                                                 </div>
-                                                
-                                                {/* Direction Arrows */}
-                                                <div className="flex flex-col gap-0.5">
-                                                    <div className={`w-4 h-3 flex items-center justify-center ${
-                                                        elevator.isMoving && elevator.direction === 'up' 
-                                                            ? 'text-emerald-400' 
-                                                            : 'text-slate-700'
-                                                    }`} style={elevator.isMoving && elevator.direction === 'up' ? {textShadow: '0 0 6px rgba(52, 211, 153, 0.8)'} : {}}>
-                                                        <span className="text-xs">▲</span>
-                                                    </div>
-                                                    <div className={`w-4 h-3 flex items-center justify-center ${
-                                                        elevator.isMoving && elevator.direction === 'down' 
-                                                            ? 'text-amber-400' 
-                                                            : 'text-slate-700'
-                                                    }`} style={elevator.isMoving && elevator.direction === 'down' ? {textShadow: '0 0 6px rgba(251, 191, 36, 0.8)'} : {}}>
-                                                        <span className="text-xs">▼</span>
-                                                    </div>
+                                                <div className={`w-4 h-3 flex items-center justify-center ${
+                                                    elevator.isMoving && elevator.direction === 'down' 
+                                                        ? 'text-amber-400' 
+                                                        : 'text-slate-700'
+                                                }`} style={elevator.isMoving && elevator.direction === 'down' ? {textShadow: '0 0 6px rgba(251, 191, 36, 0.8)'} : {}}>
+                                                    <span className="text-xs">▼</span>
                                                 </div>
                                             </div>
-                                            
-                                            {/* Right side: Queue indicator */}
-                                            <div className="text-[10px] text-cyan-400 font-mono" style={{textShadow: '0 0 4px rgba(34, 211, 238, 0.6)'}}>
+                                        </div>
+                                    </div>
+
+                                    {/* Queue Display - Below LCD - Always visible */}
+                                    <div className="mb-2 px-2 py-1.5 bg-slate-700 rounded border border-slate-600">
+                                        <div className="flex items-center gap-1.5 min-h-[20px]">
+                                            <span className="text-[10px] text-slate-400 font-semibold">Queue:</span>
+                                            <div className="flex flex-wrap gap-1">
                                                 {elevator.queue && elevator.queue.length > 0 ? (
-                                                    elevator.queue.map((q) => {
+                                                    elevator.queue.map((q, idx) => {
                                                         const floor = q.floor || q
                                                         const dir = q.callDirection
-                                                        return `${floor}${dir ? (dir === 'up' ? '↑' : '↓') : ''}`
-                                                    }).join(' ')
+                                                        return (
+                                                            <span 
+                                                                key={`queue-${elevator.id}-${idx}`}
+                                                                className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                                                                    idx === 0 
+                                                                        ? 'bg-amber-500 text-amber-900' 
+                                                                        : 'bg-slate-600 text-slate-200'
+                                                                }`}
+                                                            >
+                                                                {floor}{dir ? (dir === 'up' ? '↑' : '↓') : ''}
+                                                            </span>
+                                                        )
+                                                    })
                                                 ) : (
-                                                    <span className="text-slate-700">—</span>
+                                                    <span className="text-[10px] text-slate-500 italic py-0.5">Empty</span>
                                                 )}
                                             </div>
                                         </div>

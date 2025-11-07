@@ -125,28 +125,22 @@ const ElevatorCar = ({ elevator, numFloors, elevatorIndex }) => {
             {/* Elevator content */}
             <div className="relative z-10 flex flex-col items-center">
                 {elevator.operationalState === ELEVATOR_STATES.MOVING ? (
-                    <div className="flex items-center gap-2">
-                        <span className="text-2xl animate-pulse">
-                            {elevator.direction === 'up' ? '↑' : '↓'}
-                        </span>
-                        <span className="text-sm">{elevator.currentFloor}</span>
-                    </div>
+                    <span className="text-3xl animate-pulse">
+                        {elevator.direction === 'up' ? '↑' : '↓'}
+                    </span>
                 ) : isDoorsOpen ? (
                     <div className="flex flex-col items-center">
-                        <span className="text-xl">{elevator.currentFloor}</span>
                         {isDoorAnimating ? (
                             <span className="text-xs opacity-75">
                                 {elevator.operationalState === ELEVATOR_STATES.DOORS_OPENING ? 'Opening...' : 'Closing...'}
                             </span>
                         ) : (
-                            <span className="text-xs opacity-75 animate-pulse">
+                            <span className="text-sm opacity-75 animate-pulse">
                                 Boarding {elevator.passengerCount || 0} 👥
                             </span>
                         )}
                     </div>
-                ) : (
-                    <span className="text-xl">{elevator.currentFloor}</span>
-                )}
+                ) : null}
             </div>
 
             {/* Arrival indicator (ding!) */}
