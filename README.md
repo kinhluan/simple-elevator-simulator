@@ -1,405 +1,98 @@
 # 🏢 Simple Elevator Simulator
 
-An interactive elevator scheduling simulator that visualizes and compares different elevator dispatch algorithms in real-time. Built for educational purposes, algorithm analysis, and human-computer interaction studies.
+An interactive elevator scheduling simulator that visualizes and compares different elevator dispatch algorithms in real-time.
 
 ![Simple Elevator Simulator](docs/screenshots/simple-elevator-simulator.png)
 
-## 📋 Overview
+## Features
 
-This interactive web application simulates a multi-elevator system in a building with configurable floors and elevators. Users can test and compare different scheduling algorithms to understand their behavior, efficiency, and trade-offs in various scenarios. The simulator features realistic elevator mechanics including door animations, detailed operational states, and smooth floor-by-floor movement.
+- **Configurable Building**: 2-24 floors, 2-12 elevators
+- **Real-time Visualization**: Watch elevators move with door animations
+- **3 Scheduling Algorithms**:
+  - **SCAN** ⭐ (Recommended): Industry standard, moves in one direction to extreme then reverses
+  - **LOOK**: Reverses when no more requests ahead (more efficient than SCAN)
+  - **SSTF**: Serves nearest floor first (educational purposes, can cause starvation)
+- **Manual & Automatic Modes**: Manual assignment or algorithm-based dispatch
+- **Configurable Timing**: Adjust travel time, door open/close speeds
 
-## ✨ Features
-
-### Core Functionality
-- **Configurable Building**: Set 2-24 floors and 2-12 elevators with real-time reconfiguration
-- **Real-time Visualization**: Watch elevators move floor-by-floor with smooth animations
-- **Realistic Mechanics**: 
-  - Door opening/closing animations with progress indicators
-  - Detailed operational states (IDLE, MOVING, DOORS_OPENING, DOORS_OPEN, DOORS_CLOSING)
-  - Configurable timing for travel and door operations:
-    - **Floor Travel Time**: 100-5000ms per floor (default: 1000ms)
-    - **Door Open Time**: 500-5000ms (default: 2500ms)
-    - **Door Hold Time**: 1000-10000ms (default: 3000ms)
-    - **Door Close Time**: 500-5000ms (default: 2000ms)
-- **Multiple Operating Modes**:
-  - **Manual Mode**: Manually assign calls to specific elevators with full control
-  - **Automatic Mode**: Algorithms automatically optimize elevator assignments
-- **Interactive UI**:
-  - Collapsible sidebars for optimal screen space
-  - Tabbed control panels for organized information
-  - Real-time statistics dashboard
-  - Call buttons on each floor (up/down directions)
-  - Direct floor selection for elevators
-
-### Scheduling Algorithms
-
-#### 1. **SCAN Algorithm** ⭐ (Recommended)
-- Elevators move in one direction until reaching the extreme end (top/bottom floor)
-- Then reverses direction and continues with the full sweep
-- Industry standard algorithm used in real-world elevator systems
-- **Best for**: Production systems requiring fairness and predictability
-- **Strengths**: Excellent starvation prevention, bounded wait times, fair distribution
-- **Trade-offs**: May go to empty extremes occasionally
-
-#### 2. **LOOK Algorithm**
-- Elevators move in one direction, serving all requests in that direction
-- Reverses direction only when no more requests exist ahead (doesn't go to extreme)
-- Optimal for overall system efficiency with variable traffic
-- **Best for**: Buildings with variable traffic patterns
-- **Strengths**: Efficient, good starvation prevention, flexible
-- **Trade-offs**: Less predictable than SCAN
-
-#### 3. **SSTF (Shortest Seek Time First)**
-- Always serves the nearest floor next, regardless of direction
-- Minimizes immediate travel distance
-- Fast response for nearby calls
-- **Best for**: Educational purposes, low traffic, small buildings
-- **Strengths**: Fast immediate response, simple logic
-- **Trade-offs**: May cause starvation for distant floors, unfair under high load
-
-### User Interface Components
-- **Building Visualization**: 
-  - Visual representation of the building with floor indicators
-  - Interactive call buttons for each floor (up/down)
-  - Animated elevator cars showing current position and state
-  - Color-coded elevator indicators
-- **Statistics Dashboard**: 
-  - Active/idle elevator count
-  - Pending calls tracking
-  - Queue length monitoring
-- **Right Sidebar**:
-  - Algorithm and building configuration panel
-  - Collapsible sections for better space management
-  - Instructions panel with contextual help
-- **Calls & Elevators Panel**:
-  - Real-time queue display for each elevator
-  - Elevator status monitoring (floor, direction, state)
-  - Pending calls list with manual assignment controls
-  - Direct elevator control buttons
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- Node.js (v20.0.0 or higher)
-- npm (v10.0.0 or higher)
+- Node.js v20.0.0+
+- npm v10.0.0+
 
 ### Installation
 
-1. Clone the repository:
 ```bash
 git clone https://github.com/phatpham9/simple-elevator-simulator.git
 cd simple-elevator-simulator
-```
-
-2. Install dependencies:
-```bash
 npm install
-```
-
-3. Start the development server:
-```bash
 npm run dev
 ```
 
-4. Open your browser and navigate to the URL shown in the terminal (typically `http://localhost:5173`)
+Open browser to `http://localhost:5173`
 
-## 🎮 How to Use
+## Usage
 
-### Manual Mode
-1. Click the up/down buttons next to any floor to request an elevator
-2. Pending calls appear in the Control Panel
-3. Click on an elevator button to manually assign the call
-4. You can also send elevators directly to specific floors using the floor buttons
+**Manual Mode**: Click floor buttons to request elevators, then manually assign to specific cars
 
-### Automatic Mode (SCAN) ⭐
-1. Select "SCAN Algorithm" from the Config panel
-2. Click call buttons - elevators are automatically assigned
-3. Watch elevators complete full sweeps to top/bottom before reversing
-4. Most predictable wait times and fairest distribution
+**Automatic Mode**: Select an algorithm (SCAN/LOOK/SSTF) and click floor buttons - elevators are automatically dispatched
 
-### Automatic Mode (LOOK)
-1. Select "LOOK Algorithm" from the Config panel
-2. Click call buttons - elevators are automatically assigned
-3. Watch the queue display to see optimized stop sequences
-4. Elevators maintain direction until no more requests ahead
+**Configure**: Adjust building size and timing in the Config panel
 
-### Automatic Mode (SSTF)
-1. Select "SSTF Algorithm" from the Config panel
-2. Elevators always move to the nearest floor next
-3. Observe how it handles clustered vs. distributed calls
-4. Notice potential starvation of distant floors with high traffic
-
-### Configuring Timing
-1. Open the right sidebar and navigate to the "Config" tab
-2. Scroll to the "⏱️ Timing Configuration" section
-3. Adjust timing values to simulate different elevator speeds and door mechanisms:
-   - **Floor Travel Time**: Control how fast elevators move between floors
-   - **Door Open Time**: Set how long it takes for doors to fully open
-   - **Door Hold Time**: Configure how long doors stay open for passengers
-   - **Door Close Time**: Adjust how long it takes for doors to close
-4. Changes take effect immediately for new movements
-5. Useful for testing algorithm behavior under different performance conditions
-
-## 🏗️ Project Structure
+## Project Structure
 
 ```
-simple-elevator-simulator/
-├── src/
-│   ├── App.jsx                           # Root application component
-│   ├── main.jsx                          # Application entry point
-│   ├── index.css                         # Global styles
-│   ├── algorithms/
-│   │   ├── elevatorScheduler.js         # Main algorithm dispatcher
-│   │   ├── scanAlgorithm.js             # SCAN algorithm implementation (recommended)
-│   │   ├── lookAlgorithm.js             # LOOK algorithm implementation
-│   │   └── sstfAlgorithm.js             # SSTF algorithm implementation
-│   ├── components/
-│   │   ├── Elevator.jsx                  # Main container component
-│   │   ├── AlgorithmAndBuildingPanel.jsx # Configuration controls
-│   │   ├── BuildingVisualization.jsx     # Building and floor visualization
-│   │   ├── BuildingConfigPanel.jsx       # Building configuration controls
-│   │   ├── CallsAndElevatorsPanel.jsx    # Calls list and elevator controls
-│   │   ├── CollapsibleSidebar.jsx        # Collapsible sidebar wrapper
-│   │   ├── ElevatorCar.jsx               # Individual elevator car component
-│   │   ├── HeroSection.jsx               # Header/hero section
-│   │   ├── InstructionsPanel.jsx         # Usage instructions
-│   │   ├── RightSidebar.jsx              # Right sidebar container
-│   │   ├── StatisticsDashboard.jsx       # Statistics and metrics display
-│   │   └── TabbedControlPanel.jsx        # Tabbed control interface
-│   ├── constants/
-│   │   └── elevatorTiming.js             # Timing constants and states
-│   ├── hooks/
-│   │   └── useElevatorSystem.js          # Core elevator logic and state
-│   ├── styles/
-│   │   └── designSystem.js               # Design system and theme
-│   └── utils/
-│       └── elevatorUtils.js              # Utility functions
-├── docs/
-│   └── screenshots/
-│       └── simple-elevator-simulator.png
-├── index.html                            # HTML entry point
-├── package.json                          # Project dependencies
-├── vite.config.js                        # Vite configuration
-├── eslint.config.js                      # ESLint configuration
-└── README.md                             # This file
+src/
+├── algorithms/          # Scheduling algorithm implementations
+│   ├── elevatorScheduler.js
+│   ├── scanAlgorithm.js
+│   ├── lookAlgorithm.js
+│   └── sstfAlgorithm.js
+├── components/          # React UI components
+├── hooks/              # useElevatorSystem.js
+├── constants/          # elevatorTiming.js
+├── styles/             # designSystem.js
+└── utils/              # elevatorUtils.js
 ```
 
-## 🔧 Adding New Algorithms
+## Technologies
 
-The architecture is designed for easy algorithm extension:
+- **React 19.0.0** - UI framework
+- **Vite 6.2.0** - Build tool and dev server
+- **Tailwind CSS 4.0.17** - Utility-first CSS
+- **JavaScript (ES6+)** - Core logic
+- **ESLint 9.21.0** - Code quality
 
-1. **Create algorithm file** in `src/algorithms/`:
-```javascript
-// src/algorithms/newAlgorithm.js
+## Algorithm Comparison
 
-/**
- * Your algorithm description
- */
-export const newAlgorithm = (elevators, callFloor, callDirection) => {
-    // Implement your logic to select the best elevator
-    // Return elevator ID or null
-    return bestElevatorId
-}
+| Algorithm | Direction | Fairness | Efficiency | Starvation Risk | Real-world Use |
+|-----------|-----------|----------|------------|-----------------|----------------|
+| **SCAN** ⭐ | ✅ Yes | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | None | ✅ Standard |
+| **LOOK** | ✅ Yes | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | Very Low | ⚠️ Rare |
+| **SSTF** | ❌ No | ⭐⭐ | ⭐⭐⭐ | High | ❌ No |
 
-/**
- * Insert floor into queue based on your algorithm's logic
- */
-export const insertIntoQueueNew = (queue, currentFloor, direction, newFloor) => {
-    // Implement queue management logic
-    return newQueue
-}
-```
+**When to use:**
+- **SCAN**: Production systems, high traffic (most predictable, no starvation)
+- **LOOK**: Variable traffic patterns (more efficient, avoids empty extremes)
+- **SSTF**: Education only (demonstrates starvation problems)
 
-2. **Register in scheduler** (`src/algorithms/elevatorScheduler.js`):
-```javascript
-import { newAlgorithm, insertIntoQueueNew } from './newAlgorithm'
+## Deployment
 
-export const getAlgorithm = (mode) => {
-    switch (mode) {
-        case 'scan': return scanAlgorithm
-        case 'new': return newAlgorithm
-        // existing cases...
-    }
-}
-
-export const insertIntoQueue = (mode) => {
-    switch (mode) {
-        case 'scan': return insertIntoQueueScan
-        case 'new': return insertIntoQueueNew
-        // existing cases...
-    }
-}
-```
-
-3. **Add to UI** (`src/components/AlgorithmAndBuildingPanel.jsx`):
-```jsx
-// Add to getAlgorithmInfo switch
-case 'new':
-    return {
-        name: 'New Algorithm',
-        emoji: '✨',
-        color: 'indigo',
-        description: 'Your algorithm description',
-        badge: 'Experimental'
-    }
-
-// Add to the algorithms array
-{['manual', 'scan', 'look', 'sstf', 'new'].map((mode) => {
-    // ... button rendering
-})}
-```
-
-4. **Update instructions** in `InstructionsPanel.jsx` with algorithm description and usage
-
-## 🛠️ Technologies
-
-- **React 19.0.0** - UI framework with modern hooks
-- **Vite 6.2.0** - Lightning-fast build tool and dev server
-- **Tailwind CSS 4.0.17** - Utility-first CSS framework with @tailwindcss/vite
-- **JavaScript (ES6+)** - Core logic and algorithms
-- **ESLint 9.21.0** - Code quality and consistency
-- **gh-pages** - Automated deployment to GitHub Pages
-
-## 📊 Algorithm Comparison
-
-| Feature | SCAN ⭐ | LOOK | SSTF |
-|---------|--------|------|------|
-| **Direction Awareness** | ✅ Yes | ✅ Yes | ❌ No |
-| **Predictability** | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐ Fair |
-| **Fairness** | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐ Fair |
-| **Efficiency** | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐ Good |
-| **Average Wait Time** | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Best (when distributed) |
-| **Max Wait Time** | ⭐⭐⭐⭐⭐ Bounded | ⭐⭐⭐⭐ Mostly Bounded | ⭐ Unbounded |
-| **Starvation Risk** | ⭐⭐⭐⭐⭐ None | ⭐⭐⭐⭐ Very Low | ⭐ High |
-| **Throughput** | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐ Moderate |
-| **Complexity** | ⭐⭐⭐ Moderate | ⭐⭐⭐⭐ Low | ⭐⭐⭐⭐⭐ Very Low |
-| **Real-world Use** | ✅ Yes (Standard) | ⚠️ Rare | ❌ No |
-| **Best Use Case** | Production systems, high traffic | Variable traffic patterns | Education, low traffic |
-
-### When to Use Each Algorithm
-
-- **SCAN Algorithm** ⭐: 
-  - **Recommended for**: Office buildings, hotels, residential buildings, any production system
-  - **Why**: Industry standard with best balance of fairness, predictability, and starvation prevention
-  - **Guarantees**: Bounded wait time for all floors, no starvation ever
-  - **Trade-off**: Occasionally travels to empty extremes (top/bottom floor)
-
-- **LOOK Algorithm**: 
-  - **Best for**: Buildings with variable or low traffic patterns
-  - **Why**: More efficient than SCAN by avoiding unnecessary trips to extremes
-  - **Strengths**: Excellent throughput, good fairness, adaptive behavior
-  - **Trade-off**: Slightly less predictable than SCAN
-
-- **SSTF Algorithm**:
-  - **Best for**: Educational purposes, demonstrating starvation problems
-  - **Why**: Simple to understand but shows real-world scheduling pitfalls
-  - **Caution**: Can cause indefinite waiting (starvation) for distant floors
-  - **Use case**: Small buildings (< 10 floors) with very low traffic only
-
-## 🎓 Educational Value
-
-This simulator is ideal for:
-- **Computer Science Education**: 
-  - Teaching scheduling algorithms and operating systems concepts
-  - Demonstrating queue management and state machines
-  - Understanding time complexity and optimization
-- **Algorithm Analysis**: 
-  - Comparing performance under different scenarios
-  - Analyzing trade-offs between efficiency and fairness
-  - Studying starvation problems and solutions
-- **System Design**: 
-  - Understanding real-world elevator optimization
-  - Learning about concurrent system management
-  - Exploring timing and synchronization challenges
-- **Human-Computer Interaction**: 
-  - Studying user interface design for complex systems
-  - Analyzing visualization techniques for system state
-  - Exploring interaction patterns for control systems
-
-### Learning Outcomes
-- Understand how scheduling algorithms affect system performance
-- Learn to analyze algorithm efficiency and fairness
-- Gain insight into real-world system constraints (timing, state management)
-- Develop skills in interactive visualization and user feedback
-
-## 🚀 Deployment
-
-### Manual Deployment to GitHub Pages
-
-Deploy the application to GitHub Pages with a single command:
-
+Deploy to GitHub Pages:
 ```bash
 npm run deploy
 ```
 
-This will:
-1. Build the project (`npm run build`)
-2. Deploy the `dist` folder to the `gh-pages` branch
-3. Make it available at: `https://phatpham9.github.io/simple-elevator-simulator/`
-
-### Build for Production
-
-To build the project without deploying:
-
+Build for production:
 ```bash
 npm run build
 ```
 
-The optimized production build will be in the `dist` folder.
+## License
 
-### Preview Production Build
+MIT License
 
-To preview the production build locally:
+## Acknowledgments
 
-```bash
-npm run preview
-```
-
-## 📝 License
-
-MIT License - See LICENSE file for details. This project is available for educational and commercial use.
-
-## 🙏 Acknowledgments
-
-> **Note:** Initial inspiration from [arunsai63/SmartLift](https://github.com/arunsai63/SmartLift)
-
-## 🤝 Contributing
-
-Contributions are welcome! Here are some ways you can contribute:
-
-### Algorithm Contributions
-- Implement new scheduling algorithms (SCAN, C-LOOK, Destination Dispatch, etc.)
-- Optimize existing algorithm performance
-- Add algorithm comparison metrics
-
-### Feature Enhancements
-- Add more statistics and analytics
-- Implement advanced visualizations
-- Add export/import functionality for scenarios
-- Create preset scenarios for testing
-
-### Documentation
-- Improve algorithm explanations
-- Add more usage examples
-- Translate documentation to other languages
-- Create video tutorials
-
-### Bug Reports & Feature Requests
-- Report bugs with detailed reproduction steps
-- Suggest new features with use cases
-- Provide feedback on UX/UI improvements
-
-To contribute:
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📧 Contact
-
-For questions or feedback, please open an issue on GitHub.
-
----
-
-Built with ❤️ for learning and exploration
+Initial inspiration from [arunsai63/SmartLift](https://github.com/arunsai63/SmartLift)
