@@ -408,33 +408,6 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
         })
     }, [numFloors, numElevators])
 
-    // Call an elevator (add to pending calls)
-    const callElevator = useCallback((floor, direction) => {
-        if (!calls.some(c => c.floor === floor && c.direction === direction)) {
-            const newCall = { 
-                id: Date.now(), 
-                floor, 
-                direction,
-                timestamp: Date.now()
-            }
-            setCalls(prev => [...prev, newCall])
-            
-            // If in auto mode, immediately assign to best elevator
-            if (isAutoMode) {
-                const algorithm = getAlgorithm(schedulingMode)
-                const bestElevatorId = algorithm(elevatorsRef.current, floor, direction, numFloors)
-                if (bestElevatorId !== null) {
-                    // Use a small timeout to ensure state is updated
-                    setTimeout(() => {
-                        addToElevatorQueue(bestElevatorId, floor, direction, newCall.timestamp)
-                        setCalls(prev => prev.filter(c => c.id !== newCall.id))
-                    }, 50)
-                }
-            }
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [calls, isAutoMode, schedulingMode, numFloors])
-
     // Add a floor to an elevator's queue
     const addToElevatorQueue = useCallback((elevatorId, floor, callDirection = null, callTimestamp = null) => {
         setElevators(prev =>
@@ -451,6 +424,12 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                 // Check if this floor is already in queue
                 if (e.queue.some(q => q.floor === floor)) {
                     return e // Don't add duplicates
+                }
+                
+                // Validate floor is within bounds
+                if (floor < 1 || floor > numFloors) {
+                    console.error(`Invalid floor ${floor}. Must be between 1 and ${numFloors}`)
+                    return e // Don't add invalid floor
                 }
                 
                 // Get floor numbers for algorithm
@@ -506,7 +485,35 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                 }
             })
         )
-    }, [schedulingMode, ensureSCANExtreme, scheduleNextTransition])
+    }, [schedulingMode, numFloors, ensureSCANExtreme, scheduleNextTransition])
+
+    // Call an elevator (add to pending calls)
+    const callElevator = useCallback((floor, direction) => {
+        if (!calls.some(c => c.floor === floor && c.direction === direction)) {
+            const newCall = { 
+                id: Date.now(), 
+                floor, 
+                direction,
+                timestamp: Date.now()
+            }
+            
+            // If in auto mode, immediately assign to best elevator
+            if (isAutoMode) {
+                const algorithm = getAlgorithm(schedulingMode)
+                const bestElevatorId = algorithm(elevatorsRef.current, floor, direction, numFloors)
+                if (bestElevatorId !== null) {
+                    // Assign immediately without adding to calls list
+                    addToElevatorQueue(bestElevatorId, floor, direction, newCall.timestamp)
+                } else {
+                    // No elevator available, add to pending calls
+                    setCalls(prev => [...prev, newCall])
+                }
+            } else {
+                // Manual mode: add to pending calls
+                setCalls(prev => [...prev, newCall])
+            }
+        }
+    }, [calls, isAutoMode, schedulingMode, numFloors, addToElevatorQueue])
 
     // Move an elevator to a specific floor (manual control)
     const moveElevator = useCallback((elevatorId, targetFloor) => {
