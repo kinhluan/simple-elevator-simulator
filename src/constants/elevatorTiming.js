@@ -21,6 +21,7 @@ export const ELEVATOR_TIMING = {
     MAX_ADDITIONAL_PASSENGERS: 4,          // Random additional passengers (0-4)
     
     // Other delays
+    CALL_ASSIGNMENT_DELAY: 1000,           // 1 second delay to assign call to elevator (algorithm processing)
     DIRECTION_CHANGE_DELAY: 1000,          // 1 second delay when changing direction
     ARRIVAL_SETTLING_TIME: 1000,           // 1 second to settle after stopping (matches CSS transition)
 }

@@ -13,15 +13,66 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
     const [elevators, setElevators] = useState([])
     const [calls, setCalls] = useState([])
     
+    // Performance tracking state
+    const [performanceMetrics, setPerformanceMetrics] = useState({
+        completedCalls: [],
+        totalWaitTime: 0,
+        callsServed: 0,
+        sessionStartTime: Date.now()
+    })
+    
     // Merge custom timing config with defaults
     const timing = {
         floorTravelTime: timingConfig.floorTravelTime ?? ELEVATOR_TIMING.FLOOR_TRAVEL_TIME,
         doorOpenTime: timingConfig.doorOpenTime ?? ELEVATOR_TIMING.DOOR_OPEN_TIME,
         doorHoldTime: timingConfig.doorHoldTime ?? ELEVATOR_TIMING.DOOR_HOLD_TIME,
         doorCloseTime: timingConfig.doorCloseTime ?? ELEVATOR_TIMING.DOOR_CLOSE_TIME,
+        callAssignmentDelay: timingConfig.callAssignmentDelay ?? ELEVATOR_TIMING.CALL_ASSIGNMENT_DELAY,
     }
     
     const isAutoMode = schedulingMode !== 'manual'
+
+    // Helper function to update elevator performance stats
+    const updateElevatorStats = (elevator, updates) => {
+        const now = Date.now()
+        const timeSinceLastChange = now - (elevator.lastStateChangeTime || now)
+        
+        // Update time in previous state
+        let timeInState = { ...elevator.timeInState }
+        if (elevator.operationalState === ELEVATOR_STATES.IDLE) {
+            timeInState.idle += timeSinceLastChange
+        } else if (elevator.operationalState === ELEVATOR_STATES.MOVING) {
+            timeInState.moving += timeSinceLastChange
+        } else {
+            // ARRIVING, DOORS_OPENING, DOORS_OPEN, DOORS_CLOSING
+            timeInState.serving += timeSinceLastChange
+        }
+        
+        // Track direction changes
+        let directionChanges = elevator.directionChanges || 0
+        if (updates.direction && 
+            updates.direction !== 'idle' && 
+            elevator.lastDirection !== 'idle' && 
+            elevator.lastDirection !== updates.direction) {
+            directionChanges++
+        }
+        
+        // Track floors traveled
+        let floorsTravel = elevator.floorsTravel || 0
+        if (updates.currentFloor && updates.currentFloor !== elevator.currentFloor) {
+            floorsTravel += Math.abs(updates.currentFloor - elevator.currentFloor)
+        }
+        
+        return {
+            ...elevator,
+            ...updates,
+            timeInState,
+            directionChanges,
+            floorsTravel,
+            lastStateChangeTime: now,
+            lastDirection: updates.direction || elevator.direction
+        }
+    }
 
     // Initialize/reset elevators when configuration changes
     useEffect(() => {
@@ -35,16 +86,39 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                 operationalState: ELEVATOR_STATES.IDLE, // New: detailed state for door operations
                 queue: [], // Queue of {floor, callDirection} objects
                 doorProgress: 0, // New: for door animation (0-100)
-                passengerCount: 0 // Number of passengers boarding/alighting
+                passengerCount: 0, // Number of passengers boarding/alighting
+                // Performance tracking
+                tripsCompleted: 0,
+                floorsTravel: 0,
+                directionChanges: 0,
+                timeInState: {
+                    idle: 0,
+                    moving: 0,
+                    serving: 0 // doors opening/open/closing
+                },
+                lastStateChangeTime: Date.now(),
+                lastDirection: 'idle'
             }))
         )
         setCalls([])
+        // Reset performance metrics on configuration change
+        setPerformanceMetrics({
+            completedCalls: [],
+            totalWaitTime: 0,
+            callsServed: 0,
+            sessionStartTime: Date.now()
+        })
     }, [numFloors, numElevators])
 
     // Call an elevator (add to queue)
     const callElevator = (floor, direction) => {
         if (!calls.some(c => c.floor === floor && c.direction === direction)) {
-            const newCall = { id: Date.now(), floor, direction }
+            const newCall = { 
+                id: Date.now(), 
+                floor, 
+                direction,
+                timestamp: Date.now() // Track when call was created
+            }
             setCalls(prev => [...prev, newCall])
             
             // If in auto mode, immediately assign to best elevator
@@ -53,22 +127,26 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                     const algorithm = getAlgorithm(schedulingMode)
                     const bestElevatorId = algorithm(elevators, floor, direction)
                     if (bestElevatorId !== null) {
-                        addToElevatorQueue(bestElevatorId, floor, direction)
+                        addToElevatorQueue(bestElevatorId, floor, direction, newCall.timestamp)
                         setCalls(prev => prev.filter(c => c.id !== newCall.id))
                     }
-                }, 100) // Small delay to ensure state is updated
+                }, timing.callAssignmentDelay) // Use configurable delay
             }
         }
     }
 
     // Add a floor to an elevator's queue
-    const addToElevatorQueue = (elevatorId, floor, callDirection = null) => {
+    const addToElevatorQueue = (elevatorId, floor, callDirection = null, callTimestamp = null) => {
         setElevators(prev =>
             prev.map(e => {
                 if (e.id !== elevatorId) return e
 
-                // Create queue entry with floor and direction
-                const queueEntry = callDirection ? { floor, callDirection } : { floor, callDirection: null }
+                // Create queue entry with floor, direction, and timestamp
+                const queueEntry = { 
+                    floor, 
+                    callDirection: callDirection || null,
+                    timestamp: callTimestamp || Date.now() // Track when added to queue
+                }
                 
                 // For display and algorithm purposes, extract just the floor numbers
                 const queueFloors = e.queue.map(q => q.floor)
@@ -166,7 +244,7 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                         direction: targetFloor > e.currentFloor ? 'up' : 'down',
                         isMoving: true,
                         operationalState: ELEVATOR_STATES.MOVING,
-                        queue: [{ floor: targetFloor, callDirection: null }]
+                        queue: [{ floor: targetFloor, callDirection: null, timestamp: Date.now() }]
                     }
                     : e
             )
@@ -219,18 +297,16 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                         // Check if we've reached the target floor
                         if (nextFloor === targetFloor) {
                             // Transition to ARRIVING state
-                            return {
-                                ...e,
+                            return updateElevatorStats(e, {
                                 currentFloor: nextFloor,
                                 operationalState: ELEVATOR_STATES.ARRIVING
-                            }
+                            })
                         }
 
                         // Continue moving toward target
-                        return {
-                            ...e,
+                        return updateElevatorStats(e, {
                             currentFloor: nextFloor
-                        }
+                        })
                     })
                 )
             }, timeToNextFloor)
@@ -240,11 +316,10 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
         const handleArrivingState = (elevator) => {
             return setTimeout(() => {
                 setElevators(prev =>
-                    prev.map(e => e.id === elevator.id ? {
-                        ...e,
+                    prev.map(e => e.id === elevator.id ? updateElevatorStats(e, {
                         operationalState: ELEVATOR_STATES.DOORS_OPENING,
                         doorProgress: 0
-                    } : e)
+                    }) : e)
                 )
             }, ELEVATOR_TIMING.ARRIVAL_SETTLING_TIME)
         }
@@ -257,12 +332,11 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                     Math.floor(Math.random() * (ELEVATOR_TIMING.MAX_ADDITIONAL_PASSENGERS + 1))
                 
                 setElevators(prev =>
-                    prev.map(e => e.id === elevator.id ? {
-                        ...e,
+                    prev.map(e => e.id === elevator.id ? updateElevatorStats(e, {
                         operationalState: ELEVATOR_STATES.DOORS_OPEN,
                         doorProgress: 100,
                         passengerCount: passengerCount
-                    } : e)
+                    }) : e)
                 )
             }, timing.doorOpenTime)
         }
@@ -274,10 +348,9 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
             
             return setTimeout(() => {
                 setElevators(prev =>
-                    prev.map(e => e.id === elevator.id ? {
-                        ...e,
+                    prev.map(e => e.id === elevator.id ? updateElevatorStats(e, {
                         operationalState: ELEVATOR_STATES.DOORS_CLOSING
-                    } : e)
+                    }) : e)
                 )
             }, holdTime)
         }
@@ -293,6 +366,24 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                         
                         // Get the call information for the reached floor
                         const reachedCall = e.queue[0]
+                        
+                        // Record wait time if we have timestamp
+                        if (reachedCall && reachedCall.timestamp) {
+                            const waitTime = Date.now() - reachedCall.timestamp
+                            setPerformanceMetrics(prevMetrics => ({
+                                completedCalls: [...prevMetrics.completedCalls, {
+                                    floor: reachedCall.floor,
+                                    waitTime,
+                                    timestamp: Date.now()
+                                }].slice(-100), // Keep last 100 calls
+                                totalWaitTime: prevMetrics.totalWaitTime + waitTime,
+                                callsServed: prevMetrics.callsServed + 1,
+                                sessionStartTime: prevMetrics.sessionStartTime
+                            }))
+                        }
+                        
+                        // Increment trip counter
+                        const tripsCompleted = (e.tripsCompleted || 0) + 1
                         
                         // Remove reached floor from queue
                         let newQueue = e.queue.slice(1)
@@ -355,49 +446,49 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
                             // Add a small delay for direction change
                             setTimeout(() => {
                                 setElevators(prev2 => 
-                                    prev2.map(e2 => e2.id === elevator.id ? {
-                                        ...e2,
+                                    prev2.map(e2 => e2.id === elevator.id ? updateElevatorStats(e2, {
                                         direction: newDirection,
                                         targetFloor: nextTarget,
                                         operationalState: ELEVATOR_STATES.MOVING,
-                                        doorProgress: 0
-                                    } : e2)
+                                        doorProgress: 0,
+                                        tripsCompleted
+                                    }) : e2)
                                 )
                             }, ELEVATOR_TIMING.DIRECTION_CHANGE_DELAY)
 
-                            return {
-                                ...e,
+                            return updateElevatorStats(e, {
                                 queue: newQueue,
                                 doorProgress: 0,
-                                passengerCount: 0
-                            }
+                                passengerCount: 0,
+                                tripsCompleted
+                            })
                         }
 
                         // If we have a next target, continue moving
                         if (nextTarget !== null) {
-                            return {
-                                ...e,
+                            return updateElevatorStats(e, {
                                 targetFloor: nextTarget,
                                 direction: newDirection,
                                 queue: newQueue,
                                 isMoving: true,
                                 operationalState: ELEVATOR_STATES.MOVING,
                                 doorProgress: 0,
-                                passengerCount: 0
-                            }
+                                passengerCount: 0,
+                                tripsCompleted
+                            })
                         }
 
                         // No more floors, become idle
-                        return {
-                            ...e,
+                        return updateElevatorStats(e, {
                             targetFloor: null,
                             direction: 'idle',
                             isMoving: false,
                             operationalState: ELEVATOR_STATES.IDLE,
                             queue: [],
                             doorProgress: 0,
-                            passengerCount: 0
-                        }
+                            passengerCount: 0,
+                            tripsCompleted
+                        })
                     })
                 )
             }, timing.doorCloseTime)
@@ -436,9 +527,27 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
         if (!call) return
 
         if (isAutoMode) {
-            addToElevatorQueue(elevatorId, call.floor)
+            addToElevatorQueue(elevatorId, call.floor, call.direction, call.timestamp)
         } else {
-            moveElevator(elevatorId, call.floor)
+            // In manual mode, we still track timestamp by adding to queue
+            const elevator = elevators.find(e => e.id === elevatorId)
+            if (elevator && !elevator.isMoving) {
+                const targetFloor = call.floor
+                setElevators(prev =>
+                    prev.map(e =>
+                        e.id === elevatorId
+                            ? {
+                                ...e,
+                                targetFloor,
+                                direction: targetFloor > e.currentFloor ? 'up' : 'down',
+                                isMoving: true,
+                                operationalState: ELEVATOR_STATES.MOVING,
+                                queue: [{ floor: targetFloor, callDirection: call.direction, timestamp: call.timestamp }]
+                            }
+                            : e
+                    )
+                )
+            }
         }
         
         setCalls(prev => prev.filter(c => c.id !== callId))
@@ -453,7 +562,7 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
         calls.forEach(call => {
             const bestElevatorId = algorithm(elevators, call.floor, call.direction)
             if (bestElevatorId !== null) {
-                addToElevatorQueue(bestElevatorId, call.floor)
+                addToElevatorQueue(bestElevatorId, call.floor, call.direction, call.timestamp)
             }
         })
         
@@ -467,6 +576,7 @@ export const useElevatorSystem = (numFloors, numElevators, schedulingMode = 'man
         moveElevator,
         assignCall,
         autoAssignCalls,
-        addToElevatorQueue
+        addToElevatorQueue,
+        performanceMetrics
     }
 }

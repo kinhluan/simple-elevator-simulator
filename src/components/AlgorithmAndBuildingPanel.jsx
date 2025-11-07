@@ -195,6 +195,25 @@ const AlgorithmAndBuildingPanel = ({
                         />
                         <p className="text-xs text-slate-500 mt-1">Time to close doors (500-5000ms)</p>
                     </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                            🎯 Call Assignment Delay (ms)
+                        </label>
+                        <input
+                            type="number"
+                            min="0"
+                            max="5000"
+                            step="100"
+                            value={timingConfig.callAssignmentDelay}
+                            onChange={e => setTimingConfig({
+                                ...timingConfig,
+                                callAssignmentDelay: Math.min(5000, Math.max(0, parseInt(e.target.value) || 1000))
+                            })}
+                            className="w-full border-2 border-slate-300 rounded-lg px-3 py-2 text-slate-700 font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                        />
+                        <p className="text-xs text-slate-500 mt-1">Algorithm processing time (0-5000ms)</p>
+                    </div>
                 </div>
             </div>
         </div>

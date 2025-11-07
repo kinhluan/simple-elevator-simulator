@@ -15,7 +15,8 @@ const RightSidebar = ({
     setNumElevators,
     timingConfig,
     setTimingConfig,
-    assignCall
+    assignCall,
+    performanceMetrics
 }) => {
     const [activeTab, setActiveTab] = useState('statistics')
 
@@ -64,6 +65,7 @@ const RightSidebar = ({
                             isAutoMode={isAutoMode}
                             assignCall={assignCall}
                             compact={true}
+                            performanceMetrics={performanceMetrics}
                         />
                     </div>
                 )}

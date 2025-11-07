@@ -17,10 +17,11 @@ const Elevator = () => {
         doorOpenTime: ELEVATOR_TIMING.DOOR_OPEN_TIME,
         doorHoldTime: ELEVATOR_TIMING.DOOR_HOLD_TIME,
         doorCloseTime: ELEVATOR_TIMING.DOOR_CLOSE_TIME,
+        callAssignmentDelay: ELEVATOR_TIMING.CALL_ASSIGNMENT_DELAY,
     })
 
     // Use custom hook for elevator system logic
-    const { elevators, calls, callElevator, moveElevator, assignCall } = useElevatorSystem(
+    const { elevators, calls, callElevator, moveElevator, assignCall, performanceMetrics } = useElevatorSystem(
         numFloors, 
         numElevators, 
         schedulingMode,
@@ -99,6 +100,7 @@ const Elevator = () => {
                     timingConfig={timingConfig}
                     setTimingConfig={setTimingConfig}
                     assignCall={assignCall}
+                    performanceMetrics={performanceMetrics}
                 />
             </div>
         </div>

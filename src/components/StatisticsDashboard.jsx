@@ -1,13 +1,49 @@
 import { useEffect, useState } from 'react'
 import { getElevatorColorClass } from '../utils/elevatorUtils'
 
-const StatisticsDashboard = ({ elevators, calls, isAutoMode, assignCall, compact = false }) => {
+const StatisticsDashboard = ({ elevators, calls, isAutoMode, assignCall, compact = false, performanceMetrics }) => {
     const [stats, setStats] = useState({
         totalTrips: 0,
         activeElevators: 0,
         pendingCalls: 0,
         idleElevators: 0
     })
+
+    // Calculate average wait time
+    const avgWaitTime = performanceMetrics && performanceMetrics.callsServed > 0
+        ? (performanceMetrics.totalWaitTime / performanceMetrics.callsServed / 1000).toFixed(1)
+        : '0.0'
+    
+    // Calculate overall utilization (moving + serving time vs total time)
+    const totalUtilization = elevators.length > 0
+        ? elevators.reduce((sum, e) => {
+            const totalTime = (e.timeInState?.idle || 0) + (e.timeInState?.moving || 0) + (e.timeInState?.serving || 0)
+            if (totalTime === 0) return sum
+            const activeTime = (e.timeInState?.moving || 0) + (e.timeInState?.serving || 0)
+            return sum + (activeTime / totalTime)
+        }, 0) / elevators.length * 100
+        : 0
+    
+    // Calculate service quality score (% of calls served within 60 seconds)
+    const serviceQualityScore = performanceMetrics && performanceMetrics.callsServed > 0
+        ? (performanceMetrics.completedCalls.filter(c => c.waitTime <= 60000).length / 
+           Math.min(performanceMetrics.completedCalls.length, performanceMetrics.callsServed) * 100).toFixed(0)
+        : '0'
+    
+    // Calculate throughput (calls per minute)
+    const throughput = performanceMetrics && performanceMetrics.sessionStartTime
+        ? (() => {
+            const minutesElapsed = (Date.now() - performanceMetrics.sessionStartTime) / 60000
+            return minutesElapsed > 0 
+                ? (performanceMetrics.callsServed / minutesElapsed).toFixed(1)
+                : '0.0'
+        })()
+        : '0.0'
+    
+    // Calculate total stats across all elevators
+    const totalTripsCompleted = elevators.reduce((sum, e) => sum + (e.tripsCompleted || 0), 0)
+    const totalFloorsTravel = elevators.reduce((sum, e) => sum + (e.floorsTravel || 0), 0)
+    const totalDirectionChanges = elevators.reduce((sum, e) => sum + (e.directionChanges || 0), 0)
 
     useEffect(() => {
         const activeElevators = elevators.filter(e => e.isMoving).length
@@ -62,21 +98,95 @@ const StatisticsDashboard = ({ elevators, calls, isAutoMode, assignCall, compact
                     </div>
                 </div>
 
+                {/* Performance Metrics */}
+                <div className="space-y-2">
+                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-3">
+                        <div className="flex items-center justify-between mb-2">
+                            <span className="text-lg">⏱️</span>
+                            <span className="text-xs text-purple-600 font-semibold">
+                                {performanceMetrics?.callsServed || 0} served
+                            </span>
+                        </div>
+                        <div className="text-xl font-bold text-purple-700">{avgWaitTime}s</div>
+                        <div className="text-xs font-semibold text-slate-700">Avg Wait Time</div>
+                        <div className="text-xs text-slate-500 mt-1">
+                            Target: {'<'}60s
+                        </div>
+                    </div>
+                    
+                    <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg p-3">
+                        <div className="flex items-center justify-between mb-2">
+                            <span className="text-lg">✨</span>
+                            <span className={`text-xs font-semibold ${
+                                parseFloat(serviceQualityScore) >= 80 ? 'text-green-600' :
+                                parseFloat(serviceQualityScore) >= 60 ? 'text-yellow-600' :
+                                'text-red-600'
+                            }`}>
+                                {parseFloat(serviceQualityScore) >= 80 ? 'Excellent' :
+                                 parseFloat(serviceQualityScore) >= 60 ? 'Good' :
+                                 parseFloat(serviceQualityScore) >= 40 ? 'Fair' :
+                                 'Poor'}
+                            </span>
+                        </div>
+                        <div className="text-xl font-bold text-emerald-700">{serviceQualityScore}%</div>
+                        <div className="text-xs font-semibold text-slate-700">Service Quality</div>
+                        <div className="text-xs text-slate-500 mt-1">
+                            Calls {'<'}60s
+                        </div>
+                    </div>
+                </div>
+
                 {/* System Info */}
                 <div className="grid grid-cols-2 gap-2 p-2 bg-slate-50 rounded-lg border border-slate-200">
                     <div className="text-center">
-                        <div className="text-xs text-slate-500">Efficiency</div>
+                        <div className="text-xs text-slate-500">Utilization</div>
                         <div className="text-sm font-bold text-slate-700">
-                            {elevators.length > 0 
-                                ? Math.round((stats.activeElevators / elevators.length) * 100)
-                                : 0}%
+                            {totalUtilization.toFixed(0)}%
                         </div>
                     </div>
                     <div className="text-center">
                         <div className="text-xs text-slate-500">Status</div>
-                        <div className="text-sm font-bold text-slate-700">
-                            {stats.pendingCalls > 0 ? '🟡 Busy' : '🟢 Ready'}
+                        <div className="text-sm font-bold">
+                            {stats.pendingCalls > 0 ? (
+                                <span className="text-blue-600">🔵 Active</span>
+                            ) : (
+                                <span className="text-green-600">🟢 Ready</span>
+                            )}
                         </div>
+                    </div>
+                </div>
+
+                {/* Additional Metrics */}
+                <div className="grid grid-cols-3 gap-2">
+                    <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-2 text-center">
+                        <div className="text-lg">🎯</div>
+                        <div className="text-xl font-bold text-indigo-700">{totalTripsCompleted}</div>
+                        <div className="text-xs font-semibold text-slate-700">Trips</div>
+                    </div>
+                    <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-2 text-center">
+                        <div className="text-lg">📏</div>
+                        <div className="text-xl font-bold text-cyan-700">{totalFloorsTravel}</div>
+                        <div className="text-xs font-semibold text-slate-700">Floors</div>
+                    </div>
+                    <div className="bg-rose-50 border border-rose-200 rounded-lg p-2 text-center">
+                        <div className="text-lg">🔄</div>
+                        <div className="text-xl font-bold text-rose-700">{totalDirectionChanges}</div>
+                        <div className="text-xs font-semibold text-slate-700">Changes</div>
+                    </div>
+                </div>
+
+                {/* Throughput Metric */}
+                <div className="bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-200 rounded-lg p-3">
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-lg">⚡</span>
+                        <span className="text-xs text-violet-600 font-semibold">
+                            Live
+                        </span>
+                    </div>
+                    <div className="text-xl font-bold text-violet-700">{throughput}</div>
+                    <div className="text-xs font-semibold text-slate-700">Calls per Minute</div>
+                    <div className="text-xs text-slate-500 mt-1">
+                        Throughput rate
                     </div>
                 </div>
 
