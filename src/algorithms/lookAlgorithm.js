@@ -62,61 +62,21 @@ export const lookAlgorithm = (elevators, callFloor, callDirection) => {
     let lowestCost = Infinity
 
     for (const elevator of elevators) {
-        // Skip elevators that are busy with incompatible calls
-        if (elevator.direction !== 'idle' && elevator.queue && elevator.queue.length > 0) {
-            // Check the call directions in the queue
-            const queueHasDirectionCalls = elevator.queue.some(q => q.callDirection !== null && q.callDirection !== undefined)
-            
-            if (queueHasDirectionCalls) {
-                // Find the primary direction of calls in queue
-                const queueCallDirections = elevator.queue
-                    .filter(q => q.callDirection)
-                    .map(q => q.callDirection)
-                
-                // If queue has calls in a specific direction, only accept same-direction calls
-                if (queueCallDirections.length > 0) {
-                    const primaryDirection = queueCallDirections[0] // First call's direction
-                    
-                    // If incoming call direction doesn't match queue's direction, skip
-                    if (callDirection && primaryDirection !== callDirection) {
-                        continue // Skip this elevator
-                    }
-                }
-            }
-            
-            // Additional check: for LOOK, only accept calls ahead in the direction of travel
-            if (elevator.direction === 'up') {
-                // Elevator going up - only accept calls that are ahead
-                if (callFloor < elevator.currentFloor) {
-                    continue // Skip this elevator - call is behind
-                }
-                // If call is UP and ahead, or DOWN but we'll get it on way up, accept
-                // But if queue has DOWN calls, only accept if floor is ahead and compatible
-                if (callDirection === 'down' && callFloor > elevator.currentFloor) {
-                    // DOWN call ahead while going up - only if no other commitments
-                    const hasUpCalls = elevator.queue.some(q => q.callDirection === 'up')
-                    if (hasUpCalls) {
-                        continue // Already committed to UP calls, skip this DOWN call
-                    }
-                }
-            } else if (elevator.direction === 'down') {
-                // Elevator going down - only accept calls that are ahead (below)
-                if (callFloor > elevator.currentFloor) {
-                    continue // Skip this elevator - call is behind
-                }
-                // If call is DOWN and ahead, accept
-                // But if queue has UP calls, skip DOWN calls
-                if (callDirection === 'up' && callFloor < elevator.currentFloor) {
-                    // UP call ahead (below) while going down - only if no other commitments
-                    const hasDownCalls = elevator.queue.some(q => q.callDirection === 'down')
-                    if (hasDownCalls) {
-                        continue // Already committed to DOWN calls, skip this UP call
-                    }
-                }
+        // Calculate cost for this elevator
+        const cost = calculateCost(elevator, callFloor, callDirection)
+        
+        // Skip elevators that would have extremely high cost (incompatible), 
+        // UNLESS they're the only option
+        // This allows assignment when all elevators are busy but still picks the best one
+        const isIncompatible = cost >= 1000
+        
+        if (isIncompatible) {
+            // High cost (needs reversal), but we'll still consider it
+            // Only skip if we already have a much better option
+            if (lowestCost < 1000) {
+                continue // We have a better option, skip this high-cost one
             }
         }
-
-        const cost = calculateCost(elevator, callFloor, callDirection)
         
         if (cost < lowestCost) {
             lowestCost = cost
