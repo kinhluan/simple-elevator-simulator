@@ -10,6 +10,14 @@ const AlgorithmAndBuildingPanel = ({
 }) => {
     const getAlgorithmInfo = (mode) => {
         switch (mode) {
+            case 'scan':
+                return {
+                    name: 'SCAN Algorithm',
+                    emoji: '🔄',
+                    color: 'cyan',
+                    description: 'Industry standard - moves to extremes before reversing. Best fairness and starvation prevention',
+                    badge: 'Recommended'
+                }
             case 'look':
                 return {
                     name: 'LOOK Algorithm',
@@ -45,7 +53,7 @@ const AlgorithmAndBuildingPanel = ({
                     🎛️ Algorithm Selection
                 </h3>
                 <div className="space-y-3">
-                    {['manual', 'look', 'sstf'].map((mode) => {
+                    {['manual', 'scan', 'look', 'sstf'].map((mode) => {
                         const modeInfo = getAlgorithmInfo(mode)
                         const isActive = schedulingMode === mode
                         return (

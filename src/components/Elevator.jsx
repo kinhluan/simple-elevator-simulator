@@ -45,17 +45,20 @@ const Elevator = () => {
                                 </h1>
                                 <p className="text-blue-100 text-sm mt-1">
                                     {schedulingMode === 'manual' ? '👆 Manual Mode' : 
+                                     schedulingMode === 'scan' ? '🔄 SCAN Algorithm' :
                                      schedulingMode === 'look' ? '🎯 LOOK Algorithm' : 
                                      '⚡ SSTF Algorithm'} • {numFloors} Floors • {numElevators} Elevators
                                 </p>
                             </div>
                             <div className="text-right">
                                 <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                    schedulingMode === 'scan' ? 'bg-cyan-500' :
                                     schedulingMode === 'look' ? 'bg-green-500' :
                                     schedulingMode === 'sstf' ? 'bg-purple-500' :
                                     'bg-blue-500'
                                 } shadow-lg`}>
                                     {schedulingMode === 'manual' ? 'Manual' : 
+                                     schedulingMode === 'scan' ? 'Recommended' :
                                      schedulingMode === 'look' ? 'Optimized' : 
                                      'Fast Response'}
                                 </span>

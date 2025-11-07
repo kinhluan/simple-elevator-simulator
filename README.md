@@ -33,17 +33,29 @@ This interactive web application simulates a multi-elevator system in a building
 
 ### Scheduling Algorithms
 
-#### 1. **LOOK Algorithm** (Recommended)
-- Elevators move in one direction, serving all requests in that direction
-- Reverses direction only when no more requests exist ahead
-- Optimal for overall system efficiency
-- Similar to real-world elevator systems
+#### 1. **SCAN Algorithm** ⭐ (Recommended)
+- Elevators move in one direction until reaching the extreme end (top/bottom floor)
+- Then reverses direction and continues with the full sweep
+- Industry standard algorithm used in real-world elevator systems
+- **Best for**: Production systems requiring fairness and predictability
+- **Strengths**: Excellent starvation prevention, bounded wait times, fair distribution
+- **Trade-offs**: May go to empty extremes occasionally
 
-#### 2. **SSTF (Shortest Seek Time First)**
+#### 2. **LOOK Algorithm**
+- Elevators move in one direction, serving all requests in that direction
+- Reverses direction only when no more requests exist ahead (doesn't go to extreme)
+- Optimal for overall system efficiency with variable traffic
+- **Best for**: Buildings with variable traffic patterns
+- **Strengths**: Efficient, good starvation prevention, flexible
+- **Trade-offs**: Less predictable than SCAN
+
+#### 3. **SSTF (Shortest Seek Time First)**
 - Always serves the nearest floor next, regardless of direction
 - Minimizes immediate travel distance
 - Fast response for nearby calls
-- May cause starvation for distant floors
+- **Best for**: Educational purposes, low traffic, small buildings
+- **Strengths**: Fast immediate response, simple logic
+- **Trade-offs**: May cause starvation for distant floors, unfair under high load
 
 ### User Interface Components
 - **Building Visualization**: 
@@ -99,14 +111,20 @@ npm run dev
 3. Click on an elevator button to manually assign the call
 4. You can also send elevators directly to specific floors using the floor buttons
 
+### Automatic Mode (SCAN) ⭐
+1. Select "SCAN Algorithm" from the Config panel
+2. Click call buttons - elevators are automatically assigned
+3. Watch elevators complete full sweeps to top/bottom before reversing
+4. Most predictable wait times and fairest distribution
+
 ### Automatic Mode (LOOK)
-1. Select "Auto - LOOK Algorithm" from the Scheduling Mode dropdown
+1. Select "LOOK Algorithm" from the Config panel
 2. Click call buttons - elevators are automatically assigned
 3. Watch the queue display to see optimized stop sequences
 4. Elevators maintain direction until no more requests ahead
 
 ### Automatic Mode (SSTF)
-1. Select "Auto - SSTF Algorithm" from the Scheduling Mode dropdown
+1. Select "SSTF Algorithm" from the Config panel
 2. Elevators always move to the nearest floor next
 3. Observe how it handles clustered vs. distributed calls
 4. Notice potential starvation of distant floors with high traffic
@@ -132,6 +150,7 @@ simple-elevator-simulator/
 │   ├── index.css                         # Global styles
 │   ├── algorithms/
 │   │   ├── elevatorScheduler.js         # Main algorithm dispatcher
+│   │   ├── scanAlgorithm.js             # SCAN algorithm implementation (recommended)
 │   │   ├── lookAlgorithm.js             # LOOK algorithm implementation
 │   │   └── sstfAlgorithm.js             # SSTF algorithm implementation
 │   ├── components/
@@ -197,6 +216,7 @@ import { newAlgorithm, insertIntoQueueNew } from './newAlgorithm'
 
 export const getAlgorithm = (mode) => {
     switch (mode) {
+        case 'scan': return scanAlgorithm
         case 'new': return newAlgorithm
         // existing cases...
     }
@@ -204,6 +224,7 @@ export const getAlgorithm = (mode) => {
 
 export const insertIntoQueue = (mode) => {
     switch (mode) {
+        case 'scan': return insertIntoQueueScan
         case 'new': return insertIntoQueueNew
         // existing cases...
     }
@@ -212,7 +233,20 @@ export const insertIntoQueue = (mode) => {
 
 3. **Add to UI** (`src/components/AlgorithmAndBuildingPanel.jsx`):
 ```jsx
-<option value="new">Auto - New Algorithm</option>
+// Add to getAlgorithmInfo switch
+case 'new':
+    return {
+        name: 'New Algorithm',
+        emoji: '✨',
+        color: 'indigo',
+        description: 'Your algorithm description',
+        badge: 'Experimental'
+    }
+
+// Add to the algorithms array
+{['manual', 'scan', 'look', 'sstf', 'new'].map((mode) => {
+    // ... button rendering
+})}
 ```
 
 4. **Update instructions** in `InstructionsPanel.jsx` with algorithm description and usage
@@ -228,24 +262,39 @@ export const insertIntoQueue = (mode) => {
 
 ## 📊 Algorithm Comparison
 
-| Algorithm | Direction Awareness | Efficiency | Fairness | Starvation Risk | Best Use Case |
-|-----------|-------------------|------------|----------|----------------|---------------|
-| **LOOK** | ✅ Yes | High | High | Low | General purpose, realistic systems |
-| **SSTF** | ❌ No | Medium-High | Low | High | Quick response, low traffic, nearby calls |
+| Feature | SCAN ⭐ | LOOK | SSTF |
+|---------|--------|------|------|
+| **Direction Awareness** | ✅ Yes | ✅ Yes | ❌ No |
+| **Predictability** | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐ Fair |
+| **Fairness** | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good | ⭐⭐ Fair |
+| **Efficiency** | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐ Good |
+| **Average Wait Time** | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Best (when distributed) |
+| **Max Wait Time** | ⭐⭐⭐⭐⭐ Bounded | ⭐⭐⭐⭐ Mostly Bounded | ⭐ Unbounded |
+| **Starvation Risk** | ⭐⭐⭐⭐⭐ None | ⭐⭐⭐⭐ Very Low | ⭐ High |
+| **Throughput** | ⭐⭐⭐⭐ Very Good | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐ Moderate |
+| **Complexity** | ⭐⭐⭐ Moderate | ⭐⭐⭐⭐ Low | ⭐⭐⭐⭐⭐ Very Low |
+| **Real-world Use** | ✅ Yes (Standard) | ⚠️ Rare | ❌ No |
+| **Best Use Case** | Production systems, high traffic | Variable traffic patterns | Education, low traffic |
 
 ### When to Use Each Algorithm
 
+- **SCAN Algorithm** ⭐: 
+  - **Recommended for**: Office buildings, hotels, residential buildings, any production system
+  - **Why**: Industry standard with best balance of fairness, predictability, and starvation prevention
+  - **Guarantees**: Bounded wait time for all floors, no starvation ever
+  - **Trade-off**: Occasionally travels to empty extremes (top/bottom floor)
+
 - **LOOK Algorithm**: 
-  - Best for buildings with consistent traffic patterns
-  - Prevents starvation of distant floors
-  - More realistic behavior matching real-world elevators
-  - Recommended for most scenarios
+  - **Best for**: Buildings with variable or low traffic patterns
+  - **Why**: More efficient than SCAN by avoiding unnecessary trips to extremes
+  - **Strengths**: Excellent throughput, good fairness, adaptive behavior
+  - **Trade-off**: Slightly less predictable than SCAN
 
 - **SSTF Algorithm**:
-  - Best for buildings with clustered floors of interest
-  - Fastest immediate response time
-  - Good for low-traffic scenarios
-  - May struggle with distributed call patterns
+  - **Best for**: Educational purposes, demonstrating starvation problems
+  - **Why**: Simple to understand but shows real-world scheduling pitfalls
+  - **Caution**: Can cause indefinite waiting (starvation) for distant floors
+  - **Use case**: Small buildings (< 10 floors) with very low traffic only
 
 ## 🎓 Educational Value
 

@@ -11,14 +11,18 @@ import { lookAlgorithm, insertIntoQueueLOOK } from './lookAlgorithm'
 // Import SSTF algorithm
 import { sstfAlgorithm, insertIntoQueueSSTF } from './sstfAlgorithm'
 
+// Import SCAN algorithm
+import { scanAlgorithm, insertIntoQueueSCAN } from './scanAlgorithm'
+
 // Re-export algorithms
 export { lookAlgorithm, insertIntoQueueLOOK } from './lookAlgorithm'
 export { sstfAlgorithm, insertIntoQueueSSTF } from './sstfAlgorithm'
+export { scanAlgorithm, insertIntoQueueSCAN } from './scanAlgorithm'
 
 /**
  * Helper function to get the appropriate algorithm based on mode
  * 
- * @param {string} mode - Algorithm mode ('look', 'sstf', etc.)
+ * @param {string} mode - Algorithm mode ('look', 'sstf', 'scan', etc.)
  * @returns {Function} - The scheduling algorithm function
  */
 export const getAlgorithm = (mode) => {
@@ -27,6 +31,8 @@ export const getAlgorithm = (mode) => {
             return lookAlgorithm
         case 'sstf':
             return sstfAlgorithm
+        case 'scan':
+            return scanAlgorithm
         default:
             return lookAlgorithm
     }
@@ -35,7 +41,7 @@ export const getAlgorithm = (mode) => {
 /**
  * Helper function to get the appropriate queue insertion function
  * 
- * @param {string} mode - Algorithm mode ('look', 'sstf', etc.)
+ * @param {string} mode - Algorithm mode ('look', 'sstf', 'scan', etc.)
  * @returns {Function} - The queue insertion function
  */
 export const getQueueInserter = (mode) => {
@@ -44,6 +50,8 @@ export const getQueueInserter = (mode) => {
             return insertIntoQueueLOOK
         case 'sstf':
             return insertIntoQueueSSTF
+        case 'scan':
+            return insertIntoQueueSCAN
         default:
             return insertIntoQueueLOOK
     }
@@ -62,7 +70,7 @@ export const getQueueInserter = (mode) => {
 export const insertIntoQueue = (queue, currentFloor, direction, newFloor, mode = 'look') => {
     const inserter = getQueueInserter(mode)
     
-    // SSTF doesn't need direction, LOOK does
+    // SSTF doesn't need direction, LOOK and SCAN do
     if (mode === 'sstf') {
         return inserter(queue, currentFloor, newFloor)
     }

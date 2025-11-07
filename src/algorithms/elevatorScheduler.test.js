@@ -5,8 +5,10 @@ import {
   insertIntoQueue,
   lookAlgorithm,
   sstfAlgorithm,
+  scanAlgorithm,
   insertIntoQueueLOOK,
-  insertIntoQueueSSTF
+  insertIntoQueueSSTF,
+  insertIntoQueueSCAN
 } from '../algorithms/elevatorScheduler'
 
 describe('Elevator Scheduler', () => {
@@ -19,6 +21,11 @@ describe('Elevator Scheduler', () => {
     it('should return SSTF algorithm for "sstf" mode', () => {
       const algorithm = getAlgorithm('sstf')
       expect(algorithm).toBe(sstfAlgorithm)
+    })
+
+    it('should return SCAN algorithm for "scan" mode', () => {
+      const algorithm = getAlgorithm('scan')
+      expect(algorithm).toBe(scanAlgorithm)
     })
 
     it('should return LOOK algorithm as default for unknown mode', () => {
@@ -56,6 +63,11 @@ describe('Elevator Scheduler', () => {
     it('should return SSTF queue inserter for "sstf" mode', () => {
       const inserter = getQueueInserter('sstf')
       expect(inserter).toBe(insertIntoQueueSSTF)
+    })
+
+    it('should return SCAN queue inserter for "scan" mode', () => {
+      const inserter = getQueueInserter('scan')
+      expect(inserter).toBe(insertIntoQueueSCAN)
     })
 
     it('should return LOOK queue inserter as default for unknown mode', () => {
@@ -123,14 +135,21 @@ describe('Elevator Scheduler', () => {
         result = insertIntoQueue(result, 5, 'up', 6, 'sstf')      // distance: 1
         result = insertIntoQueue(result, 5, 'up', 8, 'sstf')      // distance: 3
         
-        // Should be sorted: 6(1), 8(3), 10(5)
-        expect(result[0]).toBe(6)
-        expect(result[1]).toBe(8)
-        expect(result[2]).toBe(10)
-      })
+      // Should be sorted: 6(1), 8(3), 10(5)
+      expect(result[0]).toBe(6)
+      expect(result[1]).toBe(8)
+      expect(result[2]).toBe(10)
     })
 
-    describe('Mode switching', () => {
+    it('should sort by distance in SCAN mode', () => {
+      const queue = [6, 10]
+      const result = insertIntoQueue(queue, 5, 'up', 8, 'scan')
+      // SCAN maintains directional order like LOOK
+      expect(result).toEqual([6, 8, 10])
+    })
+  })
+
+  describe('Mode switching', () => {
       it('should handle switching from LOOK to SSTF', () => {
         let queue = [6, 8, 10]
         
