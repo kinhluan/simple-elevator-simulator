@@ -6,10 +6,6 @@ const BuildingVisualization = ({ numFloors, numElevators, elevators, calls, call
 
     return (
         <div className="bg-white rounded-lg shadow-md border border-slate-300 overflow-hidden hover:shadow-lg transition-shadow duration-200">
-            <div className="bg-gradient-to-r from-slate-700 to-slate-800 px-4 py-3">
-                <h2 className="text-lg font-bold text-white">Building Visualization</h2>
-                <p className="text-slate-300 text-xs">Click call buttons to request an elevator</p>
-            </div>
             <div className="flex">
                 {/* Left column - floor numbers */}
                 <div className="w-20 shrink-0 border-r-2 border-slate-200 bg-slate-50">
