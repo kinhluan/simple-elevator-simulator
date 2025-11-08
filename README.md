@@ -148,7 +148,19 @@ Dưới đây là giải thích về "Starvation Risk" cho từng thuật toán:
 
 ## Triển khai
 
-Triển khai lên GitHub Pages:
+### Thiết lập GitHub Pages (Chỉ lần đầu)
+
+Để triển khai tự động qua GitHub Actions, bạn cần kích hoạt GitHub Pages thủ công:
+
+1. Vào **Settings** > **Pages** trong repository
+2. Trong phần "Build and deployment", chọn **Source**: **GitHub Actions**
+3. Lưu cài đặt
+
+Sau khi thiết lập, mỗi lần push lên nhánh `main` sẽ tự động triển khai.
+
+### Triển khai thủ công
+
+Triển khai lên GitHub Pages bằng gh-pages:
 
 ```bash
 npm run deploy
