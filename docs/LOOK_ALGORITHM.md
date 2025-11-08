@@ -43,11 +43,11 @@ Thang máy "nhìn" vào queue để quyết định:
 
 ```
 ┌─────────────────────────────────────────────┐
-│ ⚡ Efficiency (Hiệu quả): Excellent        │
-│ ✅ Fairness (Công bằng): Very Good         │
-│ 🔒 Starvation Risk: Very Low (Rất thấp)    │
-│ 📊 Predictability: Good                     │
-│ 🏢 Real-world Use: Rare (Ít dùng)          │
+│ ⚡ Hiệu quả (Efficiency) (Hiệu quả): Excellent        │
+│ ✅ Công bằng (Fairness) (Công bằng): Very Good         │
+│ 🔒 Nguy cơ bị bỏ đói (Starvation Risk): Very Low (Rất thấp)    │
+│ 📊 Khả năng dự đoán (Predictability): Good                     │
+│ 🏢 Ứng dụng thực tế (Real-world Use): Rare (Ít dùng)          │
 └─────────────────────────────────────────────┘
 ```
 
@@ -57,11 +57,11 @@ Thang máy "nhìn" vào queue để quyết định:
 |--------|------|------|
 | **Goes to extreme?** | ❌ NO | ✅ YES |
 | **Reverses when?** | No more requests ahead | At extreme |
-| **Efficiency** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| **Fairness** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| **Hiệu quả (Efficiency)** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| **Công bằng (Fairness)** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
 | **Distance traveled** | Less | More |
 
-**Key Insight**:
+**Thông Tin Chính (Key Insight)**:
 
 ```
 SCAN = "Quét toàn bộ" (Full sweep)
@@ -70,9 +70,9 @@ LOOK = "Quét thông minh" (Smart sweep)
 
 ---
 
-## 📜 Lịch Sử & Evolution
+## 📜 Lịch Sử & Tiến Hóa (Evolution)
 
-### Timeline
+### Dòng Thời Gian (Timeline)
 
 **1960s: SCAN Era**
 
@@ -106,9 +106,9 @@ LOOK: Used in specialized systems (efficiency priority)
 Hybrid: Some systems use both (adaptive switching)
 ```
 
-### From Disk to Elevators
+### Từ Đĩa Cứng Đến Thang Máy (From Disk to Elevators)
 
-**Original Context: Disk Scheduling**
+**Ngữ Cảnh Ban Đầu: Lập Lịch Đĩa (Original Context: Disk Scheduling)**
 
 ```
 Disk track layout:
@@ -125,7 +125,7 @@ Stop at track 500 (rightmost request)
 → Saves ~40% seek time!
 ```
 
-**Adaptation to Elevators**
+**Điều Chỉnh Cho Thang Máy (Adaptation to Elevators)**
 
 ```
 Elevator shaft:
@@ -141,13 +141,13 @@ SCAN: 1 → 5 → 10 → 15 → 30 (wasteful!)
 LOOK: 1 → 5 → 10 → 15 → reverse ✅
 ```
 
-### Why LOOK is Rare in Elevators?
+### Tại Sao LOOK Hiếm Thấy Trong Thang Máy? (Why LOOK is Rare in Elevators?)
 
 Despite efficiency, LOOK is **rarely used** in commercial elevators:
 
-**Reasons**:
+**Lý Do (Reasons)**:
 
-1. **Fairness Concerns**
+1. **Công bằng (Fairness) Concerns**
 
 ```
 LOOK can create "hot zones"
@@ -157,7 +157,7 @@ Floors at extremes: Can wait longer
 SCAN ensures: All floors equal treatment
 ```
 
-2. **Predictability**
+2. **Khả năng dự đoán (Predictability)**
 
 ```
 SCAN: "Elevator will arrive in max 2 × N time"
@@ -185,7 +185,7 @@ Many building codes require:
 SCAN meets these better than LOOK
 ```
 
-**Where LOOK is Used**:
+**Nơi LOOK Được Sử Dụng (Where LOOK is Used)**:
 
 - Research/academic settings
 - Specialized industrial elevators
@@ -196,7 +196,7 @@ SCAN meets these better than LOOK
 
 ## ⚙️ Nguyên Lý Hoạt Động
 
-### Core Principle
+### Nguyên Lý Cốt Lõi (Core Principle)
 
 ```
 1. Chọn một hướng (up hoặc down)
@@ -214,7 +214,7 @@ SCAN: "Go to extreme no matter what"
 LOOK: "Stop when done, no wasted movement"
 ```
 
-### Look-Ahead Logic
+### Logic Nhìn Trước (Look-Ahead Logic)
 
 **Pseudocode**:
 
@@ -247,7 +247,7 @@ while (queue.length > 0) {
 }
 ```
 
-### Visualize: LOOK Flow
+### Trực Quan Hóa: Luồng LOOK (Visualize: LOOK Flow)
 
 **Scenario**: 10-floor building, requests at floors 5, 7
 
@@ -292,7 +292,7 @@ Distance: 6 floors UP
 Savings: 9 - 6 = 3 floors (33% more efficient!)
 ```
 
-### Decision Tree
+### Cây Quyết Định (Decision Tree)
 
 ```
                     [At Current Floor]
@@ -317,7 +317,7 @@ Savings: 9 - 6 = 3 floors (33% more efficient!)
      UP         DOWN               DOWN         UP
 ```
 
-### Example Walkthrough
+### Ví Dụ Chi Tiết (Example Walkthrough)
 
 **Setup**:
 
@@ -376,18 +376,18 @@ LOOK saves: 3 floors immediately!
 
 ## 🔄 Sự Khác Biệt Với SCAN
 
-### Fundamental Differences
+### Sự Khác Biệt Cơ Bản (Fundamental Differences)
 
 | Aspect | SCAN | LOOK |
 |--------|------|------|
 | **Philosophy** | "Complete the sweep" | "Stop when done" |
 | **Extreme visit** | Mandatory | Never (unless request there) |
 | **Reversal point** | At extreme | At last request |
-| **Efficiency** | Lower (wasted moves) | Higher (optimal moves) |
-| **Fairness** | Higher (guaranteed) | Slightly lower (pattern dependent) |
+| **Hiệu quả (Efficiency)** | Lower (wasted moves) | Higher (optimal moves) |
+| **Công bằng (Fairness)** | Higher (guaranteed) | Slightly lower (pattern dependent) |
 | **Starvation risk** | Zero | Very low (but theoretically possible) |
 
-### Visual Comparison
+### So Sánh Trực Quan (Visual Comparison)
 
 **Scenario**: Requests at floors 3, 7, 14 in a 20-floor building
 
@@ -438,7 +438,7 @@ Savings: 6 floors (31% more efficient!)
 └─────────────────────────────────────────────────────────┘
 ```
 
-### Code Comparison
+### So Sánh Code (Code Comparison)
 
 **SCAN - Extreme Check**:
 
@@ -481,7 +481,7 @@ SCAN: Checks absolute position (am I at extreme?)
 LOOK: Checks relative position (am I at last request?)
 ```
 
-### Performance Comparison
+### So Sánh Hiệu Năng (Performance Comparison)
 
 **Metric 1: Average Distance Traveled**
 
@@ -533,13 +533,13 @@ LOOK:
 Trade-off: Better average, worse worst-case
 ```
 
-### When Each is Better
+### Khi Nào Nên Dùng (When Each is Better)
 
 **SCAN is better when**:
 
 ```
 ✅ Need strict fairness
-✅ Predictability is critical
+✅ Khả năng dự đoán (Predictability) is critical
 ✅ High traffic (many requests)
 ✅ Building codes require guarantees
 ✅ User expectations matter
@@ -550,7 +550,7 @@ Example: Commercial office building
 **LOOK is better when**:
 
 ```
-✅ Efficiency is priority
+✅ Hiệu quả (Efficiency) is priority
 ✅ Traffic is variable/low
 ✅ Energy saving matters
 ✅ Can tolerate slight unfairness
@@ -615,7 +615,7 @@ queue_SCAN = [7, 10, 20(phantom)]
 queue_LOOK = [7, 10]  // That's it!
 ```
 
-### Algorithm Implementation
+### Triển Khai Thuật Toán (Algorithm Implementation)
 
 #### Phase 1: Elevator Selection
 
@@ -767,7 +767,7 @@ function calculateCost_LOOK(elevator, callFloor, callDirection) {
 }
 ```
 
-**Key Insight**:
+**Thông Tin Chính (Key Insight)**:
 
 ```javascript
 // SCAN
@@ -925,7 +925,7 @@ if (!hasFloorsInDirection(queue, direction)) {
 
 ## 📊 Phân Tích Thuật Toán
 
-### Time Complexity
+### Độ Phức Tạp Thời Gian (Time Complexity)
 
 #### Worst Case
 
@@ -985,7 +985,7 @@ LOOK average < SCAN average by ~20-30%
 
 **Time Complexity**: **O(N)** but with lower constant factor
 
-### Space Complexity
+### Độ Phức Tạp Không Gian (Space Complexity)
 
 **Queue Storage**: **O(R)** where R = number of requests
 
@@ -1008,7 +1008,7 @@ Savings: 0-32 bytes per elevator
 Small but cleaner!
 ```
 
-### Starvation Analysis
+### Phân Tích Bỏ Đói (Starvation Analysis)
 
 **Can LOOK cause starvation?**
 
@@ -1059,7 +1059,7 @@ if (request.timestamp + MAX_WAIT < Date.now()) {
 }
 ```
 
-### Efficiency Analysis
+### Phân Tích Hiệu Quả (Hiệu quả (Efficiency) Analysis)
 
 **Distance Traveled Comparison**:
 
@@ -1076,7 +1076,7 @@ LOOK:
   Avg per request: 17.84 floors
   Extreme visits: 0
 
-Efficiency gain: 28.5% ✅
+Hiệu quả (Efficiency) gain: 28.5% ✅
 ```
 
 **Energy Consumption**:
@@ -1098,7 +1098,7 @@ Environmental impact:
 CO2 reduction ≈ 32 tons/year
 ```
 
-### Throughput Analysis
+### Phân Tích Thông Lượng (Throughput Analysis)
 
 **Requests per Hour**:
 
@@ -1125,7 +1125,7 @@ Throughput increase: 20% ⚡
 
 ### Ưu Điểm
 
-#### 1. Hiệu Quả Cao (Higher Efficiency)
+#### 1. Hiệu Quả Cao (Higher Hiệu quả (Efficiency))
 
 **Evidence**:
 
@@ -1230,10 +1230,10 @@ Example:
   Only request: Floor 10 from floor 1
   SCAN: 1 → 10 → 20 (extreme) = 19 floors
   LOOK: 1 → 10 = 9 floors
-  Efficiency: 52% better!
+  Hiệu quả (Efficiency): 52% better!
 ```
 
-**Scenario: Variable Traffic**:
+**Scenario: Lưu Lượng Thay Đổi (Variable Traffic)**:
 
 ```
 LOOK naturally adapts:
@@ -1356,7 +1356,7 @@ if (!hasMore) {
 - SCAN: Fewer edge cases
 - LOOK: More edge cases (empty queue, single request, etc.)
 
-#### 5. Starvation Risk (Thấp Nhưng Tồn Tại)
+#### 5. Nguy cơ bị bỏ đói (Starvation Risk) (Thấp Nhưng Tồn Tại)
 
 **Theoretical Problem**:
 
@@ -1371,15 +1371,15 @@ LOOK: Starvation theoretically possible (< 0.01% probability)
 - Building codes require guarantees
 - Liability concerns in commercial buildings
 
-### So Sánh Tổng Quan
+### So Sánh Tổng Quan (Overall Comparison)
 
 | Criterion | SCAN | LOOK | Winner |
 |-----------|------|------|--------|
-| **Efficiency** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | LOOK |
-| **Fairness** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | SCAN |
+| **Hiệu quả (Efficiency)** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | LOOK |
+| **Công bằng (Fairness)** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | SCAN |
 | **Avg wait** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | LOOK |
 | **Max wait** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | SCAN |
-| **Predictability** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | SCAN |
+| **Khả năng dự đoán (Predictability)** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | SCAN |
 | **Energy** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | LOOK |
 | **Simplicity** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | SCAN |
 | **Starvation** | ✅ Zero | ⚠️ Very low | SCAN |
@@ -1388,7 +1388,7 @@ LOOK: Starvation theoretically possible (< 0.01% probability)
 
 ## 🏢 Ứng Dụng Thực Tế
 
-### Scenario 1: Residential Building (Variable Traffic)
+### Tình Huống (Scenario) 1: Tòa Nhà Dân Cư (Residential Building) (Lưu Lượng Thay Đổi (Variable Traffic))
 
 **Context**: Apartment complex, 18 floors, 2 elevators
 
@@ -1432,7 +1432,7 @@ Energy savings:
 }
 ```
 
-### Scenario 2: Data Center (Disk I/O)
+### Tình Huống (Scenario) 2: Trung Tâm Dữ Liệu (Data Center) (Đĩa I/O (Disk I/O))
 
 **Context**: RAID array with 10 HDDs, heavy I/O workload
 
@@ -1477,7 +1477,7 @@ Improvement: 39% better IOPS! 🚀
 }
 ```
 
-### Scenario 3: Mall/Shopping Center (Short Building)
+### Tình Huống (Scenario) 3: Trung Tâm Thương Mại (Mall/Shopping Center) (Tòa Nhà Thấp (Short Building))
 
 **Context**: Shopping mall, 5 floors, 4 elevators
 
@@ -1533,7 +1533,7 @@ LOOK paths:
 }
 ```
 
-### Scenario 4: University Building (Academic)
+### Tình Huống (Scenario) 4: Tòa Nhà Đại Học (University Building) (Học Thuật (Academic))
 
 **Context**: Classroom building, 12 floors, 3 elevators
 
@@ -1570,7 +1570,7 @@ Lunch (12-1 PM):
       time: '12:00-13:00',
       algorithm: 'LOOK',
       directionBias: 'down',
-      reason: 'Efficiency for one-way traffic'
+      reason: 'Hiệu quả (Efficiency) for one-way traffic'
     },
     {
       // Normal class time: Energy saving
@@ -1597,7 +1597,7 @@ After (Adaptive LOOK/SCAN):
   Student satisfaction: 7.8/10 (8% better)
 ```
 
-### Scenario 5: Hybrid System (Best of Both)
+### Tình Huống (Scenario) 5: Hệ Thống Kết Hợp (Hybrid System) (Tốt Nhất Của Cả Hai (Best of Both))
 
 **Concept**: Use SCAN + LOOK together
 
@@ -1657,7 +1657,7 @@ Hybrid system results:
   Avg wait: 9.8s (better than both alone!)
   Max wait: 36s (controlled)
   Energy: 15% less than SCAN
-  Fairness: Better than pure LOOK
+  Công bằng (Fairness): Better than pure LOOK
   User satisfaction: 8.5/10 (highest)
 
 Why it works:
@@ -1860,7 +1860,7 @@ requests.forEach(req => {
 })
 ```
 
-### Ví Dụ 4: Efficiency in Low Traffic
+### Ví Dụ 4: Hiệu quả (Efficiency) in Low Traffic
 
 **Setup**: Demonstrate LOOK advantage in low traffic
 
@@ -1889,7 +1889,7 @@ Request 2 (Floor 4 DOWN):
 
 Total distance: 28 floors
 Wasted distance: ~12 floors (extremes)
-Efficiency: 57%
+Hiệu quả (Efficiency): 57%
 ```
 
 **LOOK Behavior**:
@@ -1909,7 +1909,7 @@ Request 2 (Floor 4 DOWN):
 
 Total distance: 9 floors
 Wasted distance: 0 floors
-Efficiency: 100% ⭐
+Hiệu quả (Efficiency): 100% ⭐
 
 Savings vs SCAN: 68% less distance!
 ```
@@ -1931,7 +1931,7 @@ LOOK advantages:
 SCAN disadvantages:
   ❌ Always goes to extremes
   ❌ Often starts from wrong position
-  ❌ Efficiency depends on coincidence
+  ❌ Hiệu quả (Efficiency) depends on coincidence
 ```
 
 ---
@@ -2061,7 +2061,7 @@ SCAN: 14 floors
 LOOK: 10 floors
 ```
 
-**4. Efficiency Gain**:
+**4. Hiệu quả (Efficiency) Gain**:
 
 ```
 Savings = (14 - 10) / 14 × 100%
@@ -2266,7 +2266,7 @@ Benefits:
 
 **A**: Ba lý do chính:
 
-**1. Fairness Concerns (Quan ngại về công bằng)**
+**1. Công bằng (Fairness) Concerns (Quan ngại về công bằng)**
 
 ```
 Thực tế: People care more about fairness than average efficiency
@@ -2359,23 +2359,23 @@ START: Need elevator algorithm
            |
            v
     High traffic? ────YES──> Use SCAN
-           |                 (Fairness priority)
+           |                 (Công bằng (Fairness) priority)
            NO
            |
            v
-    Fairness critical? ──YES──> Use SCAN
+    Công bằng (Fairness) critical? ──YES──> Use SCAN
            |                    (Regulations, liability)
            NO
            |
            v
-    Predictability ────YES──> Use SCAN
+    Khả năng dự đoán (Predictability) ────YES──> Use SCAN
     required?                 (User expectations)
            |
            NO
            |
            v
     Variable traffic? ──YES──> Use LOOK
-           |                   (Efficiency gains)
+           |                   (Hiệu quả (Efficiency) gains)
            NO
            |
            v
@@ -2608,7 +2608,7 @@ Confirm: Check statistics
 
 ## 📚 Tài Liệu Tham Khảo
 
-### Academic Papers
+### Học Thuật (Academic) Papers
 
 1. **Geist, R., & Daniel, S.** (1987). "A continuum of disk scheduling algorithms." *ACM Transactions on Computer Systems*, 5(1), 77-92.
    - Comprehensive SCAN/LOOK analysis
@@ -2619,13 +2619,13 @@ Confirm: Check statistics
 3. **Teorey, T. J., & Pinkerton, T. B.** (1972). "A comparative analysis of disk scheduling policies." *Communications of the ACM*, 15(3), 177-184.
    - Early LOOK research
 
-### Books
+### Sách (Books)
 
 - **Silberschatz et al.** (2018). *Operating System Concepts*. Chapter 9.
-- **Tanenbaum, A.** (2014). *Modern Operating Systems*. Disk I/O chapter.
+- **Tanenbaum, A.** (2014). *Modern Operating Systems*. Đĩa I/O (Disk I/O) chapter.
 - **Barney, G.** (2003). *Elevator Traffic Handbook*.
 
-### Online Resources
+### Tài Nguyên Trực Tuyến (Online Resources)
 
 - [OS Dev Wiki: LOOK Algorithm](https://wiki.osdev.org/Disk_Scheduling#LOOK)
 - [Wikipedia: LOOK Disk Scheduling](https://en.wikipedia.org/wiki/LOOK_algorithm)
@@ -2635,9 +2635,9 @@ Confirm: Check statistics
 
 ## 🎓 Tóm Tắt
 
-### Key Takeaways
+### Điểm Chính Cần Nhớ (Key Takeaways)
 
-1. ⚡ **LOOK = Efficiency First**
+1. ⚡ **LOOK = Hiệu quả (Efficiency) First**
    - Reverses at last request (not extreme)
    - 20-30% more efficient than SCAN
    - Better average wait time
@@ -2648,25 +2648,25 @@ Confirm: Check statistics
    - Simple concept, powerful impact
 
 3. 🏢 **Rare in Elevators, Common in Disks**
-   - Disk I/O: LOOK is standard
+   - Đĩa I/O (Disk I/O): LOOK is standard
    - Elevators: SCAN dominates (fairness > efficiency)
 
 4. ⚖️ **Trade-offs**
-   - Efficiency ✅ / Fairness ⚠️
+   - Hiệu quả (Efficiency) ✅ / Công bằng (Fairness) ⚠️
    - Avg wait ✅ / Max wait ❌
-   - Energy ✅ / Predictability ❌
+   - Energy ✅ / Khả năng dự đoán (Predictability) ❌
 
 5. 🔧 **Best Use Cases**
    - Low traffic buildings
    - Variable traffic patterns
    - Energy saving priority
-   - Disk I/O systems
+   - Đĩa I/O (Disk I/O) systems
 
 ### Khi Nào Dùng LOOK?
 
 ✅ **Dùng khi**:
 
-- Efficiency > Fairness
+- Hiệu quả (Efficiency) > Công bằng (Fairness)
 - Variable/low traffic
 - Short buildings (<10 floors)
 - Energy costs matter
@@ -2679,7 +2679,7 @@ Confirm: Check statistics
 - Regulations require predictability
 - Commercial elevators (use SCAN)
 
-### Final Recommendation
+### Khuyến Nghị Cuối Cùng (Final Recommendation)
 
 ```
 For most elevators: Use SCAN

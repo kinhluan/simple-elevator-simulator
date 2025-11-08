@@ -5,10 +5,10 @@
 
 export const ELEVATOR_TIMING = {
     // Movement timing (in milliseconds)
-    FLOOR_TRAVEL_TIME: 1000,              // 1 second per floor at cruise speed
+    FLOOR_TRAVEL_TIME: 1000,               // 1 second per floor at cruise speed
     ACCELERATION_TIME: 500,                // 0.5 seconds to accelerate
     DECELERATION_TIME: 500,                // 0.5 seconds to decelerate
-    SHORT_TRIP_TIME_PER_FLOOR: 2000,      // 2 seconds per floor for 1-2 floor trips
+    SHORT_TRIP_TIME_PER_FLOOR: 2000,       // 2 seconds per floor for 1-2 floor trips
     
     // Door operation timing
     DOOR_OPEN_TIME: 2500,                  // 2.5 seconds to open doors

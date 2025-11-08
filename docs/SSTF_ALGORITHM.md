@@ -37,11 +37,11 @@ Tài liệu chi tiết về thuật toán SSTF (Shortest Seek Time First) - thu�
 
 ```
 ┌─────────────────────────────────────────────┐
-│ ⚡ Immediate Efficiency: Excellent         │
-│ ✅ Fairness: Poor (⭐⭐)                     │
-│ 🔴 Starvation Risk: HIGH                   │
-│ 📊 Predictability: Poor                     │
-│ 🏢 Real-world Use: NEVER (educational only)│
+│ ⚡ Immediate Hiệu quả (Efficiency): Excellent         │
+│ ✅ Công bằng (Fairness): Poor (⭐⭐)                     │
+│ 🔴 Nguy cơ bị bỏ đói (Starvation Risk): HIGH                   │
+│ 📊 Khả năng dự đoán (Predictability): Poor                     │
+│ 🏢 Ứng dụng thực tế (Real-world Use): NEVER (educational only)│
 └─────────────────────────────────────────────┘
 ```
 
@@ -69,12 +69,12 @@ Tài liệu chi tiết về thuật toán SSTF (Shortest Seek Time First) - thu�
 | Aspect | SSTF | SCAN | LOOK |
 |--------|------|------|------|
 | **Logic** | Pick nearest | Direction-based | Direction + smart |
-| **Efficiency** | ⚡ Local optimal | ✅ Good | ⭐ Best |
-| **Fairness** | ❌ Poor | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| **Hiệu quả (Efficiency)** | ⚡ Local optimal | ✅ Good | ⭐ Best |
+| **Công bằng (Fairness)** | ❌ Poor | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
 | **Starvation** | 🔴 HIGH risk | ✅ None | ⚠️ Very low |
 | **Production** | ❌ NEVER | ✅ Standard | ⚠️ Rare |
 
-**Key Insight**:
+**Thông Tin Chính (Key Insight)**:
 
 ```
 SSTF = "Tham lam cục bộ" (Local greedy)
@@ -86,7 +86,7 @@ SSTF = "Tham lam cục bộ" (Local greedy)
 
 ## 📜 Lịch Sử & Nguồn Gốc
 
-### Timeline
+### Dòng Thời Gian (Timeline)
 
 **1950s: Early Computing**
 
@@ -116,7 +116,7 @@ Result: Disaster!
   - User complaints skyrocketed
   - Quickly abandoned
 
-Lesson learned: Efficiency ≠ Fairness
+Lesson learned: Hiệu quả (Efficiency) ≠ Công bằng (Fairness)
 ```
 
 **1980s-Present: Educational Tool**
@@ -195,7 +195,7 @@ This incident is taught in CS courses as a cautionary tale!
 
 ## ⚙️ Nguyên Lý Hoạt Động
 
-### Core Principle
+### Nguyên Lý Cốt Lõi (Core Principle)
 
 ```
 SSTF = Greedy Algorithm
@@ -209,7 +209,7 @@ At each step:
 No consideration for:
   - Direction
   - Wait time
-  - Fairness
+  - Công bằng (Fairness)
   - Starvation
 ```
 
@@ -639,7 +639,7 @@ Can wait:
 
 ## 💻 Implementation Chi Tiết
 
-### Algorithm Implementation
+### Triển Khai Thuật Toán (Algorithm Implementation)
 
 #### Phase 1: Elevator Selection
 
@@ -947,7 +947,7 @@ But simplicity ≠ good!
 
 ## 📊 Phân Tích Thuật Toán
 
-### Time Complexity
+### Độ Phức Tạp Thời Gian (Time Complexity)
 
 #### Best Case
 
@@ -1001,7 +1001,7 @@ Clustered traffic (realistic):
 
 **Time Complexity**: **O(N)** but with high variance
 
-### Space Complexity
+### Độ Phức Tạp Không Gian (Space Complexity)
 
 **Queue Storage**: **O(R)** where R = requests
 
@@ -1069,7 +1069,7 @@ Std dev (variance)   18.3s   8.2s    10.5s
 Starvation events    3       0       0
                      ❌      ✅      ✅
 
-Fairness score       3/10    10/10   8/10
+Công bằng (Fairness) score       3/10    10/10   8/10
                      ❌      ✅      ⚠️
 ```
 
@@ -1084,7 +1084,7 @@ SSTF wins on:
 SSTF loses on:
   ❌ Max wait time (worst by far)
   ❌ Variance (highest, unpredictable)
-  ❌ Fairness (terrible)
+  ❌ Công bằng (Fairness) (terrible)
   ❌ Starvation (multiple events)
 
 Verdict:
@@ -1318,7 +1318,7 @@ LOOK floor 3: Served 5th, faster than SCAN
 SSTF worst-case: Floor 3 wait >> SCAN/LOOK
 ```
 
-### Fairness Comparison
+### Công bằng (Fairness) Comparison
 
 **Test**: 100 requests, measure service frequency by floor
 
@@ -1353,7 +1353,7 @@ Floor 20: ██ 13 times  (13%)
 Variance: MEDIUM (some preference to middle)
 ```
 
-**Fairness Score** (Gini coefficient, 0=perfect equality):
+**Công bằng (Fairness) Score** (Gini coefficient, 0=perfect equality):
 
 ```
 SSTF: 0.48 (high inequality) ❌
@@ -1365,7 +1365,7 @@ LOOK: 0.18 (moderate inequality) ⚠️
 
 ## 🚫 Tại Sao Không Dùng Trong Production
 
-### Reason 1: Starvation Risk
+### Reason 1: Nguy cơ bị bỏ đói (Starvation Risk)
 
 **Real-World Impact**:
 
@@ -1492,7 +1492,7 @@ Result:
   - More breakdowns
 ```
 
-**Energy Efficiency**:
+**Energy Hiệu quả (Efficiency)**:
 
 ```
 Counter-intuitive finding:
@@ -1581,17 +1581,17 @@ Analogy:
 - Local vs global optima
 - Trade-offs in algorithm design
 
-### Lesson 2: Fairness Matters
+### Lesson 2: Công bằng (Fairness) Matters
 
 **Teaching Point**:
 
 ```
-Efficiency alone is insufficient
+Hiệu quả (Efficiency) alone is insufficient
 
 SSTF teaches:
   ✅ Average performance isn't everything
   ✅ Worst-case matters
-  ✅ Fairness is a requirement, not nice-to-have
+  ✅ Công bằng (Fairness) is a requirement, not nice-to-have
   ✅ User perception > raw metrics
 ```
 
@@ -1685,7 +1685,7 @@ SSTF fails on:
 
 **Learning Outcome**: Realize any fix makes it a different algorithm
 
-#### Exercise 4: Measure Fairness
+#### Exercise 4: Measure Công bằng (Fairness)
 
 **Task**: Calculate Gini coefficient for each algorithm
 
@@ -2155,7 +2155,7 @@ const requests = [
 // Floor 20 would be served in first UP sweep (~10s)
 ```
 
-### Bài Tập 2: Calculate Fairness
+### Bài Tập 2: Calculate Công bằng (Fairness)
 
 **Đề bài**:
 
@@ -2503,7 +2503,7 @@ Much more powerful than reading about it
 
 ```
 Average good ≠ System good
-Efficiency ≠ Fairness
+Hiệu quả (Efficiency) ≠ Công bằng (Fairness)
 Greedy ≠ Optimal
 ```
 
@@ -2585,7 +2585,7 @@ Tests:
 
 ## 🎓 Tóm Tắt
 
-### Key Takeaways
+### Điểm Chính Cần Nhớ (Key Takeaways)
 
 1. 🚨 **SSTF = Educational Only**
    - NEVER use in production
@@ -2597,7 +2597,7 @@ Tests:
    - Each step optimal ≠ overall optimal
    - Classic CS lesson
 
-3. ⚖️ **Fairness Matters**
+3. ⚖️ **Công bằng (Fairness) Matters**
    - Average performance insufficient
    - Worst-case must be bounded
    - User perception > raw metrics
@@ -2628,7 +2628,7 @@ Tests:
 - Simulators (like this one!) ✅
 - Benchmark comparisons ✅
 
-### Final Recommendation
+### Khuyến Nghị Cuối Cùng (Final Recommendation)
 
 ```
 Production: Use SCAN (fairness priority)
