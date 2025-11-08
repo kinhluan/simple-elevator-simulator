@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/phatpham9/simple-elevator-simulator/issues"
   },
-  "homepage": "https://phatpham9.github.io/simple-elevator-simulator",
+  "homepage": "https://kinhluan.github.io/simple-elevator-simulator",
   "engines": {
     "node": ">=20.0.0",
     "npm": ">=10.0.0"
