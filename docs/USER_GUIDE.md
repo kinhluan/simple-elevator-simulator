@@ -22,6 +22,7 @@ Chào mừng bạn đến với **Simple Elevator Simulator** - công cụ học
 ### Khởi Động Demo
 
 **Option 1: Chạy Local**
+
 ```bash
 # Clone repository
 git clone https://github.com/kinhluan/simple-elevator-simulator.git
@@ -33,6 +34,7 @@ npm install
 # Start development server
 npm run dev
 ```
+
 Mở trình duyệt tại `http://localhost:3000`
 
 **Option 2: Online Demo**
@@ -87,6 +89,7 @@ Chú thích:
 ```
 
 **Màu sắc thang máy**:
+
 - 🟦 **Xanh dương**: Đang di chuyển (MOVING)
 - 🟢 **Xanh lá**: Cửa đang mở (DOORS_OPEN)
 - 🟡 **Vàng**: Cửa đang đóng/mở (DOORS_OPENING/CLOSING)
@@ -95,6 +98,7 @@ Chú thích:
 #### 2. **Control Panel** (Bên phải)
 
 **Tab 1: Algorithm & Building**
+
 ```
 ┌─────────────────────────┐
 │ Algorithm: [SCAN ▼]    │
@@ -115,6 +119,7 @@ Chú thích:
 ```
 
 **Tab 2: Calls & Elevators**
+
 ```
 ┌─────────────────────────┐
 │ Pending Calls:          │
@@ -132,11 +137,13 @@ Chú thích:
 ```
 
 **Tab 3: Instructions**
+
 - Hướng dẫn cơ bản
 - Giải thích thuật toán
 - Tips sử dụng
 
 **Tab 4: Statistics**
+
 ```
 ┌─────────────────────────┐
 │ Performance Metrics     │
@@ -190,6 +197,7 @@ Chú thích:
 **Mục tiêu**: Hiểu sự khác biệt giữa 2 thuật toán
 
 **Setup**:
+
 - Floors: 10
 - Elevators: 1 (để dễ quan sát)
 - Mode: Auto
@@ -255,6 +263,7 @@ Chú thích:
 **Mục tiêu**: Hiểu vấn đề "starvation" (đói) của SSTF
 
 **Setup**:
+
 - Floors: 20 (tăng lên để dễ thấy starvation)
 - Elevators: 1
 - Algorithm: SSTF
@@ -289,6 +298,7 @@ Chú thích:
 ✅ **Checkpoint**: Bạn đã thấy starvation xảy ra như thế nào!
 
 **Câu hỏi suy nghĩ**:
+
 - Tại sao tầng 20 bị bỏ quên?
 - SSTF có phù hợp cho production không?
 - Làm sao để fix starvation trong SSTF?
@@ -364,11 +374,13 @@ Chú thích:
    - Di chuyển đến tầng đó
 
 **Lợi ích**:
+
 - ✅ Hiểu cách algorithms assign calls
 - ✅ Thử nghiệm strategies khác nhau
 - ✅ Học bằng cách làm
 
 **Ví dụ scenario**:
+
 ```
 Situation:
 - Elevator 1: Tầng 5, đang đi lên
@@ -414,6 +426,7 @@ Decision: Phụ thuộc mục tiêu!
    - Tab 2 → Elevator Status → xem Queue được sắp xếp thế nào
 
 **Lợi ích**:
+
 - ✅ Nhanh, không cần assign thủ công
 - ✅ So sánh algorithms dễ dàng
 - ✅ Học từ decisions của algorithm
@@ -427,24 +440,30 @@ Decision: Phụ thuộc mục tiêu!
 #### System-Wide Metrics
 
 **Calls Served** (Số yêu cầu đã phục vụ)
+
 ```
 Calls Served: 42
 ```
+
 - Tổng số requests đã hoàn thành
 - Càng cao = càng nhiều activity
 
 **Average Wait Time** (Thời gian chờ trung bình)
+
 ```
 Avg Wait Time: 12.3s
 ```
+
 - Thời gian trung bình từ khi gọi đến khi thang máy đến
 - **Càng thấp càng tốt**
 - Good: < 15s, Acceptable: 15-30s, Poor: > 30s
 
 **Max Wait Time** (Thời gian chờ tối đa)
+
 ```
 Max Wait Time: 28.5s
 ```
+
 - Thời gian chờ lâu nhất
 - Indicator of fairness
 - **Nếu quá cao**: Có thể có starvation
@@ -452,35 +471,43 @@ Max Wait Time: 28.5s
 #### Per-Elevator Metrics
 
 **Trips Completed** (Số chuyến hoàn thành)
+
 ```
 Elevator 1: 15 trips
 ```
+
 - Số lần elevator đi từ idle → moving → phục vụ → idle
 - Balance giữa elevators = good distribution
 
 **Floors Traveled** (Số tầng đã di chuyển)
+
 ```
 Elevator 1: 120 floors
 ```
+
 - Tổng số tầng đã đi (up + down)
 - **Càng ít càng efficient**
 - Compare algorithms: LOOK thường ít hơn SCAN
 
 **Direction Changes** (Số lần đổi hướng)
+
 ```
 Elevator 1: 8 direction changes
 ```
+
 - Số lần đổi từ up → down hoặc down → up
 - **Càng ít càng smooth**
 - SCAN: ít (predictable), SSTF: nhiều (chaotic)
 
 **Time in State** (Thời gian ở mỗi trạng thái)
+
 ```
 Elevator 1:
   Idle:    30s (20%)
   Moving:  90s (60%)
   Serving: 30s (20%)
 ```
+
 - Idle: Rảnh không làm gì
   - **Quá cao**: Underutilized (thừa elevator)
   - **Quá thấp**: Overworked (thiếu elevator)
@@ -494,7 +521,9 @@ Elevator 1:
 ```
 Service Quality: 85/100
 ```
+
 **Tính toán** (giả sử có implement):
+
 ```
 score = (
   (100 - avgWaitTime * 2) +        // Wait time factor
@@ -504,6 +533,7 @@ score = (
 ```
 
 **Interpretation**:
+
 - 90-100: Excellent ⭐⭐⭐⭐⭐
 - 80-89: Good ⭐⭐⭐⭐
 - 70-79: Acceptable ⭐⭐⭐
@@ -518,6 +548,7 @@ score = (
 **Context**: Tòa nhà văn phòng, 8:30-9:30AM, mọi người đến làm việc
 
 **Setup**:
+
 ```
 Floors: 20
 Elevators: 4
@@ -525,11 +556,13 @@ Algorithm: SCAN (fairness needed)
 ```
 
 **Task**:
+
 1. Simulate rush hour: Gọi nhiều requests từ tầng 1 đi lên (tầng 5, 8, 10, 15, 18, 20)
 2. Observe: Làm sao 4 elevators phân bổ công việc?
 3. Measure: Avg wait time có acceptable không?
 
 **Expected Learning**:
+
 - Understand load balancing
 - See why SCAN is good for fairness
 - Learn about peak hour challenges
@@ -541,6 +574,7 @@ Algorithm: SCAN (fairness needed)
 **Context**: Bệnh viện, cần response time nhanh, ít tầng
 
 **Setup**:
+
 ```
 Floors: 5
 Elevators: 2
@@ -548,11 +582,13 @@ Algorithm: LOOK (efficiency)
 ```
 
 **Task**:
+
 1. Simulate emergencies: Random urgent calls
 2. Measure: Max wait time (critical!)
 3. Compare: LOOK vs SCAN - which is faster?
 
 **Expected Learning**:
+
 - Understand time-critical scenarios
 - See LOOK's efficiency advantage
 - Learn trade-offs
@@ -564,6 +600,7 @@ Algorithm: LOOK (efficiency)
 **Context**: Chung cư, 6-8PM, người về nhà, traffic hai chiều
 
 **Setup**:
+
 ```
 Floors: 15
 Elevators: 3
@@ -571,12 +608,14 @@ Algorithm: Try all three!
 ```
 
 **Task**:
+
 1. Simulate: Mix of up calls (lobby → floors) và down calls (floors → lobby)
 2. Test SCAN: Ghi lại metrics
 3. Test LOOK: Ghi lại metrics
 4. Test SSTF: Observe starvation?
 
 **Expected Learning**:
+
 - Compare algorithms in realistic scenario
 - Understand bidirectional traffic
 - See SSTF failures in complex situations
@@ -588,6 +627,7 @@ Algorithm: Try all three!
 **Context**: Tự thiết kế thí nghiệm
 
 **Task**:
+
 ```
 Research Question:
 "Với tòa nhà 10 tầng, bao nhiêu thang máy là đủ?"
@@ -605,6 +645,7 @@ Expected Result:
 ```
 
 **Deliverable**:
+
 - Data table
 - Graph
 - Written recommendation with justification
@@ -616,6 +657,7 @@ Expected Result:
 ### Q1: Tại sao thang máy không đến khi tôi gọi?
 
 **A**: Kiểm tra:
+
 - **Mode**: Nếu đang ở Manual mode, bạn cần assign thủ công (Tab 2)
 - **Algorithm**: Một số algorithms có thể chọn elevator khác nếu cost thấp hơn
 - **Queue**: Elevator có thể đang phục vụ requests khác
@@ -627,6 +669,7 @@ Expected Result:
 ### Q2: Làm sao biết elevator nào được assign cho call của tôi?
 
 **A**:
+
 - **Auto mode**: Tab 2 → Elevator Status → Xem Queue của từng elevator
   - Call của bạn sẽ xuất hiện trong queue
 - **Manual mode**: Bạn phải assign, sẽ thấy ngay
@@ -638,11 +681,13 @@ Expected Result:
 **A**: Phantom floors chỉ xuất hiện với **SCAN algorithm**
 
 **Giải thích**:
+
 - SCAN phải đi đến extreme (tầng cao nhất/thấp nhất)
 - Nếu không có request ở extreme, hệ thống thêm "phantom floor"
 - Đây là implementation detail để ensure SCAN behavior đúng
 
 **Ví dụ**:
+
 ```
 Elevator ở tầng 5, đang đi lên
 Queue: [7, 10]
@@ -659,6 +704,7 @@ Phantom floors **không được tính** vào wait time metrics.
 **A**: Thay đổi số floors hoặc elevators cần rebuild entire system
 
 **Workaround**:
+
 - Plan cấu hình trước khi test
 - Sử dụng consistent config trong experiments
 
@@ -669,6 +715,7 @@ Phantom floors **không được tính** vào wait time metrics.
 **A**: Hiện tại **KHÔNG**. Stats reset khi refresh page.
 
 **Workaround**:
+
 - Screenshot Tab 4 trước khi refresh
 - Ghi chép manually
 - Export (feature chưa có, xem Roadmap)
@@ -680,6 +727,7 @@ Phantom floors **không được tính** vào wait time metrics.
 **A**: **CÓ**! Tab 1 → Timing
 
 **Ví dụ**:
+
 ```
 Fast simulation:
 - Floor travel: 300ms (instead of 1000ms)
@@ -699,10 +747,12 @@ Fast simulation:
 **A**: **KHÔNG** - Starvation chỉ xảy ra với specific traffic patterns
 
 **Khi NẢDO** starvation:
+
 - Liên tục có requests gần hơn request xa
 - High traffic, random distribution
 
 **Khi KHÔNG** starvation:
+
 - Low traffic
 - Requests evenly distributed
 - Enough elevators
@@ -716,6 +766,7 @@ Fast simulation:
 ### Tip 1: Start Simple
 
 ❌ **Tránh**:
+
 ```
 Floors: 24
 Elevators: 12
@@ -723,6 +774,7 @@ Elevators: 12
 ```
 
 ✅ **Nên**:
+
 ```
 Floors: 10
 Elevators: 1-2
@@ -738,6 +790,7 @@ Elevators: 1-2
 Khi so sánh, chỉ thay đổi 1 biến:
 
 **Ví dụ**:
+
 ```
 Compare SCAN vs LOOK:
 ✅ Keep constant: Floors, Elevators, Timing, Request pattern
@@ -751,6 +804,7 @@ Compare SCAN vs LOOK:
 Tạo "standard test case" để compare:
 
 **Ví dụ**:
+
 ```
 Standard Test Case:
 1. Start: All elevators at floor 1
@@ -769,12 +823,15 @@ Standard Test Case:
 ### Tip 4: Look for "Aha Moments"
 
 **SCAN**:
+
 - Aha: "Oh! It MUST go to top even when no one's there!"
 
 **LOOK**:
+
 - Aha: "It's smarter! Stops when no more requests ahead!"
 
 **SSTF**:
+
 - Aha: "Floor 20 waited forever because closer floors kept coming!"
 
 Những moments này = bạn đã hiểu concept!
@@ -784,6 +841,7 @@ Những moments này = bạn đã hiểu concept!
 ### Tip 5: Teach Someone Else
 
 Best way to learn:
+
 1. Run a scenario
 2. Explain to friend/classmate why elevator behaved that way
 3. Predict what will happen next
@@ -822,6 +880,7 @@ Example: [describe scenario]
 ### Tip 7: Use Keyboard Shortcuts (Future Feature)
 
 Đề xuất shortcuts:
+
 ```
 Spacebar: Pause/Resume simulation
 R: Reset
@@ -886,6 +945,7 @@ R: Reset
 ### Góp Ý?
 
 Chúng tôi muốn nghe từ bạn!
+
 - Feature requests
 - UI/UX improvements
 - Educational content suggestions

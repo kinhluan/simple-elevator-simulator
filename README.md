@@ -137,14 +137,14 @@ Hãy tưởng tượng bạn đang đợi thang máy ở tầng 20, nhưng thang
 
 Dưới đây là giải thích về "Starvation Risk" cho từng thuật toán:
 
-*   **SSTF (Shortest Seek Time First): High Starvation Risk**
-    *   **Tại sao?** Thuật toán này luôn ưu tiên phục vụ yêu cầu ở tầng gần nhất với vị trí hiện tại của thang máy. Điều này có thể dẫn đến tình trạng "bỏ đói" cho các tầng ở xa. Ví dụ, nếu thang máy đang ở tầng 5 và liên tục có các cuộc gọi mới ở các tầng 4, 6, 3, 7, nó sẽ chỉ di chuyển quanh khu vực đó. Một cuộc gọi từ tầng 24 sẽ bị bỏ qua vô thời hạn vì nó luôn "quá xa" so với các yêu cầu gần hơn.
+- **SSTF (Shortest Seek Time First): High Starvation Risk**
+  - **Tại sao?** Thuật toán này luôn ưu tiên phục vụ yêu cầu ở tầng gần nhất với vị trí hiện tại của thang máy. Điều này có thể dẫn đến tình trạng "bỏ đói" cho các tầng ở xa. Ví dụ, nếu thang máy đang ở tầng 5 và liên tục có các cuộc gọi mới ở các tầng 4, 6, 3, 7, nó sẽ chỉ di chuyển quanh khu vực đó. Một cuộc gọi từ tầng 24 sẽ bị bỏ qua vô thời hạn vì nó luôn "quá xa" so với các yêu cầu gần hơn.
 
-*   **SCAN: No Starvation Risk**
-    *   **Tại sao?** Thuật toán SCAN buộc thang máy phải di chuyển hết hành trình theo một hướng (ví dụ: đi lên đến tầng cao nhất) trước khi đảo chiều và đi hết hành trình theo hướng ngược lại (đi xuống tầng thấp nhất). Bằng cách này, nó đảm bảo rằng thang máy sẽ đi qua *tất cả các tầng* trong một chu kỳ hoàn chỉnh. Do đó, không có yêu cầu nào có thể bị bỏ qua mãi mãi.
+- **SCAN: No Starvation Risk**
+  - **Tại sao?** Thuật toán SCAN buộc thang máy phải di chuyển hết hành trình theo một hướng (ví dụ: đi lên đến tầng cao nhất) trước khi đảo chiều và đi hết hành trình theo hướng ngược lại (đi xuống tầng thấp nhất). Bằng cách này, nó đảm bảo rằng thang máy sẽ đi qua *tất cả các tầng* trong một chu kỳ hoàn chỉnh. Do đó, không có yêu cầu nào có thể bị bỏ qua mãi mãi.
 
-*   **LOOK: Very Low Starvation Risk**
-    *   **Tại sao?** LOOK là một phiên bản cải tiến của SCAN. Thay vì đi đến tầng cao nhất/thấp nhất, nó chỉ đi đến tầng có yêu cầu cao nhất/thấp nhất theo hướng di chuyển hiện tại rồi đảo chiều. Mặc dù hiệu quả hơn, về mặt lý thuyết, có một khả năng rất nhỏ (và hiếm gặp trong thực tế) là một yêu cầu ở tầng xa nhất có thể phải chờ đợi nếu liên tục có các yêu cầu mới xuất hiện ngay trước điểm đảo chiều của thang máy. Tuy nhiên, rủi ro này thấp đến mức có thể bỏ qua trong hầu hết các trường hợp sử dụng thực tế.
+- **LOOK: Very Low Starvation Risk**
+  - **Tại sao?** LOOK là một phiên bản cải tiến của SCAN. Thay vì đi đến tầng cao nhất/thấp nhất, nó chỉ đi đến tầng có yêu cầu cao nhất/thấp nhất theo hướng di chuyển hiện tại rồi đảo chiều. Mặc dù hiệu quả hơn, về mặt lý thuyết, có một khả năng rất nhỏ (và hiếm gặp trong thực tế) là một yêu cầu ở tầng xa nhất có thể phải chờ đợi nếu liên tục có các yêu cầu mới xuất hiện ngay trước điểm đảo chiều của thang máy. Tuy nhiên, rủi ro này thấp đến mức có thể bỏ qua trong hầu hết các trường hợp sử dụng thực tế.
 
 ## Triển khai
 

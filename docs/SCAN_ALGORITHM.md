@@ -60,12 +60,14 @@ SCAN được gọi là "Elevator Algorithm" vì nó mô phỏng cách hoạt đ
 Thuật toán SCAN ban đầu được phát triển cho **lập lịch đĩa cứng (disk scheduling)** trong hệ điều hành:
 
 **Vấn đề ban đầu** (1960s):
+
 ```
 Đĩa cứng có đầu đọc di chuyển qua các track
 Cần thuật toán để giảm thiểu thời gian tìm kiếm (minimize seek time)
 ```
 
 **Giải pháp SCAN**:
+
 ```
 Đầu đọc di chuyển theo một hướng, phục vụ tất cả requests
 Khi đến cuối đĩa, đảo ngược và quay lại
@@ -75,11 +77,13 @@ Khi đến cuối đĩa, đảo ngược và quay lại
 ### Áp Dụng Vào Hệ Thống Thang Máy (Elevator Systems)
 
 **1970s-1980s**:
+
 - Các kỹ sư nhận ra SCAN phù hợp với hệ thống thang máy
 - Đặt tên là "Elevator Algorithm" khi áp dụng vào lập lịch đĩa cứng
 - Ngược lại, áp dụng SCAN của đĩa cứng vào thang máy thực tế
 
 **Hiện nay**:
+
 - SCAN là thuật toán **tiêu chuẩn công nghiệp** cho thang máy
 - Được sử dụng trong > 90% hệ thống thang máy thương mại
 - Các biến thể: C-SCAN, LOOK, C-LOOK
@@ -103,6 +107,7 @@ Khi đến cuối đĩa, đảo ngược và quay lại
 ### Tại Sao Phải Đi Đến Điểm Tận Cùng (Extreme)?
 
 **Lý do 1: Công bằng (Fairness)**
+
 ```
 Nếu không đi đến extreme:
 - Requests gần trung tâm được phục vụ nhanh
@@ -111,6 +116,7 @@ Nếu không đi đến extreme:
 ```
 
 **Lý do 2: Khả năng dự đoán (Predictability)**
+
 ```
 Người dùng biết:
 - Thang máy sẽ đến sau tối đa 2 lần quét (sweeps)
@@ -118,6 +124,7 @@ Người dùng biết:
 ```
 
 **Lý do 3: Đơn giản (Simplicity)**
+
 ```
 Logic đơn giản:
 - Không cần quyết định phức tạp
@@ -339,6 +346,7 @@ function calculateCost(elevator, callFloor, callDirection, maxFloor) {
 ```
 
 **Diễn giải chi phí (Cost Interpretation)**:
+
 ```
 Chi phí < 50:     Khớp xuất sắc (cùng hướng, gần)
 Chi phí 50-100:   Khớp tốt (cùng hướng, xa)
@@ -458,6 +466,7 @@ function ensureSCANExtreme(queue, currentFloor, direction, numFloors) {
 ```
 
 **Khi nào thêm phantom**:
+
 ```
 Thang máy ở tầng 5, đang đi lên
 Hàng đợi: [7, 10]
@@ -469,6 +478,7 @@ maxFloor = 20
 ```
 
 **Khi nào KHÔNG thêm phantom**:
+
 ```
 Thang máy ở tầng 5, đang đi lên
 Hàng đợi: [7, 10, 20]  // Đã bao gồm tầng đỉnh!
@@ -478,6 +488,7 @@ Hàng đợi: [7, 10, 20]  // Đã bao gồm tầng đỉnh!
 ```
 
 **Loại bỏ phantom**:
+
 ```javascript
 // Khi đến một tầng, xóa nó khỏi hàng đợi
 const reachedFloor = queue[0]
@@ -572,12 +583,14 @@ Tổng: 38 tầng (20 lên + 19 xuống - 1)
 ```
 
 **Công thức**:
+
 ```
 Thời gian chờ xấu nhất = 2 × N tầng
   với N = số tầng
 ```
 
 **Độ phức tạp thời gian**: **O(N)**
+
 - N = số tầng
 - Tuyến tính với kích thước tòa nhà
 
@@ -599,10 +612,12 @@ Tổng: 1 tầng
 #### Trường Hợp Trung Bình (Average Case)
 
 **Giả định**:
+
 - Yêu cầu phân bố đều
 - Thang máy di chuyển liên tục
 
 **Thời gian chờ trung bình**:
+
 ```
 Thời gian chờ TB ≈ N/2 tầng
   với N = số tầng
@@ -613,6 +628,7 @@ Thời gian chờ TB ≈ N/2 tầng
 ### Độ Phức Tạp Không Gian (Space Complexity)
 
 **Lưu trữ hàng đợi (Queue Storage)**:
+
 ```
 Không gian = O(R)
   với R = số yêu cầu đang chờ
@@ -621,6 +637,7 @@ Không gian = O(R)
 **Thông thường**: R << N (yêu cầu ít hơn nhiều so với số tầng)
 
 **Mỗi thang máy**:
+
 ```javascript
 {
   id: 4 bytes,
@@ -634,6 +651,7 @@ Tổng mỗi thang máy ≈ 50 bytes + (R × 16 bytes)
 ```
 
 **Nhiều thang máy**:
+
 ```
 Không gian = M × (50 + R × 16) bytes
   với M = số thang máy
@@ -642,6 +660,7 @@ Không gian = M × (50 + R × 16) bytes
 ### Thông Lượng (Throughput)
 
 **Yêu cầu mỗi giờ**:
+
 ```
 Thông lượng = (3600 / T_avg) × M thang máy
 
@@ -651,6 +670,7 @@ trong đó:
 ```
 
 **Ví dụ**:
+
 ```
 Tòa nhà: 20 tầng
 Thang máy: 4
@@ -678,6 +698,7 @@ Thông lượng = (3600 / 45) × 4
 | **Triển khai (Implementation)** | Trung bình | Đơn giản |
 
 **Ví dụ so sánh**:
+
 ```
 Kịch bản:
 Thang máy ở tầng 10
@@ -709,6 +730,7 @@ Tổng: 5 + 2 + 2 + 14 = 23 tầng
 | **Thăm điểm tận cùng (Extreme visits)** | Luôn luôn | Không bao giờ |
 
 **Ví dụ so sánh**:
+
 ```
 Thang máy ở tầng 5, đang đi lên
 Hàng đợi: [7, 10]
@@ -726,11 +748,13 @@ Tổng: 5 tầng LÊN
 ```
 
 **Khi nào SCAN tốt hơn LOOK**:
+
 - Lưu lượng cao (đông người)
 - Cần đảm bảo công bằng nghiêm ngặt
 - Yêu cầu thời gian chờ tối đa có thể dự đoán
 
 **Khi nào LOOK tốt hơn SCAN**:
+
 - Lưu lượng thấp đến trung bình
 - Ưu tiên hiệu quả hơn công bằng
 - Tiết kiệm năng lượng quan trọng
@@ -748,6 +772,7 @@ Tổng: 5 tầng LÊN
 | **Sử dụng thực tế (Production use)** | ✅ Có | ❌ Không |
 
 **Ví dụ bỏ đói với SSTF**:
+
 ```
 Thang máy ở tầng 10
 Yêu cầu ban đầu: Tầng 20 (khoảng cách = 10)
@@ -781,6 +806,7 @@ Sau đó đảo chiều cho tầng 8 và 5
 | **Phương sai thời gian chờ (Wait variance)** | Cao hơn | Thấp hơn |
 
 **Ưu điểm của C-SCAN**:
+
 ```
 Vấn đề của SCAN:
 - Tầng gần giữa được phục vụ thường xuyên hơn
@@ -792,6 +818,7 @@ Giải pháp của C-SCAN:
 ```
 
 **Ví dụ**:
+
 ```
 SCAN (tòa nhà 10 tầng):
 LÊN: 1→2→3→4→5→6→7→8→9→10
@@ -815,6 +842,7 @@ Tất cả tầng được phục vụ mỗi ~10 tầng (đồng đều)
 **Kịch bản**: Tòa nhà văn phòng, 30 tầng, 8 thang máy
 
 **Tại sao dùng SCAN**:
+
 1. **Giờ cao điểm (Peak hours) (8-9 AM, 5-6 PM)**
    - Lưu lượng cực cao
    - Cần đảm bảo công bằng
@@ -829,6 +857,7 @@ Tất cả tầng được phục vụ mỗi ~10 tầng (đồng đều)
    - SCAN cung cấp dịch vụ nhất quán
 
 **Cấu hình**:
+
 ```javascript
 {
   algorithm: 'SCAN',
@@ -852,6 +881,7 @@ Tất cả tầng được phục vụ mỗi ~10 tầng (đồng đều)
 **Kịch bản**: Bệnh viện, 10 tầng, 4 thang máy
 
 **Thách thức**:
+
 - Yêu cầu khẩn cấp (ưu tiên cao)
 - Lưu lượng thường xuyên
 - Vận chuyển thiết bị
@@ -877,6 +907,7 @@ Tất cả tầng được phục vụ mỗi ~10 tầng (đồng đều)
 ```
 
 **Hành vi**:
+
 ```
 Hoạt động SCAN bình thường:
 Tầng 5 → 6 → 7 → 8 → ...
@@ -890,6 +921,7 @@ Tầng 5 → NGẮT → 3 (khẩn cấp) → tiếp tục tại 5 → 6 → 7 �
 **Kịch bản**: Chung cư, 20 tầng, 3 thang máy
 
 **Mẫu lưu lượng (Traffic patterns)**:
+
 - Buổi sáng (7-9 AM): Chủ yếu XUỐNG (đi làm)
 - Buổi tối (6-8 PM): Chủ yếu LÊN (về nhà)
 - Thời gian khác: Ngẫu nhiên
@@ -926,11 +958,13 @@ Tầng 5 → NGẮT → 3 (khẩn cấp) → tiếp tục tại 5 → 6 → 7 �
 **Kịch bản**: Trung tâm thương mại, 5 tầng, 6 thang máy
 
 **Đặc điểm**:
+
 - Tòa nhà thấp (5 tầng)
 - Lưu lượng lớn
 - Cao điểm: cuối tuần
 
 **Tại sao SCAN hoạt động tốt**:
+
 ```
 Quét ngắn:
 - Quét tối đa = 5 tầng
@@ -947,10 +981,12 @@ Quét ngắn:
 SCAN ban đầu từ lập lịch đĩa cứng, vẫn được sử dụng:
 
 **SSDs hiện đại**:
+
 - Không có chuyển động cơ học
 - Nhưng vẫn dùng SCAN cho công bằng
 
 **Mảng HDD (RAID)**:
+
 ```javascript
 {
   algorithm: 'SCAN',
@@ -974,6 +1010,7 @@ SCAN ban đầu từ lập lịch đĩa cứng, vẫn được sử dụng:
 ### Ví Dụ 1: SCAN Cơ Bản (Basic SCAN)
 
 **Thiết lập**:
+
 ```
 Tòa nhà: 10 tầng
 Thang máy: 1
@@ -981,6 +1018,7 @@ Bắt đầu: Tầng 1, RẢNH (IDLE)
 ```
 
 **Yêu cầu** (theo thứ tự):
+
 ```
 1. Tầng 5, LÊN
 2. Tầng 8, LÊN
@@ -991,6 +1029,7 @@ Bắt đầu: Tầng 1, RẢNH (IDLE)
 **Thực thi**:
 
 **Bước 1**: Yêu cầu tầng 5 LÊN
+
 ```
 Thang máy: Tầng 1, RẢNH
 Hành động: Bắt đầu di chuyển LÊN
@@ -1000,6 +1039,7 @@ Hàng đợi: [5]
 ```
 
 **Bước 2**: Yêu cầu tầng 8 LÊN (khi đang ở tầng 3)
+
 ```
 Thang máy: Tầng 3, đang đi LÊN
 Hàng đợi: [5]
@@ -1012,6 +1052,7 @@ Hàng đợi: [5, 8]
 ```
 
 **Bước 3**: Yêu cầu tầng 3 XUỐNG (khi đang ở tầng 6)
+
 ```
 Thang máy: Tầng 6, đang đi LÊN
 Hàng đợi: [8]
@@ -1028,6 +1069,7 @@ Hàng đợi: [8, 10(phantom)]
 ```
 
 **Bước 4**: Yêu cầu tầng 7 LÊN (khi đang ở tầng 9 đi LÊN)
+
 ```
 Thang máy: Tầng 9, đang đi LÊN
 Hàng đợi: [10(phantom)]
@@ -1041,6 +1083,7 @@ Sau đó: 10 → 9 → 8 → 7 (PHỤC VỤ) → ... → 3 (PHỤC VỤ) → ...
 ```
 
 **Dòng thời gian hoàn chỉnh**:
+
 ```
 Thời gian | Tầng | Hành động         | Hàng đợi
 ----------|------|-------------------|----------
@@ -1063,6 +1106,7 @@ Tổng tầng di chuyển: 9 + 7 = 16 tầng
 ### Ví Dụ 2: Nhiều Thang Máy (Multiple Elevators)
 
 **Thiết lập**:
+
 ```
 Tòa nhà: 15 tầng
 Thang máy: 3
@@ -1077,17 +1121,20 @@ Vị trí bắt đầu:
 **Tính chi phí**:
 
 **Thang máy A** (Tầng 1, RẢNH):
+
 ```
 Chi phí = |1 - 10| = 9
 ```
 
 **Thang máy B** (Tầng 8, đang đi LÊN):
+
 ```
 Cùng hướng, phía trước thang máy
 Chi phí = 10 - 8 = 2 ✅ TốT NHẤT
 ```
 
 **Thang máy C** (Tầng 12, đang đi XUỐNG):
+
 ```
 Sai hướng, phải hoàn thành quét
 Chi phí = (12-1) + (10-1) + 100 = 120
@@ -1096,6 +1143,7 @@ Chi phí = (12-1) + (10-1) + 100 = 120
 **Quyết định**: Gán cho **Thang máy B** (chi phí = 2)
 
 **Đường đi của Thang máy B**:
+
 ```
 Trước: Hàng đợi = []
 Sau: Hàng đợi = [10]
@@ -1108,6 +1156,7 @@ Sau: Hàng đợi = [10]
 **Kịch bản**: Tòa nhà văn phòng, 8:30 AM, mọi người đến làm
 
 **Thiết lập**:
+
 ```
 Tầng: 20
 Thang máy: 4
@@ -1115,6 +1164,7 @@ Tất cả bắt đầu tại: Tầng 1
 ```
 
 **Yêu cầu** (đồng thời):
+
 ```
 Tầng 5, LÊN
 Tầng 7, LÊN
@@ -1129,6 +1179,7 @@ Tầng 3, LÊN
 **Chiến lược phân phối** (SCAN):
 
 **Thang máy 1**:
+
 ```
 Được gán: Tầng 3, 5, 7
 Hàng đợi: [3, 5, 7]
@@ -1136,6 +1187,7 @@ Hàng đợi: [3, 5, 7]
 ```
 
 **Thang máy 2**:
+
 ```
 Được gán: Tầng 10, 12
 Hàng đợi: [10, 12]
@@ -1143,6 +1195,7 @@ Hàng đợi: [10, 12]
 ```
 
 **Thang máy 3**:
+
 ```
 Được gán: Tầng 15, 18
 Hàng đợi: [15, 18]
@@ -1150,6 +1203,7 @@ Hàng đợi: [15, 18]
 ```
 
 **Thang máy 4**:
+
 ```
 Được gán: Tầng 20
 Hàng đợi: [20]
@@ -1157,6 +1211,7 @@ Hàng đợi: [20]
 ```
 
 **Kết quả**:
+
 ```
 Tầng | Thời gian chờ | Được phục vụ bởi
 ------|---------------|------------------
@@ -1183,11 +1238,13 @@ Cân bằng tải: ✅
 **Đề bài**:
 
 Tòa nhà 20 tầng có 3 thang máy:
+
 - Thang máy A: Tầng 5, đang đi LÊN
 - Thang máy B: Tầng 15, đang đi XUỐNG
 - Thang máy C: Tầng 10, RẢNH
 
 **Câu hỏi**: Tính chi phí cho mỗi thang máy khi có yêu cầu:
+
 1. Tầng 12, hướng LÊN
 2. Tầng 8, hướng XUỐNG
 3. Tầng 18, hướng LÊN
@@ -1195,6 +1252,7 @@ Tòa nhà 20 tầng có 3 thang máy:
 **Đáp án**:
 
 **Yêu cầu 1: Tầng 12, LÊN**
+
 ```
 Thang máy A (Tầng 5, LÊN):
   Cùng hướng, phía trước
@@ -1211,6 +1269,7 @@ Thắng cuộc: Thang máy C
 ```
 
 **Yêu cầu 2: Tầng 8, XUỐNG**
+
 ```
 Thang máy A (Tầng 5, LÊN):
   Sai hướng
@@ -1227,6 +1286,7 @@ Thắng cuộc: Thang máy C (gần hơn)
 ```
 
 **Yêu cầu 3: Tầng 18, LÊN**
+
 ```
 Thang máy A (Tầng 5, LÊN):
   Cùng hướng, phía trước
@@ -1248,11 +1308,13 @@ Thắng cuộc: Thang máy C
 
 Thang máy tại tầng 6, đang đi LÊN, hàng đợi = [9, 15]
 Yêu cầu mới (theo thứ tự):
+
 1. Tầng 12, LÊN
 2. Tầng 4, XUỐNG
 3. Tầng 18, LÊN
 
 **Câu hỏi**:
+
 - Vẽ đường đi hoàn chỉnh của thang máy
 - Tính tổng số tầng di chuyển
 - Đánh dấu các lần đổi chiều
@@ -1260,6 +1322,7 @@ Yêu cầu mới (theo thứ tự):
 **Đáp án**:
 
 **Trạng thái ban đầu**:
+
 ```
 Tầng: 6
 Hướng: LÊN
@@ -1267,24 +1330,28 @@ Hàng đợi: [9, 15]
 ```
 
 **Yêu cầu 1**: Tầng 12, LÊN
+
 ```
 Chèn vào hàng đợi (tăng dần):
 Hàng đợi: [9, 12, 15]
 ```
 
 **Yêu cầu 2**: Tầng 4, XUỐNG
+
 ```
 Sai hướng, sẽ phục vụ sau khi đảo chiều
 Lưu tạm thời
 ```
 
 **Yêu cầu 3**: Tầng 18, LÊN
+
 ```
 Chèn vào hàng đợi:
 Hàng đợi: [9, 12, 15, 18, 20(phantom)]
 ```
 
 **Đường đi hoàn chỉnh**:
+
 ```
 Thời gian | Tầng | Hành động           | Hàng đợi
 ----------|------|---------------------|------------------
@@ -1310,11 +1377,13 @@ Tổng: 30 tầng
 **Đề bài**:
 
 Bạn thiết kế hệ thống thang máy cho:
+
 - Tòa nhà văn phòng, 25 tầng
 - Trung bình 200 nhân viên
 - Giờ cao điểm: 8-9 AM (mọi người đến), 5-6 PM (mọi người về)
 
 **Câu hỏi**:
+
 1. Cần bao nhiêu thang máy?
 2. Nên dùng SCAN hay LOOK?
 3. Có cần phân vùng thang máy không?
@@ -1324,6 +1393,7 @@ Bạn thiết kế hệ thống thang máy cho:
 **1. Số lượng thang máy**:
 
 **Tính toán**:
+
 ```
 Giả định:
 - Thời gian trung bình mỗi chuyến: 60s (25 tầng)
@@ -1348,6 +1418,7 @@ NHƯNG cộng thêm dự phòng cho:
 **Đề xuất: SCAN**
 
 **Lý do**:
+
 ```
 Đặc điểm giờ cao điểm:
 - Khối lượng lớn
@@ -1369,6 +1440,7 @@ LOOK có thể:
 **Đề xuất: CÓ, phân vùng thang máy**
 
 **Cấu hình**:
+
 ```javascript
 {
   zones: [
@@ -1392,6 +1464,7 @@ LOOK có thể:
 ```
 
 **Lợi ích**:
+
 ```
 ✅ Dịch vụ nhanh hơn (quét ngắn hơn)
 ✅ Phân phối tải tốt hơn
@@ -1417,6 +1490,7 @@ Có vùng:
 **A**: Ba lý do chính:
 
 **1. Công bằng (Fairness)**
+
 ```
 Nếu không đi đến extreme:
 - Tầng gần giữa được phục vụ nhiều
@@ -1433,6 +1507,7 @@ Có extreme:
 ```
 
 **2. Khả năng dự đoán (Predictability)**
+
 ```
 Người dùng biết:
 - Thời gian chờ tối đa = 2 lần quét đầy đủ
@@ -1444,6 +1519,7 @@ Ví dụ thực tế:
 ```
 
 **3. Đơn giản (Simplicity)**
+
 ```
 Logic đơn giản:
 - Không cần quyết định phức tạp
@@ -1483,6 +1559,7 @@ if (!floor.isPhantom) {
 ```
 
 **Tác động**:
+
 ```
 Với phantom: 0s overhead
 Không có phantom: Nguy cơ không đi đến extreme → không công bằng
@@ -1495,6 +1572,7 @@ Không có phantom: Nguy cơ không đi đến extreme → không công bằng
 **A**: **KHÔNG**. Tùy thuộc vào loại tòa nhà.
 
 **Phù hợp** ✅:
+
 ```
 1. Tòa nhà cao tầng (>10 tầng)
    - Quét dài biện minh cho việc thăm extreme
@@ -1510,6 +1588,7 @@ Không có phantom: Nguy cơ không đi đến extreme → không công bằng
 ```
 
 **Không phù hợp** ❌:
+
 ```
 1. Tòa nhà thấp tầng (<5 tầng)
    - LOOK hiệu quả hơn
@@ -1529,6 +1608,7 @@ Không có phantom: Nguy cơ không đi đến extreme → không công bằng
 **A**: Nhiều chiến lược:
 
 **Chiến lược 1: Điều khiển nhóm (Group Control)**
+
 ```javascript
 // Trong giờ cao điểm LÊN (buổi sáng)
 elevators.forEach(e => {
@@ -1540,6 +1620,7 @@ elevators.forEach(e => {
 ```
 
 **Chiến lược 2: Phân vùng (Zone Assignment)**
+
 ```javascript
 peakHours: {
   time: '08:00-09:00',
@@ -1553,6 +1634,7 @@ peakHours: {
 ```
 
 **Chiến lược 3: Chế độ tốc hành (Express Mode)**
+
 ```javascript
 // Một số thang máy bỏ qua tầng
 elevator[0]: {
@@ -1571,6 +1653,7 @@ elevator[1-4]: {
 **A**: Nhiều biến thể:
 
 **C-SCAN (Circular SCAN)**:
+
 ```
 SCAN bình thường:
 LÊN: 1→20, XUỐNG: 20→1
@@ -1583,6 +1666,7 @@ Luôn luôn một hướng
 ```
 
 **LOOK**:
+
 ```
 Như SCAN nhưng:
 - Không đi đến extreme
@@ -1593,6 +1677,7 @@ Nhược điểm: Ít công bằng hơn
 ```
 
 **N-Step-SCAN**:
+
 ```
 Gom yêu cầu thành nhóm
 Xử lý N yêu cầu, sau đó chấp nhận yêu cầu mới
@@ -1601,6 +1686,7 @@ Xử lý N yêu cầu, sau đó chấp nhận yêu cầu mới
 ```
 
 **FSCAN (Freeze SCAN)**:
+
 ```
 Hai hàng đợi:
 - Hoạt động: Đang được phục vụ
@@ -1640,6 +1726,7 @@ Tests:
 **A**: Làm theo kịch bản này:
 
 **Test 1: Hành vi extreme**
+
 ```
 1. Cấu hình: 10 tầng, 1 thang máy, SCAN
 2. Thang máy ở tầng 1, RẢNH
@@ -1651,6 +1738,7 @@ Tests:
 ```
 
 **Test 2: Công bằng**
+
 ```
 1. Cấu hình: 20 tầng, 2 thang máy
 2. Tạo 10 yêu cầu ngẫu nhiên
@@ -1660,6 +1748,7 @@ Tests:
 ```
 
 **Test 3: Tính chi phí**
+
 ```
 1. Chế độ thủ công
 2. Ghi chú vị trí thang máy
@@ -1727,12 +1816,14 @@ Tests:
 ### Khi Nào Dùng SCAN?
 
 ✅ **Dùng khi**:
+
 - Tòa nhà cao tầng (>10 tầng)
 - Lưu lượng cao
 - Yêu cầu công bằng
 - Khả năng dự đoán quan trọng
 
 ❌ **Không dùng khi**:
+
 - Tòa nhà thấp tầng (<5 tầng) → dùng LOOK
 - Lưu lượng thấp → dùng LOOK
 - Chỉ khẩn cấp → dùng dựa trên ưu tiên
