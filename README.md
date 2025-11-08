@@ -146,36 +146,36 @@ Dưới đây là giải thích về "Starvation Risk" cho từng thuật toán:
 - **LOOK: Very Low Starvation Risk**
   - **Tại sao?** LOOK là một phiên bản cải tiến của SCAN. Thay vì đi đến tầng cao nhất/thấp nhất, nó chỉ đi đến tầng có yêu cầu cao nhất/thấp nhất theo hướng di chuyển hiện tại rồi đảo chiều. Mặc dù hiệu quả hơn, về mặt lý thuyết, có một khả năng rất nhỏ (và hiếm gặp trong thực tế) là một yêu cầu ở tầng xa nhất có thể phải chờ đợi nếu liên tục có các yêu cầu mới xuất hiện ngay trước điểm đảo chiều của thang máy. Tuy nhiên, rủi ro này thấp đến mức có thể bỏ qua trong hầu hết các trường hợp sử dụng thực tế.
 
-## Triển khai
+## Deployment
 
-### Thiết lập GitHub Pages (Chỉ lần đầu)
+### GitHub Pages Setup (First Time Only)
 
-Để triển khai tự động qua GitHub Actions, bạn cần kích hoạt GitHub Pages thủ công:
+To enable automatic deployment via GitHub Actions, you need to manually enable GitHub Pages:
 
-1. Vào **Settings** > **Pages** trong repository
-2. Trong phần "Build and deployment", chọn **Source**: **GitHub Actions**
-3. Lưu cài đặt
+1. Go to **Settings** > **Pages** in your repository
+2. Under "Build and deployment", select **Source**: **GitHub Actions**
+3. Save the settings
 
-Sau khi thiết lập, mỗi lần push lên nhánh `main` sẽ tự động triển khai.
+After setup, every push to the `main` branch will automatically deploy.
 
-### Triển khai thủ công
+### Manual Deployment
 
-Triển khai lên GitHub Pages bằng gh-pages:
+Deploy to GitHub Pages using gh-pages:
 
 ```bash
 npm run deploy
 ```
 
-Xây dựng cho sản xuất:
+Build for production:
 
 ```bash
 npm run build
 ```
 
-## Giấy phép
+## License
 
-Giấy phép MIT
+MIT License - Copyright (c) 2025 Luân B
 
-## Ghi nhận
+## Acknowledgments
 
-Nguồn cảm hứng ban đầu từ [arunsai63/SmartLift](https://github.com/arunsai63/SmartLift)
+Initial inspiration from [arunsai63/SmartLift](https://github.com/arunsai63/SmartLift)
