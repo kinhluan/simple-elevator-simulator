@@ -1,4 +1,4 @@
-# SCAN Algorithm - Thuật Toán Quét Thang Máy
+# Thuật Toán SCAN (SCAN Algorithm) - Thuật Toán Lập Lịch Thang Máy
 
 Tài liệu chi tiết về thuật toán SCAN (còn gọi là "Elevator Algorithm") - thuật toán lập lịch thang máy phổ biến nhất trong thực tế.
 
@@ -9,7 +9,7 @@ Tài liệu chi tiết về thuật toán SCAN (còn gọi là "Elevator Algorit
 1. [Tổng Quan](#tổng-quan)
 2. [Lịch Sử & Nguồn Gốc](#lịch-sử--nguồn-gốc)
 3. [Nguyên Lý Hoạt Động](#nguyên-lý-hoạt-động)
-4. [Implementation Chi Tiết](#implementation-chi-tiết)
+4. [Triển Khai Chi Tiết](#triển-khai-chi-tiết)
 5. [Phân Tích Thuật Toán](#phân-tích-thuật-toán)
 6. [So Sánh Với Các Thuật Toán Khác](#so-sánh-với-các-thuật-toán-khác)
 7. [Ứng Dụng Thực Tế](#ứng-dụng-thực-tế)
@@ -23,7 +23,7 @@ Tài liệu chi tiết về thuật toán SCAN (còn gọi là "Elevator Algorit
 
 ### Định Nghĩa
 
-**SCAN Algorithm** (Thuật toán Quét) là một thuật toán lập lịch được sử dụng trong hệ thống thang máy, trong đó thang máy di chuyển theo một hướng (lên hoặc xuống) đến tận cùng (extreme) của tòa nhà, sau đó đảo ngược hướng và tiếp tục.
+**Thuật toán SCAN (SCAN Algorithm)** là một thuật toán lập lịch (scheduling algorithm) được sử dụng trong hệ thống thang máy, trong đó thang máy di chuyển theo một hướng (lên hoặc xuống) đến tận cùng (extreme) của tòa nhà, sau đó đảo ngược hướng và tiếp tục.
 
 ### Tên Gọi Khác
 
@@ -35,11 +35,11 @@ Tài liệu chi tiết về thuật toán SCAN (còn gọi là "Elevator Algorit
 
 ```
 ┌─────────────────────────────────────────────┐
-│ ✅ Fairness (Công bằng): Excellent         │
-│ ⚡ Efficiency (Hiệu quả): Good             │
-│ 🔒 Starvation Risk: None (Không có)        │
-│ 📊 Predictability: Excellent                │
-│ 🏢 Real-world Use: Industry Standard       │
+│ ✅ Công bằng (Fairness): Xuất sắc          │
+│ ⚡ Hiệu quả (Efficiency): Tốt              │
+│ 🔒 Nguy cơ bị bỏ đói (Starvation Risk): Không có │
+│ 📊 Khả năng dự đoán (Predictability): Xuất sắc │
+│ 🏢 Ứng dụng thực tế (Real-world Use): Tiêu chuẩn công nghiệp │
 └─────────────────────────────────────────────┘
 ```
 
@@ -55,14 +55,14 @@ SCAN được gọi là "Elevator Algorithm" vì nó mô phỏng cách hoạt đ
 
 ## 📜 Lịch Sử & Nguồn Gốc
 
-### Nguồn Gốc Từ Disk Scheduling
+### Nguồn Gốc Từ Lập Lịch Đĩa Cứng (Disk Scheduling)
 
-SCAN algorithm ban đầu được phát triển cho **disk scheduling** (lập lịch đĩa cứng) trong hệ điều hành:
+Thuật toán SCAN ban đầu được phát triển cho **lập lịch đĩa cứng (disk scheduling)** trong hệ điều hành:
 
 **Vấn đề ban đầu** (1960s):
 ```
 Đĩa cứng có đầu đọc di chuyển qua các track
-Cần thuật toán để minimize seek time (thời gian tìm kiếm)
+Cần thuật toán để giảm thiểu thời gian tìm kiếm (minimize seek time)
 ```
 
 **Giải pháp SCAN**:
@@ -72,12 +72,12 @@ Khi đến cuối đĩa, đảo ngược và quay lại
 → Giống như cách thang máy hoạt động!
 ```
 
-### Áp Dụng Vào Elevator Systems
+### Áp Dụng Vào Hệ Thống Thang Máy (Elevator Systems)
 
 **1970s-1980s**:
-- Các kỹ sư nhận ra SCAN phù hợp với elevator systems
-- Đặt tên là "Elevator Algorithm" khi áp dụng vào disk scheduling
-- Ngược lại, áp dụng disk SCAN vào thang máy thực tế
+- Các kỹ sư nhận ra SCAN phù hợp với hệ thống thang máy
+- Đặt tên là "Elevator Algorithm" khi áp dụng vào lập lịch đĩa cứng
+- Ngược lại, áp dụng SCAN của đĩa cứng vào thang máy thực tế
 
 **Hiện nay**:
 - SCAN là thuật toán **tiêu chuẩn công nghiệp** cho thang máy
@@ -88,50 +88,50 @@ Khi đến cuối đĩa, đảo ngược và quay lại
 
 ## ⚙️ Nguyên Lý Hoạt Động
 
-### Core Principle (Nguyên lý cốt lõi)
+### Nguyên Lý Cốt Lõi (Core Principle)
 
 ```
 1. Chọn một hướng (up hoặc down)
 2. Di chuyển theo hướng đó, phục vụ tất cả requests trên đường đi
-3. Đi đến EXTREME (tầng cao nhất hoặc thấp nhất)
+3. Đi đến điểm tận cùng (EXTREME) - tầng cao nhất hoặc thấp nhất
 4. Đảo ngược hướng
 5. Lặp lại từ bước 2
 ```
 
-**Key Point**: Thang máy PHẢI đi đến extreme ngay cả khi không có requests ở đó.
+**Điểm chính (Key Point)**: Thang máy PHẢI đi đến điểm tận cùng (extreme) ngay cả khi không có requests ở đó.
 
-### Tại Sao Phải Đi Đến Extreme?
+### Tại Sao Phải Đi Đến Điểm Tận Cùng (Extreme)?
 
-**Lý do 1: Fairness (Công bằng)**
+**Lý do 1: Công bằng (Fairness)**
 ```
 Nếu không đi đến extreme:
 - Requests gần trung tâm được phục vụ nhanh
 - Requests ở extremes bị bỏ quên
-→ Starvation problem
+→ Vấn đề bỏ đói (Starvation problem)
 ```
 
-**Lý do 2: Predictability (Dự đoán được)**
+**Lý do 2: Khả năng dự đoán (Predictability)**
 ```
 Người dùng biết:
-- Thang máy sẽ đến sau tối đa 2 sweeps (quét)
-- Thời gian chờ maximum = 2 × (số tầng × thời gian/tầng)
+- Thang máy sẽ đến sau tối đa 2 lần quét (sweeps)
+- Thời gian chờ tối đa = 2 × (số tầng × thời gian/tầng)
 ```
 
-**Lý do 3: Simplicity (Đơn giản)**
+**Lý do 3: Đơn giản (Simplicity)**
 ```
 Logic đơn giản:
-- Không cần decision phức tạp
-- Dễ implement trong hardware/software
+- Không cần quyết định phức tạp
+- Dễ triển khai trong hardware/software
 ```
 
-### Visualize: SCAN Flow
+### Trực Quan Hóa: Luồng SCAN (SCAN Flow)
 
 ```
 Tòa nhà 10 tầng, thang máy bắt đầu tại tầng 1
 
-Step 1: Direction = UP
+Bước 1: Hướng (Direction) = LÊN (UP)
 ═══════════════════════════════════════════
-Tầng 10  ←─────────────────── Extreme (MUST reach)
+Tầng 10  ←─────────────────── Extreme (PHẢI đến)
 Tầng 9
 Tầng 8   ← Request (phục vụ)
 Tầng 7
@@ -140,15 +140,15 @@ Tầng 5   ← Request (phục vụ)
 Tầng 4
 Tầng 3
 Tầng 2
-Tầng 1   ● Start
+Tầng 1   ● Bắt đầu
 ═══════════════════════════════════════════
 
-Path: 1 → 2 → 3 → 4 → 5(serve) → 6 → 7 → 8(serve) → 9 → 10(extreme)
+Đường đi: 1 → 2 → 3 → 4 → 5(phục vụ) → 6 → 7 → 8(phục vụ) → 9 → 10(extreme)
 
 
-Step 2: Direction = DOWN (reversed)
+Bước 2: Hướng (Direction) = XUỐNG (DOWN) - đã đảo chiều
 ═══════════════════════════════════════════
-Tầng 10  ● Now here, reverse
+Tầng 10  ● Hiện tại ở đây, đảo chiều
 Tầng 9
 Tầng 8
 Tầng 7
@@ -157,77 +157,77 @@ Tầng 5
 Tầng 4
 Tầng 3   ← Request (phục vụ)
 Tầng 2
-Tầng 1   ←─────────────────── Extreme (MUST reach)
+Tầng 1   ←─────────────────── Extreme (PHẢI đến)
 ═══════════════════════════════════════════
 
-Path: 10 → 9 → 8 → 7 → 6 → 5 → 4 → 3(serve) → 2 → 1(extreme)
+Đường đi: 10 → 9 → 8 → 7 → 6 → 5 → 4 → 3(phục vụ) → 2 → 1(extreme)
 
 
-Step 3: Direction = UP again
-Loop continues...
+Bước 3: Hướng (Direction) = LÊN (UP) lại
+Vòng lặp tiếp tục...
 ```
 
 ---
 
-## 💻 Implementation Chi Tiết
+## 💻 Triển Khai Chi Tiết
 
 ### Cấu Trúc Dữ Liệu
 
-#### 1. Elevator State
+#### 1. Trạng Thái Thang Máy (Elevator State)
 
 ```javascript
 const elevator = {
-  id: 0,                        // Elevator ID
+  id: 0,                        // ID thang máy
   currentFloor: 5,              // Vị trí hiện tại
   direction: 'up',              // 'up' | 'down' | 'idle'
   targetFloor: 10,              // Tầng đích hiện tại
 
-  queue: [                      // Hàng đợi các tầng cần phục vụ
+  queue: [                      // Hàng đợi (Queue) các tầng cần phục vụ
     { floor: 7, callDirection: 'up', timestamp: 1699... },
     { floor: 10, callDirection: 'up', timestamp: 1699... }
   ],
 
-  // Performance metrics
+  // Các số liệu hiệu suất (Performance metrics)
   tripsCompleted: 5,
   floorsTravel: 42,
   directionChanges: 3
 }
 ```
 
-#### 2. Queue Structure
+#### 2. Cấu Trúc Hàng Đợi (Queue Structure)
 
-Queue trong SCAN **PHẢI** được sắp xếp theo hướng:
+Hàng đợi (Queue) trong SCAN **PHẢI** được sắp xếp theo hướng:
 
 ```javascript
-// Going UP: Ascending order (tăng dần)
+// Đi LÊN (UP): Thứ tự tăng dần (Ascending order)
 if (direction === 'up') {
   queue.sort((a, b) => a.floor - b.floor)
-  // Result: [3, 5, 7, 10, 15]
+  // Kết quả: [3, 5, 7, 10, 15]
 }
 
-// Going DOWN: Descending order (giảm dần)
+// Đi XUỐNG (DOWN): Thứ tự giảm dần (Descending order)
 if (direction === 'down') {
   queue.sort((a, b) => b.floor - a.floor)
-  // Result: [15, 10, 7, 5, 3]
+  // Kết quả: [15, 10, 7, 5, 3]
 }
 ```
 
 **Lý do**: Thang máy phục vụ các tầng theo thứ tự gặp trên đường đi.
 
-### Algorithm Implementation
+### Triển Khai Thuật Toán (Algorithm Implementation)
 
-#### Phase 1: Elevator Selection (Chọn Thang Máy)
+#### Giai Đoạn 1: Chọn Thang Máy (Elevator Selection)
 
-Khi có request mới, chọn thang máy tốt nhất dựa trên **cost function**:
+Khi có yêu cầu mới, chọn thang máy tốt nhất dựa trên **hàm chi phí (cost function)**:
 
 ```javascript
 /**
- * SCAN Algorithm: Select best elevator for a call
- * @param {Array} elevators - All elevators in building
- * @param {number} callFloor - Floor making the request
- * @param {string} callDirection - 'up' or 'down'
- * @param {number} maxFloor - Total floors in building
- * @returns {number} - ID of best elevator
+ * Thuật toán SCAN: Chọn thang máy tốt nhất cho một lệnh gọi
+ * @param {Array} elevators - Tất cả thang máy trong tòa nhà
+ * @param {number} callFloor - Tầng đang yêu cầu
+ * @param {string} callDirection - 'up' hoặc 'down'
+ * @param {number} maxFloor - Tổng số tầng trong tòa nhà
+ * @returns {number} - ID của thang máy tốt nhất
  */
 function scanAlgorithm(elevators, callFloor, callDirection, maxFloor) {
   let bestElevator = null
@@ -246,90 +246,90 @@ function scanAlgorithm(elevators, callFloor, callDirection, maxFloor) {
 }
 ```
 
-#### Phase 2: Cost Calculation (Tính Chi Phí)
+#### Giai Đoạn 2: Tính Chi Phí (Cost Calculation)
 
-**Cost function** quyết định elevator nào phù hợp nhất:
+**Hàm chi phí (Cost function)** quyết định thang máy nào phù hợp nhất:
 
 ```javascript
 /**
- * Calculate cost for an elevator to serve a call
- * Lower cost = better match
+ * Tính chi phí cho một thang máy để phục vụ một lệnh gọi
+ * Chi phí thấp hơn = khớp tốt hơn
  */
 function calculateCost(elevator, callFloor, callDirection, maxFloor) {
   const { currentFloor, direction } = elevator
 
   // ════════════════════════════════════════════════════════
-  // CASE 1: Elevator is IDLE
+  // TRƯỜNG HỢP 1: Thang máy đang RẢNH (IDLE)
   // ════════════════════════════════════════════════════════
   if (direction === 'idle') {
-    // Simple distance
+    // Khoảng cách đơn giản
     return Math.abs(currentFloor - callFloor)
   }
 
   // ════════════════════════════════════════════════════════
-  // CASE 2: Elevator going UP
+  // TRƯỜNG HỢP 2: Thang máy đang đi LÊN (UP)
   // ════════════════════════════════════════════════════════
   if (direction === 'up') {
 
-    // Sub-case 2a: Call is UP and AHEAD of elevator
+    // Trường hợp con 2a: Lệnh gọi hướng LÊN và Ở PHÍA TRƯỚC thang máy
     if (callFloor >= currentFloor && callDirection === 'up') {
-      // ✅ Best case: Can pick up on the way
-      // Cost = distance to call
+      // ✅ Trường hợp tốt nhất: Có thể đón trên đường đi
+      // Chi phí = khoảng cách đến lệnh gọi
       return callFloor - currentFloor
 
-      // Example:
-      // Elevator at floor 5, going up
-      // Call at floor 8, going up
-      // Cost = 8 - 5 = 3 floors
+      // Ví dụ:
+      // Thang máy ở tầng 5, đang đi lên
+      // Lệnh gọi tại tầng 8, hướng lên
+      // Chi phí = 8 - 5 = 3 tầng
     }
 
-    // Sub-case 2b: Call is DOWN or BEHIND elevator
+    // Trường hợp con 2b: Lệnh gọi hướng XUỐNG hoặc Ở PHÍA SAU thang máy
     else {
-      // ⚠️ Must complete sweep first
-      // Cost = distance to top + distance from top to call
+      // ⚠️ Phải hoàn thành quét trước
+      // Chi phí = khoảng cách đến đỉnh + khoảng cách từ đỉnh đến lệnh gọi
       const distanceToTop = maxFloor - currentFloor
       const distanceFromTopToCall = maxFloor - callFloor
-      const penalty = 100  // Penalty for direction reversal
+      const penalty = 100  // Phạt cho việc đảo chiều
 
       return distanceToTop + distanceFromTopToCall + penalty
 
-      // Example:
-      // Elevator at floor 5, going up
-      // Call at floor 3, going down
+      // Ví dụ:
+      // Thang máy ở tầng 5, đang đi lên
+      // Lệnh gọi tại tầng 3, hướng xuống
       // maxFloor = 20
-      // Cost = (20-5) + (20-3) + 100 = 15 + 17 + 100 = 132
+      // Chi phí = (20-5) + (20-3) + 100 = 15 + 17 + 100 = 132
     }
   }
 
   // ════════════════════════════════════════════════════════
-  // CASE 3: Elevator going DOWN
+  // TRƯỜNG HỢP 3: Thang máy đang đi XUỐNG (DOWN)
   // ════════════════════════════════════════════════════════
   if (direction === 'down') {
 
-    // Sub-case 3a: Call is DOWN and AHEAD of elevator
+    // Trường hợp con 3a: Lệnh gọi hướng XUỐNG và Ở PHÍA TRƯỚC thang máy
     if (callFloor <= currentFloor && callDirection === 'down') {
-      // ✅ Best case: Can pick up on the way
+      // ✅ Trường hợp tốt nhất: Có thể đón trên đường đi
       return currentFloor - callFloor
 
-      // Example:
-      // Elevator at floor 10, going down
-      // Call at floor 5, going down
-      // Cost = 10 - 5 = 5 floors
+      // Ví dụ:
+      // Thang máy ở tầng 10, đang đi xuống
+      // Lệnh gọi tại tầng 5, hướng xuống
+      // Chi phí = 10 - 5 = 5 tầng
     }
 
-    // Sub-case 3b: Call is UP or BEHIND elevator
+    // Trường hợp con 3b: Lệnh gọi hướng LÊN hoặc Ở PHÍA SAU thang máy
     else {
-      // ⚠️ Must complete sweep first
+      // ⚠️ Phải hoàn thành quét trước
       const distanceToBottom = currentFloor - 1
       const distanceFromBottomToCall = callFloor - 1
       const penalty = 100
 
       return distanceToBottom + distanceFromBottomToCall + penalty
 
-      // Example:
-      // Elevator at floor 10, going down
-      // Call at floor 15, going up
-      // Cost = (10-1) + (15-1) + 100 = 9 + 14 + 100 = 123
+      // Ví dụ:
+      // Thang máy ở tầng 10, đang đi xuống
+      // Lệnh gọi tại tầng 15, hướng lên
+      // Chi phí = (10-1) + (15-1) + 100 = 9 + 14 + 100 = 123
     }
   }
 
@@ -338,66 +338,66 @@ function calculateCost(elevator, callFloor, callDirection, maxFloor) {
 }
 ```
 
-**Cost Interpretation**:
+**Diễn giải chi phí (Cost Interpretation)**:
 ```
-Cost < 50:     Excellent match (same direction, close)
-Cost 50-100:   Good match (same direction, far)
-Cost > 100:    Poor match (needs reversal)
+Chi phí < 50:     Khớp xuất sắc (cùng hướng, gần)
+Chi phí 50-100:   Khớp tốt (cùng hướng, xa)
+Chi phí > 100:    Khớp kém (cần đảo chiều)
 ```
 
-#### Phase 3: Queue Insertion (Thêm Vào Hàng Đợi)
+#### Giai Đoạn 3: Chèn Vào Hàng Đợi (Queue Insertion)
 
-Sau khi chọn elevator, thêm floor vào queue:
+Sau khi chọn thang máy, thêm tầng vào hàng đợi:
 
 ```javascript
 /**
- * Insert floor into queue maintaining SCAN order
+ * Chèn tầng vào hàng đợi duy trì thứ tự SCAN
  */
 function insertIntoQueueSCAN(queue, currentFloor, direction, newFloor) {
-  // Edge case: Empty queue or idle
+  // Trường hợp đặc biệt: Hàng đợi trống hoặc rảnh
   if (queue.length === 0 || direction === 'idle') {
     return [newFloor]
   }
 
-  // Clone queue
+  // Sao chép hàng đợi
   const newQueue = [...queue]
 
-  // Check duplicate
+  // Kiểm tra trùng lặp
   if (newQueue.includes(newFloor)) {
     return newQueue
   }
 
-  // Insert and sort based on direction
+  // Chèn và sắp xếp dựa trên hướng
   newQueue.push(newFloor)
 
   if (direction === 'up') {
-    // Ascending order: smallest to largest
+    // Thứ tự tăng dần: nhỏ nhất đến lớn nhất
     newQueue.sort((a, b) => a - b)
 
-    // Example: [3, 5, 7, 10]
-    // Insert 6 → [3, 5, 6, 7, 10]
+    // Ví dụ: [3, 5, 7, 10]
+    // Chèn 6 → [3, 5, 6, 7, 10]
   }
   else if (direction === 'down') {
-    // Descending order: largest to smallest
+    // Thứ tự giảm dần: lớn nhất đến nhỏ nhất
     newQueue.sort((a, b) => b - a)
 
-    // Example: [10, 7, 5, 3]
-    // Insert 6 → [10, 7, 6, 5, 3]
+    // Ví dụ: [10, 7, 5, 3]
+    // Chèn 6 → [10, 7, 6, 5, 3]
   }
 
   return newQueue
 }
 ```
 
-#### Phase 4: Phantom Floors (Tầng Ảo)
+#### Giai Đoạn 4: Tầng Ảo (Phantom Floors)
 
-**Vấn đề**: Làm sao ensure thang máy đi đến extreme?
+**Vấn đề**: Làm sao đảm bảo thang máy đi đến điểm tận cùng?
 
-**Giải pháp**: Thêm "phantom floors" vào queue.
+**Giải pháp**: Thêm "tầng ảo (phantom floors)" vào hàng đợi.
 
 ```javascript
 /**
- * Ensure SCAN goes to extreme by adding phantom floors
+ * Đảm bảo SCAN đi đến điểm tận cùng bằng cách thêm tầng ảo
  */
 function ensureSCANExtreme(queue, currentFloor, direction, numFloors) {
   if (!queue || queue.length === 0) return queue
@@ -405,7 +405,7 @@ function ensureSCANExtreme(queue, currentFloor, direction, numFloors) {
   const newQueue = [...queue]
 
   // ════════════════════════════════════════════════════════
-  // Going UP: Ensure we reach top floor
+  // Đi LÊN: Đảm bảo đến tầng cao nhất
   // ════════════════════════════════════════════════════════
   if (direction === 'up') {
     const hasFloorsAbove = queue.some(q => q.floor > currentFloor)
@@ -413,20 +413,20 @@ function ensureSCANExtreme(queue, currentFloor, direction, numFloors) {
     if (hasFloorsAbove) {
       const maxInQueue = Math.max(...queue.map(q => q.floor))
 
-      // If max in queue < top floor, add phantom
+      // Nếu tầng cao nhất trong hàng đợi < tầng đỉnh, thêm phantom
       if (maxInQueue < numFloors) {
         newQueue.push({
           floor: numFloors,
           callDirection: null,
           timestamp: Date.now(),
-          isPhantom: true  // Mark as phantom
+          isPhantom: true  // Đánh dấu là phantom
         })
       }
     }
   }
 
   // ════════════════════════════════════════════════════════
-  // Going DOWN: Ensure we reach bottom floor
+  // Đi XUỐNG: Đảm bảo đến tầng thấp nhất
   // ════════════════════════════════════════════════════════
   else if (direction === 'down') {
     const hasFloorsBelow = queue.some(q => q.floor < currentFloor)
@@ -434,7 +434,7 @@ function ensureSCANExtreme(queue, currentFloor, direction, numFloors) {
     if (hasFloorsBelow) {
       const minInQueue = Math.min(...queue.map(q => q.floor))
 
-      // If min in queue > floor 1, add phantom
+      // Nếu tầng thấp nhất trong hàng đợi > tầng 1, thêm phantom
       if (minInQueue > 1) {
         newQueue.push({
           floor: 1,
@@ -446,7 +446,7 @@ function ensureSCANExtreme(queue, currentFloor, direction, numFloors) {
     }
   }
 
-  // Re-sort after adding phantom
+  // Sắp xếp lại sau khi thêm phantom
   if (direction === 'up') {
     newQueue.sort((a, b) => a.floor - b.floor)
   } else {
@@ -459,94 +459,94 @@ function ensureSCANExtreme(queue, currentFloor, direction, numFloors) {
 
 **Khi nào thêm phantom**:
 ```
-Elevator at floor 5, going up
-Queue: [7, 10]
+Thang máy ở tầng 5, đang đi lên
+Hàng đợi: [7, 10]
 maxFloor = 20
 
-→ Add phantom floor 20
-→ Queue becomes: [7, 10, 20]
-→ Elevator will go: 5 → 7 → 10 → 20 (extreme!)
+→ Thêm tầng ảo 20
+→ Hàng đợi trở thành: [7, 10, 20]
+→ Thang máy sẽ đi: 5 → 7 → 10 → 20 (extreme!)
 ```
 
 **Khi nào KHÔNG thêm phantom**:
 ```
-Elevator at floor 5, going up
-Queue: [7, 10, 20]  // Already includes top floor!
+Thang máy ở tầng 5, đang đi lên
+Hàng đợi: [7, 10, 20]  // Đã bao gồm tầng đỉnh!
 
-→ No phantom needed
-→ Queue stays: [7, 10, 20]
+→ Không cần phantom
+→ Hàng đợi giữ nguyên: [7, 10, 20]
 ```
 
 **Loại bỏ phantom**:
 ```javascript
-// When reaching a floor, remove it from queue
+// Khi đến một tầng, xóa nó khỏi hàng đợi
 const reachedFloor = queue[0]
 
-// Don't count phantom floors in metrics
+// Không tính tầng ảo trong số liệu
 if (!reachedFloor.isPhantom) {
-  // Record wait time, update statistics
+  // Ghi lại thời gian chờ, cập nhật thống kê
   recordMetrics(reachedFloor)
 }
 
-// Remove from queue (phantom or not)
+// Xóa khỏi hàng đợi (phantom hay không)
 queue = queue.slice(1)
 ```
 
-#### Phase 5: Direction Reversal (Đảo Hướng)
+#### Giai Đoạn 5: Đảo Chiều (Direction Reversal)
 
-Khi nào đảo hướng?
+Khi nào đảo chiều?
 
 ```javascript
 /**
- * Determine if elevator should reverse direction
+ * Xác định liệu thang máy có nên đảo chiều hay không
  */
 function shouldReverse(elevator, maxFloor) {
   const { currentFloor, direction, queue } = elevator
 
-  // No queue = stay idle
+  // Không có hàng đợi = giữ rảnh
   if (queue.length === 0) {
     return { shouldReverse: false, newDirection: 'idle' }
   }
 
   // ════════════════════════════════════════════════════════
-  // At TOP floor, going UP → reverse to DOWN
+  // Ở tầng ĐỈNH, đang đi LÊN → đảo chiều XUỐNG
   // ════════════════════════════════════════════════════════
   if (currentFloor === maxFloor && direction === 'up') {
     return { shouldReverse: true, newDirection: 'down' }
   }
 
   // ════════════════════════════════════════════════════════
-  // At BOTTOM floor, going DOWN → reverse to UP
+  // Ở tầng ĐÁY, đang đi XUỐNG → đảo chiều LÊN
   // ════════════════════════════════════════════════════════
   if (currentFloor === 1 && direction === 'down') {
     return { shouldReverse: true, newDirection: 'up' }
   }
 
   // ════════════════════════════════════════════════════════
-  // Finished queue while going UP → reverse to DOWN
+  // Hoàn thành hàng đợi khi đang đi LÊN → đảo chiều XUỐNG
   // ════════════════════════════════════════════════════════
   if (direction === 'up' && queue.length > 0) {
     const nextFloor = queue[0].floor
 
     if (nextFloor < currentFloor) {
-      // Next floor is below us → must have reached top
+      // Tầng tiếp theo ở phía dưới → chắc đã đến đỉnh
       return { shouldReverse: true, newDirection: 'down' }
     }
   }
 
   // ════════════════════════════════════════════════════════
-  // Finished queue while going DOWN → reverse to UP
+  // Hoàn thành hàng đợi khi đang đi XUỐNG → đảo chiều LÊN
   // ════════════════════════════════════════════════════════
   if (direction === 'down' && queue.length > 0) {
     const nextFloor = queue[0].floor
 
     if (nextFloor > currentFloor) {
-      // Next floor is above us → must have reached bottom
+      // Tầng tiếp theo ở phía trên → chắc đã đến đáy
       return { shouldReverse: true, newDirection: 'up' }
     }
   }
 
-  // Continue current direction
+  // Tiếp tục hướng hiện tại
   return { shouldReverse: false, newDirection: direction }
 }
 ```
@@ -555,110 +555,110 @@ function shouldReverse(elevator, maxFloor) {
 
 ## 📊 Phân Tích Thuật Toán
 
-### Time Complexity (Độ Phức Tạp Thời Gian)
+### Độ Phức Tạp Thời Gian (Time Complexity)
 
-#### Worst Case (Trường hợp xấu nhất)
+#### Trường Hợp Xấu Nhất (Worst Case)
 
-**Scenario**: Request ở tầng đối diện với hướng elevator hiện tại
+**Kịch bản**: Yêu cầu ở tầng đối diện với hướng của thang máy hiện tại
 
 ```
-Elevator: Tầng 1, going UP
-Request: Tầng 1, going DOWN
+Thang máy: Tầng 1, đang đi LÊN
+Yêu cầu: Tầng 1, hướng XUỐNG
 
-Path:
-1 → 2 → 3 → ... → 20 (top) → 19 → 18 → ... → 1 (serve)
+Đường đi:
+1 → 2 → 3 → ... → 20 (đỉnh) → 19 → 18 → ... → 1 (phục vụ)
 
-Total: 38 floors (20 up + 19 down - 1)
+Tổng: 38 tầng (20 lên + 19 xuống - 1)
 ```
 
-**Formula**:
+**Công thức**:
 ```
-Worst-case wait = 2 × N floors
-  where N = number of floors
+Thời gian chờ xấu nhất = 2 × N tầng
+  với N = số tầng
 ```
 
-**Time Complexity**: **O(N)**
+**Độ phức tạp thời gian**: **O(N)**
 - N = số tầng
-- Linear với kích thước building
+- Tuyến tính với kích thước tòa nhà
 
-#### Best Case (Trường hợp tốt nhất)
+#### Trường Hợp Tốt Nhất (Best Case)
 
-**Scenario**: Request cùng hướng và ngay phía trước
+**Kịch bản**: Yêu cầu cùng hướng và ngay phía trước
 
 ```
-Elevator: Tầng 5, going UP
-Request: Tầng 6, going UP
+Thang máy: Tầng 5, đang đi LÊN
+Yêu cầu: Tầng 6, hướng LÊN
 
-Path: 5 → 6 (serve immediately)
+Đường đi: 5 → 6 (phục vụ ngay lập tức)
 
-Total: 1 floor
+Tổng: 1 tầng
 ```
 
-**Time Complexity**: **O(1)** - Constant time
+**Độ phức tạp thời gian**: **O(1)** - Thời gian hằng số
 
-#### Average Case (Trường hợp trung bình)
+#### Trường Hợp Trung Bình (Average Case)
 
 **Giả định**:
-- Requests phân bố đều
-- Elevator di chuyển liên tục
+- Yêu cầu phân bố đều
+- Thang máy di chuyển liên tục
 
-**Average wait time**:
+**Thời gian chờ trung bình**:
 ```
-Avg wait ≈ N/2 floors
-  where N = number of floors
-```
-
-**Time Complexity**: **O(N)**
-
-### Space Complexity (Độ Phức Tạp Không Gian)
-
-**Queue Storage**:
-```
-Space = O(R)
-  where R = number of pending requests
+Thời gian chờ TB ≈ N/2 tầng
+  với N = số tầng
 ```
 
-**Typical**: R << N (requests ít hơn nhiều so với số tầng)
+**Độ phức tạp thời gian**: **O(N)**
 
-**Per Elevator**:
+### Độ Phức Tạp Không Gian (Space Complexity)
+
+**Lưu trữ hàng đợi (Queue Storage)**:
+```
+Không gian = O(R)
+  với R = số yêu cầu đang chờ
+```
+
+**Thông thường**: R << N (yêu cầu ít hơn nhiều so với số tầng)
+
+**Mỗi thang máy**:
 ```javascript
 {
   id: 4 bytes,
   currentFloor: 4 bytes,
   direction: 4 bytes,
-  queue: R × 16 bytes,  // R requests × 16 bytes each
+  queue: R × 16 bytes,  // R yêu cầu × 16 bytes mỗi cái
   ...
 }
 
-Total per elevator ≈ 50 bytes + (R × 16 bytes)
+Tổng mỗi thang máy ≈ 50 bytes + (R × 16 bytes)
 ```
 
-**Multiple Elevators**:
+**Nhiều thang máy**:
 ```
-Space = M × (50 + R × 16) bytes
-  where M = number of elevators
-```
-
-### Throughput (Thông Lượng)
-
-**Requests per hour**:
-```
-Throughput = (3600 / T_avg) × M elevators
-
-where:
-  T_avg = average time per trip (seconds)
-  M = number of elevators
+Không gian = M × (50 + R × 16) bytes
+  với M = số thang máy
 ```
 
-**Example**:
-```
-Building: 20 floors
-Elevators: 4
-T_avg: 45 seconds (estimate)
+### Thông Lượng (Throughput)
 
-Throughput = (3600 / 45) × 4
+**Yêu cầu mỗi giờ**:
+```
+Thông lượng = (3600 / T_avg) × M thang máy
+
+trong đó:
+  T_avg = thời gian trung bình mỗi chuyến (giây)
+  M = số thang máy
+```
+
+**Ví dụ**:
+```
+Tòa nhà: 20 tầng
+Thang máy: 4
+T_avg: 45 giây (ước tính)
+
+Thông lượng = (3600 / 45) × 4
            = 80 × 4
-           = 320 requests/hour
+           = 320 yêu cầu/giờ
 ```
 
 ---
@@ -669,301 +669,301 @@ Throughput = (3600 / 45) × 4
 
 **FCFS**: Phục vụ theo thứ tự yêu cầu
 
-| Aspect | SCAN | FCFS |
+| Khía cạnh | SCAN | FCFS |
 |--------|------|------|
-| **Fairness** | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐ Fair |
-| **Efficiency** | ⭐⭐⭐⭐ Good | ⭐⭐ Poor |
-| **Starvation** | ✅ None | ✅ None |
-| **Predictability** | ⭐⭐⭐⭐⭐ High | ⭐⭐⭐⭐⭐ High |
-| **Implementation** | Medium | Simple |
+| **Công bằng (Fairness)** | ⭐⭐⭐⭐⭐ Xuất sắc | ⭐⭐⭐ Khá |
+| **Hiệu quả (Efficiency)** | ⭐⭐⭐⭐ Tốt | ⭐⭐ Kém |
+| **Bỏ đói (Starvation)** | ✅ Không có | ✅ Không có |
+| **Khả năng dự đoán (Predictability)** | ⭐⭐⭐⭐⭐ Cao | ⭐⭐⭐⭐⭐ Cao |
+| **Triển khai (Implementation)** | Trung bình | Đơn giản |
 
 **Ví dụ so sánh**:
 ```
-Scenario:
-Elevator at floor 10
-Requests (in order): Floor 5, Floor 15, Floor 3
+Kịch bản:
+Thang máy ở tầng 10
+Yêu cầu (theo thứ tự): Tầng 5, Tầng 15, Tầng 3
 
-FCFS Path:
-10 → 5 (serve) → 15 (serve) → 3 (serve)
-Total: 5 + 10 + 12 = 27 floors
-Direction changes: 2
+Đường đi FCFS:
+10 → 5 (phục vụ) → 15 (phục vụ) → 3 (phục vụ)
+Tổng: 5 + 10 + 12 = 27 tầng
+Đổi chiều: 2 lần
 
-SCAN Path (going down):
-10 → 5 (serve) → 3 (serve) → 1 (extreme) → ... → 15 (serve)
-Total: 5 + 2 + 2 + 14 = 23 floors
-Direction changes: 1
+Đường đi SCAN (đang đi xuống):
+10 → 5 (phục vụ) → 3 (phục vụ) → 1 (extreme) → ... → 15 (phục vụ)
+Tổng: 5 + 2 + 2 + 14 = 23 tầng
+Đổi chiều: 1 lần
 
-→ SCAN more efficient (-15%)
+→ SCAN hiệu quả hơn (-15%)
 ```
 
 ### SCAN vs LOOK
 
-**LOOK**: Như SCAN nhưng KHÔNG đi đến extreme
+**LOOK**: Như SCAN nhưng KHÔNG đi đến điểm tận cùng
 
-| Aspect | SCAN | LOOK |
+| Khía cạnh | SCAN | LOOK |
 |--------|------|------|
-| **Fairness** | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good |
-| **Efficiency** | ⭐⭐⭐⭐ Good | ⭐⭐⭐⭐⭐ Excellent |
-| **Starvation** | ✅ None | ⚠️ Very rare |
-| **Predictability** | ⭐⭐⭐⭐⭐ High | ⭐⭐⭐⭐ Good |
-| **Extreme visits** | Always | Never |
+| **Công bằng (Fairness)** | ⭐⭐⭐⭐⭐ Xuất sắc | ⭐⭐⭐⭐ Rất tốt |
+| **Hiệu quả (Efficiency)** | ⭐⭐⭐⭐ Tốt | ⭐⭐⭐⭐⭐ Xuất sắc |
+| **Bỏ đói (Starvation)** | ✅ Không có | ⚠️ Rất hiếm |
+| **Khả năng dự đoán (Predictability)** | ⭐⭐⭐⭐⭐ Cao | ⭐⭐⭐⭐ Tốt |
+| **Thăm điểm tận cùng (Extreme visits)** | Luôn luôn | Không bao giờ |
 
 **Ví dụ so sánh**:
 ```
-Elevator at floor 5, going up
-Queue: [7, 10]
+Thang máy ở tầng 5, đang đi lên
+Hàng đợi: [7, 10]
 maxFloor: 20
 
 SCAN:
-5 → 7 → 10 → 20 (extreme!) → reverse
-Total: 15 floors UP
+5 → 7 → 10 → 20 (extreme!) → đảo chiều
+Tổng: 15 tầng LÊN
 
 LOOK:
-5 → 7 → 10 → reverse immediately
-Total: 5 floors UP
+5 → 7 → 10 → đảo chiều ngay
+Tổng: 5 tầng LÊN
 
-→ LOOK saves 10 floors (67% more efficient)
+→ LOOK tiết kiệm 10 tầng (hiệu quả hơn 67%)
 ```
 
 **Khi nào SCAN tốt hơn LOOK**:
-- High traffic (đông người)
-- Need strict fairness guarantees
-- Predictable max wait time required
+- Lưu lượng cao (đông người)
+- Cần đảm bảo công bằng nghiêm ngặt
+- Yêu cầu thời gian chờ tối đa có thể dự đoán
 
 **Khi nào LOOK tốt hơn SCAN**:
-- Low to medium traffic
-- Efficiency prioritized over fairness
-- Energy saving important
+- Lưu lượng thấp đến trung bình
+- Ưu tiên hiệu quả hơn công bằng
+- Tiết kiệm năng lượng quan trọng
 
 ### SCAN vs SSTF (Shortest Seek Time First)
 
 **SSTF**: Luôn phục vụ tầng gần nhất
 
-| Aspect | SCAN | SSTF |
+| Khía cạnh | SCAN | SSTF |
 |--------|------|------|
-| **Fairness** | ⭐⭐⭐⭐⭐ | ⭐⭐ Poor |
-| **Efficiency** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ (but risky) |
-| **Starvation** | ✅ None | ❌ High risk |
-| **Predictability** | ⭐⭐⭐⭐⭐ | ⭐⭐ Poor |
-| **Production use** | ✅ Yes | ❌ No |
+| **Công bằng (Fairness)** | ⭐⭐⭐⭐⭐ | ⭐⭐ Kém |
+| **Hiệu quả (Efficiency)** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ (nhưng rủi ro) |
+| **Bỏ đói (Starvation)** | ✅ Không có | ❌ Nguy cơ cao |
+| **Khả năng dự đoán (Predictability)** | ⭐⭐⭐⭐⭐ | ⭐⭐ Kém |
+| **Sử dụng thực tế (Production use)** | ✅ Có | ❌ Không |
 
-**Ví dụ starvation với SSTF**:
+**Ví dụ bỏ đói với SSTF**:
 ```
-Elevator at floor 10
-Initial request: Floor 20 (distance = 10)
+Thang máy ở tầng 10
+Yêu cầu ban đầu: Tầng 20 (khoảng cách = 10)
 
-Elevator starts moving to 20...
-At floor 12:
-  - New request: Floor 8 (distance = 4)
-  - SSTF reverses to floor 8!
+Thang máy bắt đầu di chuyển đến 20...
+Ở tầng 12:
+  - Yêu cầu mới: Tầng 8 (khoảng cách = 4)
+  - SSTF đảo chiều về tầng 8!
 
-At floor 9:
-  - New request: Floor 5 (distance = 4)
-  - SSTF reverses to floor 5!
+Ở tầng 9:
+  - Yêu cầu mới: Tầng 5 (khoảng cách = 4)
+  - SSTF đảo chiều về tầng 5!
 
-Floor 20 never gets served! (Starvation)
+Tầng 20 không bao giờ được phục vụ! (Bỏ đói - Starvation)
 
-With SCAN:
-10 → 12 → ... → 20 (serve floor 20 first)
-Then reverse for floor 8 and 5
-→ No starvation
+Với SCAN:
+10 → 12 → ... → 20 (phục vụ tầng 20 trước)
+Sau đó đảo chiều cho tầng 8 và 5
+→ Không có bỏ đói
 ```
 
 ### SCAN vs C-SCAN (Circular SCAN)
 
-**C-SCAN**: Đi lên đến top, teleport về bottom, lặp lại
+**C-SCAN**: Đi lên đến đỉnh, dịch chuyển về đáy, lặp lại
 
-| Aspect | SCAN | C-SCAN |
+| Khía cạnh | SCAN | C-SCAN |
 |--------|------|--------|
-| **Fairness** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ (better) |
-| **Efficiency** | ⭐⭐⭐⭐ | ⭐⭐⭐ |
-| **Direction** | Bi-directional | Uni-directional |
-| **Wait variance** | Higher | Lower |
+| **Công bằng (Fairness)** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ (tốt hơn) |
+| **Hiệu quả (Efficiency)** | ⭐⭐⭐⭐ | ⭐⭐⭐ |
+| **Hướng (Direction)** | Hai chiều | Một chiều |
+| **Phương sai thời gian chờ (Wait variance)** | Cao hơn | Thấp hơn |
 
-**C-SCAN advantage**:
+**Ưu điểm của C-SCAN**:
 ```
-SCAN problem:
-- Floors near middle served more frequently
-- Floors at extremes wait longer
+Vấn đề của SCAN:
+- Tầng gần giữa được phục vụ thường xuyên hơn
+- Tầng ở extremes chờ lâu hơn
 
-C-SCAN solution:
-- All floors have similar wait times
-- More uniform service distribution
+Giải pháp của C-SCAN:
+- Tất cả tầng có thời gian chờ tương tự
+- Phân phối dịch vụ đồng đều hơn
 ```
 
 **Ví dụ**:
 ```
-SCAN (10-floor building):
-UP: 1→2→3→4→5→6→7→8→9→10
-DOWN: 10→9→8→7→6→5→4→3→2→1
-Floors 5-6 served every ~10 floors
-Floors 1,10 served every ~19 floors
+SCAN (tòa nhà 10 tầng):
+LÊN: 1→2→3→4→5→6→7→8→9→10
+XUỐNG: 10→9→8→7→6→5→4→3→2→1
+Tầng 5-6 được phục vụ mỗi ~10 tầng
+Tầng 1,10 được phục vụ mỗi ~19 tầng
 
 C-SCAN:
-UP: 1→2→3→4→5→6→7→8→9→10
-TELEPORT: 10 → 1
-UP: 1→2→3→4→5→6→7→8→9→10
-All floors served every ~10 floors (uniform)
+LÊN: 1→2→3→4→5→6→7→8→9→10
+DỊCH CHUYỂN: 10 → 1
+LÊN: 1→2→3→4→5→6→7→8→9→10
+Tất cả tầng được phục vụ mỗi ~10 tầng (đồng đều)
 ```
 
 ---
 
 ## 🏢 Ứng Dụng Thực Tế
 
-### Commercial Buildings (Tòa Nhà Thương Mại)
+### Tòa Nhà Thương Mại (Commercial Buildings)
 
-**Scenario**: Office building, 30 tầng, 8 thang máy
+**Kịch bản**: Tòa nhà văn phòng, 30 tầng, 8 thang máy
 
 **Tại sao dùng SCAN**:
-1. **Peak hours (8-9 AM, 5-6 PM)**
+1. **Giờ cao điểm (Peak hours) (8-9 AM, 5-6 PM)**
    - Lưu lượng cực cao
-   - Cần fairness guarantee
-   - Predictable wait times
+   - Cần đảm bảo công bằng
+   - Thời gian chờ có thể dự đoán
 
-2. **Lunch time (12-1 PM)**
-   - Bidirectional traffic (up & down)
-   - SCAN handles well
+2. **Giờ ăn trưa (Lunch time) (12-1 PM)**
+   - Lưu lượng hai chiều (lên & xuống)
+   - SCAN xử lý tốt
 
-3. **Normal hours**
-   - Distributed traffic
-   - SCAN provides consistent service
+3. **Giờ thường (Normal hours)**
+   - Lưu lượng phân tán
+   - SCAN cung cấp dịch vụ nhất quán
 
-**Configuration**:
+**Cấu hình**:
 ```javascript
 {
   algorithm: 'SCAN',
   floors: 30,
   elevators: 8,
 
-  // Group elevators by zones
+  // Nhóm thang máy theo vùng
   zones: [
-    { elevators: [0,1,2], floors: [1,10] },   // Low-rise
-    { elevators: [3,4,5], floors: [11,20] },  // Mid-rise
-    { elevators: [6,7], floors: [21,30] }     // High-rise
+    { elevators: [0,1,2], floors: [1,10] },   // Tầng thấp
+    { elevators: [3,4,5], floors: [11,20] },  // Tầng trung
+    { elevators: [6,7], floors: [21,30] }     // Tầng cao
   ],
 
-  // Each zone runs SCAN independently
+  // Mỗi vùng chạy SCAN độc lập
   perZoneSCAN: true
 }
 ```
 
-### Hospitals (Bệnh Viện)
+### Bệnh Viện (Hospitals)
 
-**Scenario**: Hospital, 10 tầng, 4 thang máy
+**Kịch bản**: Bệnh viện, 10 tầng, 4 thang máy
 
-**Challenges**:
-- Emergency requests (ưu tiên cao)
-- Regular traffic
-- Equipment transport
+**Thách thức**:
+- Yêu cầu khẩn cấp (ưu tiên cao)
+- Lưu lượng thường xuyên
+- Vận chuyển thiết bị
 
-**Solution**: Modified SCAN với priority
+**Giải pháp**: SCAN cải tiến với ưu tiên
 
 ```javascript
 {
   algorithm: 'SCAN_with_priority',
 
   priorities: {
-    emergency: 10,    // Highest
+    emergency: 10,    // Cao nhất
     staff: 5,
     visitor: 1
   },
 
-  // Emergency overrides SCAN
+  // Khẩn cấp ghi đè SCAN
   emergencyOverride: true,
 
-  // After emergency, resume SCAN
+  // Sau khẩn cấp, tiếp tục SCAN
   resumeSCAN: true
 }
 ```
 
-**Behavior**:
+**Hành vi**:
 ```
-Normal SCAN operation:
-Floor 5 → 6 → 7 → 8 → ...
+Hoạt động SCAN bình thường:
+Tầng 5 → 6 → 7 → 8 → ...
 
-EMERGENCY at floor 3:
-Floor 5 → INTERRUPT → 3 (emergency) → resume at 5 → 6 → 7 → ...
+KHẨN CẤP tại tầng 3:
+Tầng 5 → NGẮT → 3 (khẩn cấp) → tiếp tục tại 5 → 6 → 7 → ...
 ```
 
-### Residential Buildings (Chung Cư)
+### Chung Cư (Residential Buildings)
 
-**Scenario**: Apartment building, 20 tầng, 3 thang máy
+**Kịch bản**: Chung cư, 20 tầng, 3 thang máy
 
-**Traffic patterns**:
-- Morning (7-9 AM): Mostly DOWN (đi làm)
-- Evening (6-8 PM): Mostly UP (về nhà)
-- Other times: Random
+**Mẫu lưu lượng (Traffic patterns)**:
+- Buổi sáng (7-9 AM): Chủ yếu XUỐNG (đi làm)
+- Buổi tối (6-8 PM): Chủ yếu LÊN (về nhà)
+- Thời gian khác: Ngẫu nhiên
 
-**Optimization**: Adaptive SCAN
+**Tối ưu hóa**: SCAN thích ứng
 
 ```javascript
 {
   algorithm: 'adaptive_SCAN',
 
-  // Morning: Prioritize DOWN direction
+  // Buổi sáng: Ưu tiên hướng XUỐNG
   morningMode: {
     time: '07:00-09:00',
     startDirection: 'down',
-    downWeight: 1.5  // Prefer down requests
+    downWeight: 1.5  // Ưu tiên yêu cầu xuống
   },
 
-  // Evening: Prioritize UP direction
+  // Buổi tối: Ưu tiên hướng LÊN
   eveningMode: {
     time: '18:00-20:00',
     startDirection: 'up',
     upWeight: 1.5
   },
 
-  // Other times: Standard SCAN
+  // Thời gian khác: SCAN tiêu chuẩn
   normalMode: {
     algorithm: 'SCAN'
   }
 }
 ```
 
-### Shopping Malls (Trung Tâm Thương Mại)
+### Trung Tâm Thương Mại (Shopping Malls)
 
-**Scenario**: Mall, 5 tầng, 6 thang máy
+**Kịch bản**: Trung tâm thương mại, 5 tầng, 6 thang máy
 
-**Characteristics**:
-- Short building (5 floors)
-- High volume traffic
-- Peak: weekends
+**Đặc điểm**:
+- Tòa nhà thấp (5 tầng)
+- Lưu lượng lớn
+- Cao điểm: cuối tuần
 
-**Why SCAN works**:
+**Tại sao SCAN hoạt động tốt**:
 ```
-Short sweeps:
-- Max sweep = 5 floors
-- Quick reversals
-- High throughput
+Quét ngắn:
+- Quét tối đa = 5 tầng
+- Đảo chiều nhanh
+- Thông lượng cao
 
-SCAN advantage over LOOK:
-- Predictability > Efficiency
-- Shoppers appreciate consistency
+Ưu điểm SCAN so với LOOK:
+- Khả năng dự đoán > Hiệu quả
+- Khách hàng đánh giá cao tính nhất quán
 ```
 
-### Data Centers (Applied to Disk I/O)
+### Trung Tâm Dữ Liệu (Data Centers) (Áp dụng cho Disk I/O)
 
-SCAN ban đầu từ disk scheduling, vẫn được dùng:
+SCAN ban đầu từ lập lịch đĩa cứng, vẫn được sử dụng:
 
-**Modern SSDs**:
-- Không có mechanical movement
-- Nhưng vẫn dùng SCAN cho fairness
+**SSDs hiện đại**:
+- Không có chuyển động cơ học
+- Nhưng vẫn dùng SCAN cho công bằng
 
-**HDD Arrays (RAID)**:
+**Mảng HDD (RAID)**:
 ```javascript
 {
   algorithm: 'SCAN',
   application: 'disk_scheduling',
 
-  // Multiple disks = multiple elevators
+  // Nhiều đĩa = nhiều thang máy
   disks: [0, 1, 2, 3],
 
-  // Tracks = floors
+  // Tracks = tầng
   tracks: 10000,
 
-  // Seek time = travel time
-  seekTimePerTrack: 0.1  // milliseconds
+  // Thời gian tìm kiếm = thời gian di chuyển
+  seekTimePerTrack: 0.1  // mili giây
 }
 ```
 
@@ -971,207 +971,207 @@ SCAN ban đầu từ disk scheduling, vẫn được dùng:
 
 ## 📐 Ví Dụ Minh Họa
 
-### Ví Dụ 1: Basic SCAN (Cơ Bản)
+### Ví Dụ 1: SCAN Cơ Bản (Basic SCAN)
 
-**Setup**:
+**Thiết lập**:
 ```
-Building: 10 floors
-Elevator: 1
-Start: Floor 1, IDLE
-```
-
-**Requests** (in order):
-```
-1. Floor 5, UP
-2. Floor 8, UP
-3. Floor 3, DOWN
-4. Floor 7, UP
+Tòa nhà: 10 tầng
+Thang máy: 1
+Bắt đầu: Tầng 1, RẢNH (IDLE)
 ```
 
-**Execution**:
-
-**Step 1**: Request tầng 5 UP
+**Yêu cầu** (theo thứ tự):
 ```
-Elevator: Floor 1, IDLE
-Action: Start moving UP
-Queue: [5]
-
-Path: 1 → 2 → 3 → 4 → 5 (SERVE)
+1. Tầng 5, LÊN
+2. Tầng 8, LÊN
+3. Tầng 3, XUỐNG
+4. Tầng 7, LÊN
 ```
 
-**Step 2**: Request tầng 8 UP (khi đang tại tầng 3)
+**Thực thi**:
+
+**Bước 1**: Yêu cầu tầng 5 LÊN
 ```
-Elevator: Floor 3, going UP
-Queue: [5]
-New request: Floor 8, UP
+Thang máy: Tầng 1, RẢNH
+Hành động: Bắt đầu di chuyển LÊN
+Hàng đợi: [5]
 
-Insert into queue (ascending):
-Queue: [5, 8]
-
-Path: 3 → 4 → 5 (SERVE) → 6 → 7 → 8 (SERVE)
-```
-
-**Step 3**: Request tầng 3 DOWN (khi đang tại tầng 6)
-```
-Elevator: Floor 6, going UP
-Queue: [8]
-New request: Floor 3, DOWN
-
-Cost calculation:
-- Going UP, must reach top first
-- Cost = (10-6) + (10-3) + 100 = 111
-
-Insert:
-Queue: [8, 10(phantom)]
-
-Path: 6 → 7 → 8 (SERVE) → 9 → 10 (extreme) → REVERSE
+Đường đi: 1 → 2 → 3 → 4 → 5 (PHỤC VỤ)
 ```
 
-**Step 4**: Request tầng 7 UP (khi đang tại tầng 9 going UP)
+**Bước 2**: Yêu cầu tầng 8 LÊN (khi đang ở tầng 3)
 ```
-Elevator: Floor 9, going UP
-Queue: [10(phantom)]
-New request: Floor 7, UP
+Thang máy: Tầng 3, đang đi LÊN
+Hàng đợi: [5]
+Yêu cầu mới: Tầng 8, LÊN
 
-Cost = high (opposite direction now)
+Chèn vào hàng đợi (tăng dần):
+Hàng đợi: [5, 8]
 
-Will be served on DOWN sweep:
-Current: 9 → 10 (extreme) → REVERSE
-Then: 10 → 9 → 8 → 7 (SERVE) → ... → 3 (SERVE) → ...
-```
-
-**Complete Timeline**:
-```
-Time  | Floor | Action           | Queue
-------|-------|------------------|----------
-0     | 1     | Request 5 UP     | [5]
-5     | 5     | SERVE floor 5    | []
-5     | 5     | Request 8 UP     | [8]
-8     | 8     | SERVE floor 8    | []
-9     | 9     | Request 3 DOWN   | [10p]
-10    | 10    | Reach extreme    | []
-10    | 10    | REVERSE          |
-10    | 10    | Request 7 UP     | [7, 3]
-11    | 7     | SERVE floor 7    | [3]
-14    | 3     | SERVE floor 3    | []
-
-Total time: 14 time units
-Total floors traveled: 9 + 7 = 16 floors
-Direction changes: 1
+Đường đi: 3 → 4 → 5 (PHỤC VỤ) → 6 → 7 → 8 (PHỤC VỤ)
 ```
 
-### Ví Dụ 2: Multiple Elevators
-
-**Setup**:
+**Bước 3**: Yêu cầu tầng 3 XUỐNG (khi đang ở tầng 6)
 ```
-Building: 15 floors
-Elevators: 3
-Start positions:
-  - Elevator A: Floor 1, IDLE
-  - Elevator B: Floor 8, going UP
-  - Elevator C: Floor 12, going DOWN
-```
+Thang máy: Tầng 6, đang đi LÊN
+Hàng đợi: [8]
+Yêu cầu mới: Tầng 3, XUỐNG
 
-**New Request**: Floor 10, going UP
+Tính chi phí:
+- Đang đi LÊN, phải đến đỉnh trước
+- Chi phí = (10-6) + (10-3) + 100 = 111
 
-**Cost Calculation**:
+Chèn:
+Hàng đợi: [8, 10(phantom)]
 
-**Elevator A** (Floor 1, IDLE):
-```
-Cost = |1 - 10| = 9
+Đường đi: 6 → 7 → 8 (PHỤC VỤ) → 9 → 10 (extreme) → ĐẢO CHIỀU
 ```
 
-**Elevator B** (Floor 8, going UP):
+**Bước 4**: Yêu cầu tầng 7 LÊN (khi đang ở tầng 9 đi LÊN)
 ```
-Same direction, ahead of elevator
-Cost = 10 - 8 = 2 ✅ BEST
+Thang máy: Tầng 9, đang đi LÊN
+Hàng đợi: [10(phantom)]
+Yêu cầu mới: Tầng 7, LÊN
+
+Chi phí = cao (hướng ngược lại bây giờ)
+
+Sẽ được phục vụ trong quét XUỐNG:
+Hiện tại: 9 → 10 (extreme) → ĐẢO CHIỀU
+Sau đó: 10 → 9 → 8 → 7 (PHỤC VỤ) → ... → 3 (PHỤC VỤ) → ...
 ```
 
-**Elevator C** (Floor 12, going DOWN):
+**Dòng thời gian hoàn chỉnh**:
 ```
-Wrong direction, must complete sweep
-Cost = (12-1) + (10-1) + 100 = 120
+Thời gian | Tầng | Hành động         | Hàng đợi
+----------|------|-------------------|----------
+0         | 1    | Yêu cầu 5 LÊN     | [5]
+5         | 5    | PHỤC VỤ tầng 5    | []
+5         | 5    | Yêu cầu 8 LÊN     | [8]
+8         | 8    | PHỤC VỤ tầng 8    | []
+9         | 9    | Yêu cầu 3 XUỐNG   | [10p]
+10        | 10   | Đến extreme       | []
+10        | 10   | ĐẢO CHIỀU         |
+10        | 10   | Yêu cầu 7 LÊN     | [7, 3]
+11        | 7    | PHỤC VỤ tầng 7    | [3]
+14        | 3    | PHỤC VỤ tầng 3    | []
+
+Tổng thời gian: 14 đơn vị
+Tổng tầng di chuyển: 9 + 7 = 16 tầng
+Đổi chiều: 1 lần
 ```
 
-**Decision**: Assign to **Elevator B** (cost = 2)
+### Ví Dụ 2: Nhiều Thang Máy (Multiple Elevators)
 
-**Elevator B's Path**:
+**Thiết lập**:
 ```
-Before: Queue = []
-After: Queue = [10]
-
-Path: 8 → 9 → 10 (SERVE)
-```
-
-### Ví Dụ 3: Rush Hour Simulation
-
-**Scenario**: Office building, 8:30 AM, mọi người đến làm
-
-**Setup**:
-```
-Floors: 20
-Elevators: 4
-All start at: Floor 1
+Tòa nhà: 15 tầng
+Thang máy: 3
+Vị trí bắt đầu:
+  - Thang máy A: Tầng 1, RẢNH
+  - Thang máy B: Tầng 8, đang đi LÊN
+  - Thang máy C: Tầng 12, đang đi XUỐNG
 ```
 
-**Requests** (simultaneous):
+**Yêu cầu mới**: Tầng 10, hướng LÊN
+
+**Tính chi phí**:
+
+**Thang máy A** (Tầng 1, RẢNH):
 ```
-Floor 5, UP
-Floor 7, UP
-Floor 10, UP
-Floor 12, UP
-Floor 15, UP
-Floor 18, UP
-Floor 20, UP
-Floor 3, UP
+Chi phí = |1 - 10| = 9
 ```
 
-**Distribution Strategy** (SCAN):
-
-**Elevator 1**:
+**Thang máy B** (Tầng 8, đang đi LÊN):
 ```
-Assigned: Floors 3, 5, 7
-Queue: [3, 5, 7]
-Path: 1 → 3(S) → 5(S) → 7(S) → 20(E) → reverse
+Cùng hướng, phía trước thang máy
+Chi phí = 10 - 8 = 2 ✅ TốT NHẤT
 ```
 
-**Elevator 2**:
+**Thang máy C** (Tầng 12, đang đi XUỐNG):
 ```
-Assigned: Floors 10, 12
-Queue: [10, 12]
-Path: 1 → 10(S) → 12(S) → 20(E) → reverse
-```
-
-**Elevator 3**:
-```
-Assigned: Floors 15, 18
-Queue: [15, 18]
-Path: 1 → 15(S) → 18(S) → 20(E) → reverse
+Sai hướng, phải hoàn thành quét
+Chi phí = (12-1) + (10-1) + 100 = 120
 ```
 
-**Elevator 4**:
+**Quyết định**: Gán cho **Thang máy B** (chi phí = 2)
+
+**Đường đi của Thang máy B**:
 ```
-Assigned: Floor 20
-Queue: [20]
-Path: 1 → 20(S) → reverse
+Trước: Hàng đợi = []
+Sau: Hàng đợi = [10]
+
+Đường đi: 8 → 9 → 10 (PHỤC VỤ)
 ```
 
-**Results**:
-```
-Floor | Wait Time | Served By
-------|-----------|----------
-3     | 3s        | Elevator 1
-5     | 5s        | Elevator 1
-7     | 7s        | Elevator 1
-10    | 10s       | Elevator 2
-12    | 12s       | Elevator 2
-15    | 15s       | Elevator 3
-18    | 18s       | Elevator 3
-20    | 20s       | Elevator 4
+### Ví Dụ 3: Mô Phỏng Giờ Cao Điểm (Rush Hour Simulation)
 
-Average wait: 11.25s
-Max wait: 20s
-Balanced load: ✅
+**Kịch bản**: Tòa nhà văn phòng, 8:30 AM, mọi người đến làm
+
+**Thiết lập**:
+```
+Tầng: 20
+Thang máy: 4
+Tất cả bắt đầu tại: Tầng 1
+```
+
+**Yêu cầu** (đồng thời):
+```
+Tầng 5, LÊN
+Tầng 7, LÊN
+Tầng 10, LÊN
+Tầng 12, LÊN
+Tầng 15, LÊN
+Tầng 18, LÊN
+Tầng 20, LÊN
+Tầng 3, LÊN
+```
+
+**Chiến lược phân phối** (SCAN):
+
+**Thang máy 1**:
+```
+Được gán: Tầng 3, 5, 7
+Hàng đợi: [3, 5, 7]
+Đường đi: 1 → 3(S) → 5(S) → 7(S) → 20(E) → đảo chiều
+```
+
+**Thang máy 2**:
+```
+Được gán: Tầng 10, 12
+Hàng đợi: [10, 12]
+Đường đi: 1 → 10(S) → 12(S) → 20(E) → đảo chiều
+```
+
+**Thang máy 3**:
+```
+Được gán: Tầng 15, 18
+Hàng đợi: [15, 18]
+Đường đi: 1 → 15(S) → 18(S) → 20(E) → đảo chiều
+```
+
+**Thang máy 4**:
+```
+Được gán: Tầng 20
+Hàng đợi: [20]
+Đường đi: 1 → 20(S) → đảo chiều
+```
+
+**Kết quả**:
+```
+Tầng | Thời gian chờ | Được phục vụ bởi
+------|---------------|------------------
+3     | 3s            | Thang máy 1
+5     | 5s            | Thang máy 1
+7     | 7s            | Thang máy 1
+10    | 10s           | Thang máy 2
+12    | 12s           | Thang máy 2
+15    | 15s           | Thang máy 3
+18    | 18s           | Thang máy 3
+20    | 20s           | Thang máy 4
+
+Thời gian chờ trung bình: 11.25s
+Thời gian chờ tối đa: 20s
+Cân bằng tải: ✅
 ```
 
 ---
@@ -1183,296 +1183,296 @@ Balanced load: ✅
 **Đề bài**:
 
 Tòa nhà 20 tầng có 3 thang máy:
-- Elevator A: Tầng 5, going UP
-- Elevator B: Tầng 15, going DOWN
-- Elevator C: Tầng 10, IDLE
+- Thang máy A: Tầng 5, đang đi LÊN
+- Thang máy B: Tầng 15, đang đi XUỐNG
+- Thang máy C: Tầng 10, RẢNH
 
-**Câu hỏi**: Tính cost cho mỗi elevator khi có request:
-1. Floor 12, going UP
-2. Floor 8, going DOWN
-3. Floor 18, going UP
+**Câu hỏi**: Tính chi phí cho mỗi thang máy khi có yêu cầu:
+1. Tầng 12, hướng LÊN
+2. Tầng 8, hướng XUỐNG
+3. Tầng 18, hướng LÊN
 
 **Đáp án**:
 
-**Request 1: Floor 12, UP**
+**Yêu cầu 1: Tầng 12, LÊN**
 ```
-Elevator A (Floor 5, UP):
-  Same direction, ahead
-  Cost = 12 - 5 = 7 ✅
+Thang máy A (Tầng 5, LÊN):
+  Cùng hướng, phía trước
+  Chi phí = 12 - 5 = 7 ✅
 
-Elevator B (Floor 15, DOWN):
-  Wrong direction
-  Cost = (15-1) + (12-1) + 100 = 125
+Thang máy B (Tầng 15, XUỐNG):
+  Sai hướng
+  Chi phí = (15-1) + (12-1) + 100 = 125
 
-Elevator C (Floor 10, IDLE):
-  Cost = |10 - 12| = 2 ✅✅ BEST
+Thang máy C (Tầng 10, RẢNH):
+  Chi phí = |10 - 12| = 2 ✅✅ TỐT NHẤT
 
-Winner: Elevator C
-```
-
-**Request 2: Floor 8, DOWN**
-```
-Elevator A (Floor 5, UP):
-  Wrong direction
-  Cost = (20-5) + (20-8) + 100 = 127
-
-Elevator B (Floor 15, DOWN):
-  Same direction, ahead
-  Cost = 15 - 8 = 7 ✅ BEST
-
-Elevator C (Floor 10, IDLE):
-  Cost = |10 - 8| = 2 ✅✅ BEST
-
-Winner: Elevator C (closer)
+Thắng cuộc: Thang máy C
 ```
 
-**Request 3: Floor 18, UP**
+**Yêu cầu 2: Tầng 8, XUỐNG**
 ```
-Elevator A (Floor 5, UP):
-  Same direction, ahead
-  Cost = 18 - 5 = 13 ✅
+Thang máy A (Tầng 5, LÊN):
+  Sai hướng
+  Chi phí = (20-5) + (20-8) + 100 = 127
 
-Elevator B (Floor 15, DOWN):
-  Wrong direction
-  Cost = (15-1) + (18-1) + 100 = 131
+Thang máy B (Tầng 15, XUỐNG):
+  Cùng hướng, phía trước
+  Chi phí = 15 - 8 = 7 ✅ TỐT NHẤT
 
-Elevator C (Floor 10, IDLE):
-  Cost = |10 - 18| = 8 ✅✅ BEST
+Thang máy C (Tầng 10, RẢNH):
+  Chi phí = |10 - 8| = 2 ✅✅ TỐT NHẤT
 
-Winner: Elevator C
+Thắng cuộc: Thang máy C (gần hơn)
+```
+
+**Yêu cầu 3: Tầng 18, LÊN**
+```
+Thang máy A (Tầng 5, LÊN):
+  Cùng hướng, phía trước
+  Chi phí = 18 - 5 = 13 ✅
+
+Thang máy B (Tầng 15, XUỐNG):
+  Sai hướng
+  Chi phí = (15-1) + (18-1) + 100 = 131
+
+Thang máy C (Tầng 10, RẢNH):
+  Chi phí = |10 - 18| = 8 ✅✅ TỐT NHẤT
+
+Thắng cuộc: Thang máy C
 ```
 
 ### Bài Tập 2: Vẽ Lộ Trình (Path Drawing)
 
 **Đề bài**:
 
-Elevator tại tầng 6, going UP, queue = [9, 15]
-Requests mới (theo thứ tự):
-1. Floor 12, UP
-2. Floor 4, DOWN
-3. Floor 18, UP
+Thang máy tại tầng 6, đang đi LÊN, hàng đợi = [9, 15]
+Yêu cầu mới (theo thứ tự):
+1. Tầng 12, LÊN
+2. Tầng 4, XUỐNG
+3. Tầng 18, LÊN
 
 **Câu hỏi**:
-- Vẽ complete path của elevator
-- Tính total floors traveled
-- Đánh dấu direction changes
+- Vẽ đường đi hoàn chỉnh của thang máy
+- Tính tổng số tầng di chuyển
+- Đánh dấu các lần đổi chiều
 
 **Đáp án**:
 
-**Initial State**:
+**Trạng thái ban đầu**:
 ```
-Floor: 6
-Direction: UP
-Queue: [9, 15]
-```
-
-**Request 1**: Floor 12, UP
-```
-Insert into queue (ascending):
-Queue: [9, 12, 15]
+Tầng: 6
+Hướng: LÊN
+Hàng đợi: [9, 15]
 ```
 
-**Request 2**: Floor 4, DOWN
+**Yêu cầu 1**: Tầng 12, LÊN
 ```
-Wrong direction, will serve after reversal
-Temp storage
-```
-
-**Request 3**: Floor 18, UP
-```
-Insert into queue:
-Queue: [9, 12, 15, 18, 20(phantom)]
+Chèn vào hàng đợi (tăng dần):
+Hàng đợi: [9, 12, 15]
 ```
 
-**Complete Path**:
+**Yêu cầu 2**: Tầng 4, XUỐNG
 ```
-Time | Floor | Action              | Queue
------|-------|---------------------|----------------
-0    | 6     | Start               | [9,12,15,18,20p]
-3    | 9     | SERVE floor 9       | [12,15,18,20p]
-6    | 12    | SERVE floor 12      | [15,18,20p]
-9    | 15    | SERVE floor 15      | [18,20p]
-12   | 18    | SERVE floor 18      | [20p]
-14   | 20    | Reach extreme       | []
-14   | 20    | ⟲ REVERSE           | [4]
-20   | 4     | SERVE floor 4       | []
-
-Floors traveled:
-UP: 6→9→12→15→18→20 = 14 floors
-DOWN: 20→4 = 16 floors
-Total: 30 floors
-
-Direction changes: 1 (at floor 20)
+Sai hướng, sẽ phục vụ sau khi đảo chiều
+Lưu tạm thời
 ```
 
-### Bài Tập 3: Optimize Configuration
+**Yêu cầu 3**: Tầng 18, LÊN
+```
+Chèn vào hàng đợi:
+Hàng đợi: [9, 12, 15, 18, 20(phantom)]
+```
+
+**Đường đi hoàn chỉnh**:
+```
+Thời gian | Tầng | Hành động           | Hàng đợi
+----------|------|---------------------|------------------
+0         | 6    | Bắt đầu             | [9,12,15,18,20p]
+3         | 9    | PHỤC VỤ tầng 9      | [12,15,18,20p]
+6         | 12   | PHỤC VỤ tầng 12     | [15,18,20p]
+9         | 15   | PHỤC VỤ tầng 15     | [18,20p]
+12        | 18   | PHỤC VỤ tầng 18     | [20p]
+14        | 20   | Đến extreme         | []
+14        | 20   | ⟲ ĐẢO CHIỀU        | [4]
+20        | 4    | PHỤC VỤ tầng 4      | []
+
+Tầng di chuyển:
+LÊN: 6→9→12→15→18→20 = 14 tầng
+XUỐNG: 20→4 = 16 tầng
+Tổng: 30 tầng
+
+Đổi chiều: 1 lần (tại tầng 20)
+```
+
+### Bài Tập 3: Tối Ưu Hóa Cấu Hình (Optimize Configuration)
 
 **Đề bài**:
 
 Bạn thiết kế hệ thống thang máy cho:
-- Office building, 25 tầng
-- Average 200 employees
-- Peak hours: 8-9 AM (everyone comes), 5-6 PM (everyone leaves)
+- Tòa nhà văn phòng, 25 tầng
+- Trung bình 200 nhân viên
+- Giờ cao điểm: 8-9 AM (mọi người đến), 5-6 PM (mọi người về)
 
 **Câu hỏi**:
-1. Bao nhiêu elevators cần thiết?
-2. Có nên dùng SCAN hay LOOK?
-3. Có cần zone elevators không?
+1. Cần bao nhiêu thang máy?
+2. Nên dùng SCAN hay LOOK?
+3. Có cần phân vùng thang máy không?
 
 **Đáp án**:
 
-**1. Số lượng elevators**:
+**1. Số lượng thang máy**:
 
-**Calculation**:
+**Tính toán**:
 ```
-Assume:
-- Average trip time: 60s (25 floors)
-- Each elevator can do: 60 trips/hour
-- Peak hour: 200 people need elevator
-- Each trip carries: ~5 people
+Giả định:
+- Thời gian trung bình mỗi chuyến: 60s (25 tầng)
+- Mỗi thang máy có thể thực hiện: 60 chuyến/giờ
+- Giờ cao điểm: 200 người cần thang máy
+- Mỗi chuyến chở: ~5 người
 
-Trips needed: 200 / 5 = 40 trips/hour
+Số chuyến cần thiết: 200 / 5 = 40 chuyến/giờ
 
-Elevators needed: 40 / 60 = 0.67 ≈ 1 elevator (minimum)
+Số thang máy cần: 40 / 60 = 0.67 ≈ 1 thang máy (tối thiểu)
 
-BUT add buffer for:
-- Concurrent requests
-- Waiting time minimization
-- Redundancy
+NHƯNG cộng thêm dự phòng cho:
+- Yêu cầu đồng thời
+- Giảm thiểu thời gian chờ
+- Dự phòng
 
-Recommended: 3-4 elevators
+Đề xuất: 3-4 thang máy
 ```
 
 **2. SCAN vs LOOK**:
 
-**Recommendation: SCAN**
+**Đề xuất: SCAN**
 
 **Lý do**:
 ```
-Peak hours characteristics:
-- High volume
-- Need fairness (everyone wants elevator!)
-- Predictability important (know max wait)
+Đặc điểm giờ cao điểm:
+- Khối lượng lớn
+- Cần công bằng (mọi người đều muốn thang máy!)
+- Khả năng dự đoán quan trọng (biết thời gian chờ tối đa)
 
-SCAN advantages:
-✅ Fairness guarantee
-✅ No starvation
-✅ Predictable max wait: 2 × 25 × 1s = 50s
+Ưu điểm của SCAN:
+✅ Đảm bảo công bằng
+✅ Không có bỏ đói
+✅ Thời gian chờ tối đa có thể dự đoán: 2 × 25 × 1s = 50s
 
-LOOK might:
-⚠️ Slightly more efficient
-❌ But less fair during peak
+LOOK có thể:
+⚠️ Hiệu quả hơn một chút
+❌ Nhưng ít công bằng hơn trong giờ cao điểm
 ```
 
-**3. Zoning**:
+**3. Phân vùng (Zoning)**:
 
-**Recommendation: YES, zone elevators**
+**Đề xuất: CÓ, phân vùng thang máy**
 
-**Configuration**:
+**Cấu hình**:
 ```javascript
 {
   zones: [
     {
-      name: 'Low-rise',
+      name: 'Tầng thấp',
       elevators: [0, 1],
       floors: [1, 12],
       algorithm: 'SCAN'
     },
     {
-      name: 'High-rise',
+      name: 'Tầng cao',
       elevators: [2, 3],
       floors: [13, 25],
       algorithm: 'SCAN'
     }
   ],
 
-  // Lobby (floor 1) served by all
+  // Sảnh (tầng 1) được phục vụ bởi tất cả
   lobbyElevator: 'all'
 }
 ```
 
-**Benefits**:
+**Lợi ích**:
 ```
-✅ Faster service (shorter sweeps)
-✅ Better load distribution
-✅ Reduced wait times
+✅ Dịch vụ nhanh hơn (quét ngắn hơn)
+✅ Phân phối tải tốt hơn
+✅ Giảm thời gian chờ
 
-Example:
-Without zones:
-  Request floor 25 from floor 1
-  Worst: 1→25 = 24 floors
+Ví dụ:
+Không có vùng:
+  Yêu cầu tầng 25 từ tầng 1
+  Xấu nhất: 1→25 = 24 tầng
 
-With zones:
-  Use high-rise elevator
-  Start from floor 13
-  Only 12 floors max
+Có vùng:
+  Sử dụng thang máy tầng cao
+  Bắt đầu từ tầng 13
+  Chỉ tối đa 12 tầng
 ```
 
 ---
 
 ## ❓ Câu Hỏi Thường Gặp
 
-### Q1: Tại sao SCAN phải đi đến extreme ngay cả khi không có request?
+### Q1: Tại sao SCAN phải đi đến điểm tận cùng (extreme) ngay cả khi không có yêu cầu?
 
 **A**: Ba lý do chính:
 
-**1. Fairness (Công bằng)**
+**1. Công bằng (Fairness)**
 ```
 Nếu không đi đến extreme:
-- Floors gần giữa được serve nhiều
-- Floors ở extremes bị starve
+- Tầng gần giữa được phục vụ nhiều
+- Tầng ở extremes bị bỏ đói
 
-Example:
-Building 20 floors, elevator ở giữa (floor 10)
-Without extreme:
-  - Floors 8-12: Served frequently
-  - Floors 1-3, 18-20: Rarely served
+Ví dụ:
+Tòa nhà 20 tầng, thang máy ở giữa (tầng 10)
+Không có extreme:
+  - Tầng 8-12: Được phục vụ thường xuyên
+  - Tầng 1-3, 18-20: Hiếm khi được phục vụ
 
-With extreme:
-  - All floors served equally every 2 sweeps
+Có extreme:
+  - Tất cả tầng được phục vụ đều đặn mỗi 2 lần quét
 ```
 
-**2. Predictability (Dự đoán được)**
+**2. Khả năng dự đoán (Predictability)**
 ```
-Users know:
-- Max wait = 2 full sweeps
-- Can calculate: 2 × 20 floors × 1s = 40s max
+Người dùng biết:
+- Thời gian chờ tối đa = 2 lần quét đầy đủ
+- Có thể tính: 2 × 20 tầng × 1s = 40s tối đa
 
-Real example:
+Ví dụ thực tế:
 "Thang máy sẽ đến trong 40s" vs "Không biết bao lâu"
-→ User experience tốt hơn
+→ Trải nghiệm người dùng tốt hơn
 ```
 
-**3. Simplicity (Đơn giản)**
+**3. Đơn giản (Simplicity)**
 ```
 Logic đơn giản:
-- No complex decisions
-- No edge cases
-- Easy to implement in hardware/software
+- Không cần quyết định phức tạp
+- Không có trường hợp đặc biệt
+- Dễ triển khai trong hardware/software
 
-Alternative (like LOOK):
-- Need to check "còn request phía trước không?"
-- More complex logic
-- More bugs possible
+Thay thế (như LOOK):
+- Cần kiểm tra "còn yêu cầu phía trước không?"
+- Logic phức tạp hơn
+- Có thể có nhiều lỗi hơn
 ```
 
-### Q2: Phantom floors có ảnh hưởng đến performance không?
+### Q2: Tầng ảo (Phantom floors) có ảnh hưởng đến hiệu suất không?
 
 **A**: **KHÔNG** ảnh hưởng đáng kể.
 
 **Lý do**:
 
 ```javascript
-// Phantom floor được skip nhanh
+// Tầng ảo được bỏ qua nhanh
 if (floor.isPhantom) {
-  // No door operations
-  // No passenger loading
-  // Just reverse direction
+  // Không có thao tác cửa
+  // Không có người lên xuống
+  // Chỉ đảo chiều
 
-  time_at_phantom = 0s (instant reverse)
+  time_at_phantom = 0s (đảo chiều ngay lập tức)
 }
 
-// Real floor
+// Tầng thực
 if (!floor.isPhantom) {
   door_open: 2.5s
   door_hold: 3s
@@ -1482,64 +1482,64 @@ if (!floor.isPhantom) {
 }
 ```
 
-**Impact**:
+**Tác động**:
 ```
-With phantom: 0s overhead
-Without phantom: Risk of not going to extreme → unfairness
+Với phantom: 0s overhead
+Không có phantom: Nguy cơ không đi đến extreme → không công bằng
 
-Trade-off: Worth it for fairness guarantee
+Đánh đổi: Đáng giá để đảm bảo công bằng
 ```
 
-### Q3: SCAN có phù hợp với mọi building không?
+### Q3: SCAN có phù hợp với mọi tòa nhà không?
 
-**A**: **KHÔNG**. Depends on building type.
+**A**: **KHÔNG**. Tùy thuộc vào loại tòa nhà.
 
 **Phù hợp** ✅:
 ```
-1. High-rise buildings (>10 floors)
-   - Long sweeps justify extreme visits
+1. Tòa nhà cao tầng (>10 tầng)
+   - Quét dài biện minh cho việc thăm extreme
 
-2. High traffic buildings
-   - Office buildings
-   - Hotels
-   - Hospitals
+2. Tòa nhà lưu lượng cao
+   - Tòa nhà văn phòng
+   - Khách sạn
+   - Bệnh viện
 
-3. Need fairness
-   - Public buildings
-   - Government offices
+3. Cần công bằng
+   - Tòa nhà công cộng
+   - Văn phòng chính phủ
 ```
 
 **Không phù hợp** ❌:
 ```
-1. Low-rise buildings (<5 floors)
-   - LOOK more efficient
-   - Extreme visits wasteful
+1. Tòa nhà thấp tầng (<5 tầng)
+   - LOOK hiệu quả hơn
+   - Thăm extreme lãng phí
 
-2. Low traffic
-   - Residential (off-peak)
-   - Efficiency > Fairness
+2. Lưu lượng thấp
+   - Chung cư (ngoài giờ cao điểm)
+   - Hiệu quả > Công bằng
 
-3. Special requirements
-   - Emergency-only elevators
-   - Freight elevators (use FCFS)
+3. Yêu cầu đặc biệt
+   - Thang máy chỉ dành cho khẩn cấp
+   - Thang máy hàng hóa (dùng FCFS)
 ```
 
-### Q4: Làm sao optimize SCAN cho peak hours?
+### Q4: Làm sao tối ưu hóa SCAN cho giờ cao điểm?
 
-**A**: Nhiều strategies:
+**A**: Nhiều chiến lược:
 
-**Strategy 1: Group Control**
+**Chiến lược 1: Điều khiển nhóm (Group Control)**
 ```javascript
-// During peak UP (morning)
+// Trong giờ cao điểm LÊN (buổi sáng)
 elevators.forEach(e => {
   if (e.direction === 'idle') {
-    e.direction = 'up'  // Pre-position
-    e.startFloor = 1    // Wait at lobby
+    e.direction = 'up'  // Định vị trước
+    e.startFloor = 1    // Chờ tại sảnh
   }
 })
 ```
 
-**Strategy 2: Zone Assignment**
+**Chiến lược 2: Phân vùng (Zone Assignment)**
 ```javascript
 peakHours: {
   time: '08:00-09:00',
@@ -1552,195 +1552,195 @@ peakHours: {
 }
 ```
 
-**Strategy 3: Express Mode**
+**Chiến lược 3: Chế độ tốc hành (Express Mode)**
 ```javascript
-// Some elevators skip floors
+// Một số thang máy bỏ qua tầng
 elevator[0]: {
-  floors: [1, 5, 10, 15, 20, 25, 30],  // Express
+  floors: [1, 5, 10, 15, 20, 25, 30],  // Tốc hành
   algorithm: 'SCAN'
 }
 
 elevator[1-4]: {
-  floors: [1...30],  // Local
+  floors: [1...30],  // Nội thành
   algorithm: 'SCAN'
 }
 ```
 
-### Q5: SCAN có variants nào?
+### Q5: SCAN có biến thể nào?
 
-**A**: Nhiều variants:
+**A**: Nhiều biến thể:
 
 **C-SCAN (Circular SCAN)**:
 ```
-Normal SCAN:
-UP: 1→20, DOWN: 20→1
+SCAN bình thường:
+LÊN: 1→20, XUỐNG: 20→1
 
 C-SCAN:
-UP: 1→20, TELEPORT: 20→1, UP: 1→20...
-Always one direction
+LÊN: 1→20, DỊCH CHUYỂN: 20→1, LÊN: 1→20...
+Luôn luôn một hướng
 
-Advantage: More uniform wait times
+Ưu điểm: Thời gian chờ đồng đều hơn
 ```
 
 **LOOK**:
 ```
-Like SCAN but:
-- Don't go to extreme
-- Reverse when no more requests
+Như SCAN nhưng:
+- Không đi đến extreme
+- Đảo chiều khi không còn yêu cầu
 
-Advantage: More efficient
-Disadvantage: Less fair
+Ưu điểm: Hiệu quả hơn
+Nhược điểm: Ít công bằng hơn
 ```
 
 **N-Step-SCAN**:
 ```
-Batch requests into groups
-Process N requests, then accept new ones
+Gom yêu cầu thành nhóm
+Xử lý N yêu cầu, sau đó chấp nhận yêu cầu mới
 
-Advantage: Prevents starvation from continuous requests
+Ưu điểm: Ngăn chặn bỏ đói từ yêu cầu liên tục
 ```
 
 **FSCAN (Freeze SCAN)**:
 ```
-Two queues:
-- Active: Being served
-- Waiting: New requests
+Hai hàng đợi:
+- Hoạt động: Đang được phục vụ
+- Chờ: Yêu cầu mới
 
-After sweep, swap queues
+Sau khi quét, hoán đổi hàng đợi
 
-Advantage: Bounded wait time
+Ưu điểm: Thời gian chờ có giới hạn
 ```
 
-### Q6: Source code ở đâu trong project?
+### Q6: Mã nguồn (Source code) ở đâu trong dự án?
 
 **A**:
 
 ```
-Main implementation:
+Triển khai chính:
 /src/algorithms/scanAlgorithm.js
 
-Key functions:
-- scanAlgorithm()        // Elevator selection
-- calculateCost()        // Cost calculation
-- insertIntoQueueSCAN()  // Queue management
+Các hàm chính:
+- scanAlgorithm()        // Chọn thang máy
+- calculateCost()        // Tính chi phí
+- insertIntoQueueSCAN()  // Quản lý hàng đợi
 
-Integration:
+Tích hợp:
 /src/hooks/useElevatorSystem.js
-- ensureSCANExtreme()    // Phantom floor logic
-- Line 264-266           // SCAN extreme handling
+- ensureSCANExtreme()    // Logic tầng ảo
+- Line 264-266           // Xử lý extreme của SCAN
 
 Tests:
 /src/algorithms/scanAlgorithm.test.js
-- 227 lines of tests
-- Edge cases covered
+- 227 dòng tests
+- Các trường hợp đặc biệt được bao phủ
 ```
 
-### Q7: Làm sao test SCAN behavior trong simulator?
+### Q7: Làm sao kiểm tra hành vi SCAN trong simulator?
 
-**A**: Follow scenario này:
+**A**: Làm theo kịch bản này:
 
-**Test 1: Extreme behavior**
+**Test 1: Hành vi extreme**
 ```
-1. Config: 10 floors, 1 elevator, SCAN
-2. Elevator at floor 1, IDLE
-3. Call floor 5 UP
-4. Wait until elevator at floor 3
-5. Call floor 3 DOWN
-6. Observe: Elevator continues to 5 → 10 (extreme!) → reverse → 3
-✅ Confirms extreme visit
-```
-
-**Test 2: Fairness**
-```
-1. Config: 20 floors, 2 elevators
-2. Create 10 random requests
-3. Check statistics:
-   - Max wait time < 2 × 20 = 40s ✅
-   - No request ignored ✅
+1. Cấu hình: 10 tầng, 1 thang máy, SCAN
+2. Thang máy ở tầng 1, RẢNH
+3. Gọi tầng 5 LÊN
+4. Chờ đến khi thang máy ở tầng 3
+5. Gọi tầng 3 XUỐNG
+6. Quan sát: Thang máy tiếp tục đến 5 → 10 (extreme!) → đảo chiều → 3
+✅ Xác nhận thăm extreme
 ```
 
-**Test 3: Cost calculation**
+**Test 2: Công bằng**
 ```
-1. Manual mode
-2. Note elevator positions
-3. Calculate expected costs manually
-4. Switch to AUTO (SCAN)
-5. Check which elevator was chosen
-✅ Verify cost function works
+1. Cấu hình: 20 tầng, 2 thang máy
+2. Tạo 10 yêu cầu ngẫu nhiên
+3. Kiểm tra thống kê:
+   - Thời gian chờ tối đa < 2 × 20 = 40s ✅
+   - Không có yêu cầu nào bị bỏ qua ✅
+```
+
+**Test 3: Tính chi phí**
+```
+1. Chế độ thủ công
+2. Ghi chú vị trí thang máy
+3. Tính chi phí kỳ vọng thủ công
+4. Chuyển sang AUTO (SCAN)
+5. Kiểm tra thang máy nào được chọn
+✅ Xác minh hàm chi phí hoạt động
 ```
 
 ---
 
 ## 📚 Tài Liệu Tham Khảo
 
-### Academic Papers
+### Các Bài Báo Học Thuật (Academic Papers)
 
 1. **Denning, P. J.** (1967). "Effects of scheduling on file memory operations." *AFIPS Proceedings*, 9-21.
-   - Original SCAN algorithm paper
+   - Bài báo thuật toán SCAN gốc
 
 2. **Geist, R., & Daniel, S.** (1987). "A continuum of disk scheduling algorithms." *ACM Transactions on Computer Systems*, 5(1), 77-92.
-   - Comprehensive analysis of SCAN variants
+   - Phân tích toàn diện các biến thể SCAN
 
 3. **Barney, G. C.** (2003). *Elevator Traffic Handbook: Theory and Practice*.
-   - Industry standard for elevator systems
+   - Tiêu chuẩn công nghiệp cho hệ thống thang máy
 
-### Online Resources
+### Tài Nguyên Trực Tuyến (Online Resources)
 
 - [Wikipedia: Elevator Algorithm](https://en.wikipedia.org/wiki/Elevator_algorithm)
 - [OS Dev: Disk Scheduling](https://wiki.osdev.org/Disk_Scheduling)
-- [Elevator Saga Game](https://play.elevatorsaga.com/) - Interactive learning
+- [Elevator Saga Game](https://play.elevatorsaga.com/) - Học tập tương tác
 
-### Books
+### Sách (Books)
 
 - **Silberschatz, Galvin, Gagne** (2018). *Operating System Concepts* (10th ed.)
-  - Chapter 9: Mass-Storage Structure
+  - Chương 9: Mass-Storage Structure
 
 - **Tanenbaum, A. S.** (2014). *Modern Operating Systems* (4th ed.)
-  - Section on I/O scheduling
+  - Phần về lập lịch I/O
 
 ---
 
 ## 🎓 Tóm Tắt
 
-### Key Takeaways
+### Những Điểm Chính (Key Takeaways)
 
-1. ✅ **SCAN = Fairness + Predictability**
-   - Đảm bảo mọi request được serve
-   - Max wait time dự đoán được
+1. ✅ **SCAN = Công bằng + Khả năng dự đoán**
+   - Đảm bảo mọi yêu cầu được phục vụ
+   - Thời gian chờ tối đa có thể dự đoán
 
-2. ⚡ **Must Go to Extreme**
-   - Không phải bug, là feature!
-   - Ensure fairness và prevent starvation
+2. ⚡ **Phải Đi Đến Điểm Tận Cùng (Must Go to Extreme)**
+   - Không phải lỗi, là tính năng!
+   - Đảm bảo công bằng và ngăn chặn bỏ đói
 
-3. 🏢 **Industry Standard**
-   - Used in >90% commercial elevators
-   - Proven in real-world
+3. 🏢 **Tiêu Chuẩn Công Nghiệp (Industry Standard)**
+   - Sử dụng trong >90% thang máy thương mại
+   - Đã được chứng minh trong thực tế
 
-4. 📊 **Trade-offs**
-   - Fairness ✅ / Efficiency ⚠️
-   - Better than SSTF, less efficient than LOOK
+4. 📊 **Đánh Đổi (Trade-offs)**
+   - Công bằng ✅ / Hiệu quả ⚠️
+   - Tốt hơn SSTF, ít hiệu quả hơn LOOK
 
-5. 🔧 **Customizable**
-   - Variants: C-SCAN, LOOK, FSCAN
-   - Can optimize for specific buildings
+5. 🔧 **Có Thể Tùy Chỉnh (Customizable)**
+   - Các biến thể: C-SCAN, LOOK, FSCAN
+   - Có thể tối ưu hóa cho tòa nhà cụ thể
 
 ### Khi Nào Dùng SCAN?
 
 ✅ **Dùng khi**:
-- High-rise buildings (>10 floors)
-- High traffic
-- Fairness required
-- Predictability important
+- Tòa nhà cao tầng (>10 tầng)
+- Lưu lượng cao
+- Yêu cầu công bằng
+- Khả năng dự đoán quan trọng
 
 ❌ **Không dùng khi**:
-- Low-rise (<5 floors) → use LOOK
-- Low traffic → use LOOK
-- Emergency-only → use priority-based
+- Tòa nhà thấp tầng (<5 tầng) → dùng LOOK
+- Lưu lượng thấp → dùng LOOK
+- Chỉ khẩn cấp → dùng dựa trên ưu tiên
 
 ---
 
 **Chúc bạn học tốt! 🚀**
 
-*Document version: 1.0*
-*Last updated: 2025-11-08*
+*Phiên bản tài liệu: 1.0*
+*Cập nhật lần cuối: 2025-11-08*
 *Phản hồi: [GitHub Issues](https://github.com/kinhluan/simple-elevator-simulator/issues)*
