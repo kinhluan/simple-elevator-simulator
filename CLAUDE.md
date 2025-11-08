@@ -35,6 +35,7 @@ npm run test:coverage # Run tests with coverage report
 ```bash
 npm run deploy        # Deploy to GitHub Pages (runs build first)
 ```
+Deployed at: https://kinhluan.github.io/simple-elevator-simulator
 
 ## Architecture
 
