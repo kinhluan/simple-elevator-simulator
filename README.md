@@ -1,98 +1,98 @@
-# 🏢 Simple Elevator Simulator
+# 🏢 Trình mô phỏng thang máy đơn giản
 
-An interactive elevator scheduling simulator that visualizes and compares different elevator dispatch algorithms in real-time.
+Một trình mô phỏng lập lịch thang máy tương tác giúp trực quan hóa và so sánh các thuật toán điều phối thang máy khác nhau trong thời gian thực.
 
-![Simple Elevator Simulator](docs/screenshots/simple-elevator-simulator.png)
+![Trình mô phỏng thang máy đơn giản](docs/screenshots/simple-elevator-simulator.png)
 
-## Features
+## Tính năng
 
-- **Configurable Building**: 2-24 floors, 2-12 elevators
-- **Real-time Visualization**: Watch elevators move with door animations
-- **3 Scheduling Algorithms**:
-  - **SCAN** ⭐ (Recommended): Industry standard, moves in one direction to extreme then reverses
-  - **LOOK**: Reverses when no more requests ahead (more efficient than SCAN)
-  - **SSTF**: Serves nearest floor first (educational purposes, can cause starvation)
-- **Manual & Automatic Modes**: Manual assignment or algorithm-based dispatch
-- **Configurable Timing**: Adjust travel time, door open/close speeds
+- **Tòa nhà có thể định cấu hình**: 2-24 tầng, 2-12 thang máy
+- **Trực quan hóa thời gian thực**: Xem thang máy di chuyển với hoạt ảnh cửa
+- **3 thuật toán lập lịch**:
+  - **SCAN** ⭐ (Khuyên dùng): Tiêu chuẩn công nghiệp, di chuyển theo một hướng đến điểm cuối cùng rồi đảo ngược
+  - **LOOK**: Đảo ngược khi không còn yêu cầu nào ở phía trước (hiệu quả hơn SCAN)
+  - **SSTF**: Phục vụ tầng gần nhất trước tiên (mục đích giáo dục, có thể gây ra tình trạng đói)
+- **Chế độ thủ công & tự động**: Gán thủ công hoặc điều phối dựa trên thuật toán
+- **Thời gian có thể định cấu hình**: Điều chỉnh thời gian di chuyển, tốc độ mở/đóng cửa
 
-## Getting Started
+## Bắt đầu
 
-### Prerequisites
+### Điều kiện tiên quyết
 - Node.js v20.0.0+
 - npm v10.0.0+
 
-### Installation
+### Cài đặt
 
 ```bash
-git clone https://github.com/phatpham9/simple-elevator-simulator.git
+git clone https://github.com/kinhluan/simple-elevator-simulator.git
 cd simple-elevator-simulator
 npm install
 npm run dev
 ```
 
-Open browser to `http://localhost:5173`
+Mở trình duyệt tới `http://localhost:5173`
 
-## Usage
+## Sử dụng
 
-**Manual Mode**: Click floor buttons to request elevators, then manually assign to specific cars
+**Chế độ thủ công**: Nhấp vào các nút tầng để yêu cầu thang máy, sau đó gán thủ công cho các cabin cụ thể
 
-**Automatic Mode**: Select an algorithm (SCAN/LOOK/SSTF) and click floor buttons - elevators are automatically dispatched
+**Chế độ tự động**: Chọn một thuật toán (SCAN/LOOK/SSTF) và nhấp vào các nút tầng - thang máy được điều phối tự động
 
-**Configure**: Adjust building size and timing in the Config panel
+**Cấu hình**: Điều chỉnh kích thước tòa nhà và thời gian trong bảng Cấu hình
 
-## Project Structure
+## Cấu trúc dự án
 
 ```
 src/
-├── algorithms/          # Scheduling algorithm implementations
+├── algorithms/          # Triển khai thuật toán lập lịch
 │   ├── elevatorScheduler.js
 │   ├── scanAlgorithm.js
 │   ├── lookAlgorithm.js
 │   └── sstfAlgorithm.js
-├── components/          # React UI components
+├── components/          # Thành phần React UI
 ├── hooks/              # useElevatorSystem.js
 ├── constants/          # elevatorTiming.js
 ├── styles/             # designSystem.js
 └── utils/              # elevatorUtils.js
 ```
 
-## Technologies
+## Công nghệ
 
-- **React 19.0.0** - UI framework
-- **Vite 6.2.0** - Build tool and dev server
-- **Tailwind CSS 4.0.17** - Utility-first CSS
-- **JavaScript (ES6+)** - Core logic
-- **ESLint 9.21.0** - Code quality
+- **React 19.0.0** - Framework UI
+- **Vite 6.2.0** - Công cụ xây dựng và máy chủ phát triển
+- **Tailwind CSS 4.0.17** - CSS ưu tiên tiện ích
+- **JavaScript (ES6+)** - Logic cốt lõi
+- **ESLint 9.21.0** - Chất lượng mã
 
-## Algorithm Comparison
+## So sánh thuật toán
 
-| Algorithm | Direction | Fairness | Efficiency | Starvation Risk | Real-world Use |
+| Thuật toán | Hướng | Công bằng | Hiệu quả | Rủi ro đói | Sử dụng trong thực tế |
 |-----------|-----------|----------|------------|-----------------|----------------|
-| **SCAN** ⭐ | ✅ Yes | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | None | ✅ Standard |
-| **LOOK** | ✅ Yes | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | Very Low | ⚠️ Rare |
-| **SSTF** | ❌ No | ⭐⭐ | ⭐⭐⭐ | High | ❌ No |
+| **SCAN** ⭐ | ✅ Có | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | Không | ✅ Tiêu chuẩn |
+| **LOOK** | ✅ Có | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | Rất thấp | ⚠️ Hiếm |
+| **SSTF** | ❌ Không | ⭐⭐ | ⭐⭐⭐ | Cao | ❌ Không |
 
-**When to use:**
-- **SCAN**: Production systems, high traffic (most predictable, no starvation)
-- **LOOK**: Variable traffic patterns (more efficient, avoids empty extremes)
-- **SSTF**: Education only (demonstrates starvation problems)
+**Khi nào nên sử dụng:**
+- **SCAN**: Hệ thống sản xuất, lưu lượng truy cập cao (dễ dự đoán nhất, không bị đói)
+- **LOOK**: Các mẫu lưu lượng truy cập thay đổi (hiệu quả hơn, tránh các thái cực trống)
+- **SSTF**: Chỉ dành cho giáo dục (chứng tỏ các vấn đề đói)
 
-## Deployment
+## Triển khai
 
-Deploy to GitHub Pages:
+Triển khai lên GitHub Pages:
 ```bash
 npm run deploy
 ```
 
-Build for production:
+Xây dựng cho sản xuất:
 ```bash
 npm run build
 ```
 
-## License
+## Giấy phép
 
-MIT License
+Giấy phép MIT
 
-## Acknowledgments
+## Ghi nhận
 
-Initial inspiration from [arunsai63/SmartLift](https://github.com/arunsai63/SmartLift)
+Nguồn cảm hứng ban đầu từ [arunsai63/SmartLift](https://github.com/arunsai63/SmartLift)
